@@ -41,28 +41,44 @@ function CustomerReviews(){
                 <SwiperSlide>
                     <div className="common_review_slide position-relative">
                         <img src={Stars} alt="Image" className="" />
-                        <p className='text-white letter-spacing-20'>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.”</p>
+                        <p className='text-white letter-spacing-20'>
+                            “I am delighted to recommend the services of SSJ Luxury Transport.<br />
+                            We have been working with Sohail for more than five years and his team always deliver above expectation. The fleet are modern, clean, and well equipped. As an experienced hospitality industry professional, who has worked in many countries around the globe including Japan at the highest levels, I can say that Sohail and his team are among the best in the world. We look forward to working with his organisation for many years to come.
+                            ”
+                        </p>
                         <span className=' text-white font-11 text-uppercase letter-spacing-15'>Recent Customer</span>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_review_slide position-relative">
                         <img src={Stars} alt="Image" className="" />
-                        <p className='text-white letter-spacing-20'>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.”</p>
+                        <p className='text-white letter-spacing-20'>
+                            “I am delighted to recommend the services of SSJ Luxury Transport.<br />
+                            We have been working with Sohail for more than five years and his team always deliver above expectation. The fleet are modern, clean, and well equipped. As an experienced hospitality industry professional, who has worked in many countries around the globe including Japan at the highest levels, I can say that Sohail and his team are among the best in the world. We look forward to working with his organisation for many years to come.
+                            ”
+                        </p>
                         <span className=' text-white font-11 text-uppercase letter-spacing-15'>Recent Customer</span>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_review_slide position-relative">
                         <img src={Stars} alt="Image" className="" />
-                        <p className='text-white letter-spacing-20'>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.”</p>
+                        <p className='text-white letter-spacing-20'>
+                            “I am delighted to recommend the services of SSJ Luxury Transport.<br />
+                            We have been working with Sohail for more than five years and his team always deliver above expectation. The fleet are modern, clean, and well equipped. As an experienced hospitality industry professional, who has worked in many countries around the globe including Japan at the highest levels, I can say that Sohail and his team are among the best in the world. We look forward to working with his organisation for many years to come.
+                            ”
+                        </p>
                         <span className=' text-white font-11 text-uppercase letter-spacing-15'>Recent Customer</span>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_review_slide position-relative">
                         <img src={Stars} alt="Image" className="" />
-                        <p className='text-white letter-spacing-20'>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.”</p>
+                        <p className='text-white letter-spacing-20'>
+                            “I am delighted to recommend the services of SSJ Luxury Transport.<br />
+                            We have been working with Sohail for more than five years and his team always deliver above expectation. The fleet are modern, clean, and well equipped. As an experienced hospitality industry professional, who has worked in many countries around the globe including Japan at the highest levels, I can say that Sohail and his team are among the best in the world. We look forward to working with his organisation for many years to come.
+                            ”
+                        </p>
                         <span className=' text-white font-11 text-uppercase letter-spacing-15'>Recent Customer</span>
                     </div>
                 </SwiperSlide>         

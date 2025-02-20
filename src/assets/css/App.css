@@ -60,6 +60,9 @@ ul {
   margin-top: 0;
   margin-bottom: 0;
 }
+.about-pagedesc ul {
+  margin-bottom: 20px;
+}
 .list-style-none{
   list-style: none;
 }
@@ -67,7 +70,7 @@ p{
   margin-top: 0;
   margin-bottom: 15px;
 }
-p:last-of-type{
+div:not(.about-pagedesc) p:last-of-type{
   margin-bottom: 0;
 }
 a {
@@ -99,6 +102,7 @@ img{
   text-decoration: underline;
   color: #000000;
   font-style: italic;
+  cursor: pointer;
 }
 .btn {
   background: #000;
@@ -439,20 +443,33 @@ input.p-inputtext {
 }
 
 .booking-popup-outer .error-message,
-.booking-popup-outer .warning-message {
+.booking-popup-outer .warning-message{
   font-size: 16px;
   text-align: center;
   border: 1px solid #f00;
 }
-.booking-popup-outer .success-message{
+.booking-popup-outer .success-message,
+.form-sucsess-message{
   font-size: 16px;
   text-align: center;
   border: 1px solid green!important;
 }
+.form-error-message{
+  border: 1px solid #f00 !important;
+  text-align: center;
+  
+}
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 6px;
+}
 
-.success-message {
+.success-message,
+.form-success-message {
   color: green;
-  border: 1px solid green
+  border: 1px solid green;
+  text-align: center;
 }
 
 .loading {
@@ -500,6 +517,9 @@ header.main-header {
   border-bottom: 0.6px solid rgba(255,255,255,0.4);
   z-index: 3;
   padding: 13px 30px;
+}
+.header_logo img {
+  max-width: 25px;
 }
 
 /* Home Banner */
@@ -790,6 +810,9 @@ body .vehicle-options .swiper-scrollbar {
   background-repeat: no-repeat;
   background-position: center center;
 }
+.footer-logo img {
+  max-width: 50px;
+}
 footer.main-footer::before {
   content: "";
   position: absolute;
@@ -1077,6 +1100,16 @@ ul.popup-filter-results:empty {
   object-fit: cover;  
   border-radius: 50%;
 }
+.booking-popup-vhicles {
+  max-width: 750px;
+}
+.booking-popup-vhicles .booking-car-list {
+  padding: 50px 30px;
+}
+.booking-popup-vhicles .booking-car-list {
+  padding: 30px 15px;
+}
+
 
 .p-dialog-content {
   background: #f7f7f7;
@@ -1157,6 +1190,7 @@ ul.popup-filter-results + ul.popup-filter-results::before {
 }
 .booking-popup-outer.p-dialog .p-dialog-header button.p-dialog-header-icon {
   color: #fff;
+  background: transparent;
 }
 .car-info-popup-outer .p-dialog-header-icons .p-dialog-header-icon:hover svg path,
 .booking-popup-outer.p-dialog .p-dialog-header button.p-dialog-header-icon:hover{
@@ -1268,6 +1302,21 @@ ul.popup-filter-results + ul.popup-filter-results::before {
 .policies-tabs .p-tabview-panels {
   padding: 70px 0 0;
 }
+.about-pagedesc h2 {
+  font-size: 20px;
+}
+.about-pagedesc h3 {
+  font-size: 18px;
+  line-height: 22px;
+}
+.about-pagedesc h4 {
+  font-size: 16px;
+  line-height: 22px;
+}
+.about-pagedesc a {
+  text-decoration: underline;
+  color: #000000;
+}
 
 /* For Corporate */
 .forcorporate-titletext h6 {
@@ -1313,6 +1362,24 @@ h2.deletepopup {
   background: #3a3939;
 }
 /* Responsive  */
+
+@media (max-width: 1199px) {
+  .booking-popup-outer.p-dialog .p-dialog-header {
+    top: -25px;
+    right: 0;
+    padding: 0;
+  }
+  .booking-popup-outer.p-dialog .p-dialog-header button.p-dialog-header-icon {
+      right: 30px;
+      display: inline-block;
+      background: transparent;
+      top: -40px;
+      margin-right: 0;
+  }
+  .booking-popup-vhicles .booking-car-list {
+    padding: 20px 15px;
+  }
+}
 
 @media (max-width: 991px) {
   .ptb-150 {
@@ -1428,6 +1495,9 @@ h2.deletepopup {
   }
 }
 @media (max-width: 767px) {  
+  .header_logo img {
+    max-width: 30px;
+  }
   .vehicle-options .p-tabview-panels {
     padding-left: 20px;
     padding-right: 0;
