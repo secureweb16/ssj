@@ -63,6 +63,10 @@ ul {
 .about-pagedesc ul {
   margin-bottom: 20px;
 }
+.about-pagedesc ul li {
+  margin-bottom: 8px;
+  color: #000;
+}
 .list-style-none{
   list-style: none;
 }
@@ -413,6 +417,10 @@ img{
 }
 input.p-inputtext {
   height: 46px;
+  background: #edecea;
+  border-radius: 40px;
+  padding: 0 40px;
+  border: 1px solid #b2b1b0;
 }
 .p-inputtextarea {
   height: 112px;
@@ -1890,8 +1898,8 @@ input[type="file"] {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  border: 1px solid #b2b1b0;
+  border-radius: 40px;
   font-size: 16px;
   transition: border-color 0.3s ease;
 }
