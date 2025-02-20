@@ -1,7 +1,7 @@
 import React from 'react'; // Added useState import
 import { Link } from "react-router-dom";
-import Logo from "../assets/images/logo.svg";
-import FooterBackground from "../assets/images/footer-background.jpg";
+import Logo from "../assets/images/ssj-logo.svg";
+import FooterBackground from "../assets/images/footer-bg.jpg";
 
 
 function Footer() {
@@ -29,7 +29,7 @@ function Footer() {
                                 <Link to='/signature-routes' className='text-white'>Signature Routes</Link>
                             </li>
                             <li>
-                                <Link to='/vehicle' className='text-white'>Vehicle</Link>
+                                <Link to='/vehicle' className='text-white'>Vehicles</Link>
                             </li>    
                             <li>
                                 <Link to='/for-corporate' className='text-white'>For Corporate</Link>

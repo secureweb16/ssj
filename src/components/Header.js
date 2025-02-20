@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'; // Added useState import
 import { Link } from "react-router-dom";
-import Logo from "../assets/images/logo.svg";
+import Logo from "../assets/images/ssj-logo.svg";
 import Logo1 from "../assets/images/logo.png";
 import WhatsappIcon from "../assets/images/whatsapp-white-icon.svg";
 import EmailIcon from "../assets/images/email-send.svg";
@@ -21,7 +21,7 @@ function Header() {
     return (
         <>
             <header className={`position-absolute w-100 ${scroll ? "main-header sticky" : "main-header"}`} >
-                <div className='header-inner w-100 d-flex justify-content-between'>
+                <div className='header-inner w-100 d-flex align-items-center justify-content-between'>
                     <div className='header-left d-flex align-items-center'> 
                         <Link to='/' className='header_logo'>
                             <img src={Logo} alt="Logo" />
@@ -29,10 +29,13 @@ function Header() {
                     </div>
                     <div className='header-right'>
                         <ul className='d-flex gap-10 nostyle'>
-                            <li className='show-mobile'>
-                                <Link to='/' className='btn transparent-btn'><img src={EmailIcon} alt="Icon"/></Link>
+                            <li className='show-desktop'>
+                                <Link to='/' className='btn transparent-btn'><span className='show-desktop'>Whatsapp</span><img src={WhatsappIcon} alt="Icon" className='show-mobile'/></Link>
                             </li>
                             <li>
+                                <Link to='/' className='btn transparent-btn'><span className='show-desktop'>Telegram</span><img src={EmailIcon} alt="Icon" className='show-mobile'/></Link>
+                            </li>
+                            <li className='show-mobile'>
                                 <Link to='/' className='btn transparent-btn'><span className='show-desktop'>Whatsapp</span><img src={WhatsappIcon} alt="Icon" className='show-mobile'/></Link>
                             </li>
                             <li>
