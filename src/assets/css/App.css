@@ -397,13 +397,15 @@ img{
   box-shadow: none;
   border-color: #aaa;
 }
-input.p-inputtext,.p-inputtextarea {
+/* .vehicle-routeschedule-content input.p-inputtext, */
+.booking-popup-outer input.p-inputtext,.p-inputtextarea {
   border-color: #b2b1b0;
   background: #edecea;
   border-radius: 50px;
   padding: 0 40px;
   font-weight: 500;
   color: #000;
+  font-size: 14px;
 }
 input.p-inputtext {
   height: 46px;
@@ -420,6 +422,77 @@ input.p-inputtext {
 }
 .p-dialog .p-dialog-content {
   color: #000;
+}
+.gmnoprint .gm-style-mtc button {
+  border-radius: 2px !important;
+  margin-right: 5px !important;
+}
+
+/* Form Responces */
+.success-message,
+.error-message,
+.warning-message {
+  font-weight: 400;
+  color: #f00;
+  padding: 5px 10px;
+  margin-top: 15px;
+}
+
+.booking-popup-outer .error-message,
+.booking-popup-outer .warning-message {
+  font-size: 16px;
+  text-align: center;
+  border: 1px solid #f00;
+}
+.booking-popup-outer .success-message{
+  font-size: 16px;
+  text-align: center;
+  border: 1px solid green!important;
+}
+
+.success-message {
+  color: green;
+  border: 1px solid green
+}
+
+.loading {
+  color: transparent !important;
+  position: relative;
+  pointer-events: none;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.loading .loader {
+  position: absolute;
+  left: 45%;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+.btn.loading.deletebtn{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center; 
+}
+.btn.loading.deletebtn span{
+  width: 18px;
+  height: 18px;	
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Header Css */
@@ -780,6 +853,20 @@ footer.main-footer::before {
   right: 0;
   padding: 10px;
 }
+.car-info-popup-outer.p-dialog .p-dialog-header {
+  top: -40px;
+  right: -40px;
+}
+.car-loading {
+  text-align: center;
+  padding: 0px 0 90px;
+  font-size: 26px;
+  line-height: 28px;
+  font-weight: 400;
+}
+.p-dialog-header-icons button {
+  display: contents;
+}
 .car-info-popup-outer .p-dialog-content {
   padding: 0;
 }
@@ -796,7 +883,7 @@ footer.main-footer::before {
   left: 0;
   width: 100%;
   height: 222px;
-  z-index: -1;
+  z-index: 2;
 }
 .car-info-banner h6 {
   font-size: 25px;
@@ -804,6 +891,7 @@ footer.main-footer::before {
 .car-info-banner-content {
   padding: 0 66px 45px;
   bottom: 0;
+  z-index: 3;
 }
 .car-info-popup-outer {
   max-width: 700px;
@@ -862,7 +950,7 @@ footer.main-footer::before {
   padding: 20px;
 }
 .booking-popup-outer {
-  max-width: 1014px;
+  max-width: 1024px;
   width: 100%;
 }
 .booking-popup-outer .p-dialog-content {
@@ -876,9 +964,12 @@ footer.main-footer::before {
   border: 1px solid #00000080;
 }
 .booking-popup-head {
-  padding: 26px;
+  padding: 20px 25px;
   border-bottom: 0.5px solid #d2d2d2;
   gap: 20px;
+}
+.booking-popup-head button {
+  margin: 0;
 }
 .booking-popup-head .booking-popup-head-left {
   flex: 0 0 calc(100% - 181px);
@@ -911,7 +1002,7 @@ footer.main-footer::before {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  padding: 11px 48px;
+  padding: 10px 50px;
   font-weight: 300;  
 }
 .booking-popup-maintab-left .bookingpop-left-tab > button:not(.p-button-outlined){
@@ -919,6 +1010,9 @@ footer.main-footer::before {
 }
 .bookingpop-left-tab:not(:last-child){
   margin-bottom: 20px;
+}
+ul.popup-filter-results:empty {
+  display: none;
 }
 .common-booking-car-info .select-button {
   min-width: auto;
@@ -987,6 +1081,18 @@ footer.main-footer::before {
 .p-dialog-content {
   background: #f7f7f7;
 }
+.p-dialog-content::-webkit-scrollbar {
+  width: 10px;
+}
+.p-dialog-content::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+.p-dialog-content::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+.p-dialog-content::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 .booking-popup .p-float-label:has(input:focus) label, 
 .booking-popup .p-float-label:has(input.p-filled) label, 
 .booking-popup .p-float-label:has(input:-webkit-autofill) label, 
@@ -1045,15 +1151,66 @@ ul.popup-filter-results + ul.popup-filter-results::before {
   gap: 20px;
 }
 .booking-popup-outer.p-dialog .p-dialog-header {
-  top: -42px;
-  right: 10px;
+  top: -25px;
+  right: -30px;
   padding: 0;
 }
 .booking-popup-outer.p-dialog .p-dialog-header button.p-dialog-header-icon {
   color: #fff;
 }
+.car-info-popup-outer .p-dialog-header-icons .p-dialog-header-icon:hover svg path,
 .booking-popup-outer.p-dialog .p-dialog-header button.p-dialog-header-icon:hover{
-  color: #000;
+  color: #9d9d9d;
+}
+.p-datepicker-title button {
+  margin-top: 0;
+}
+.p-datepicker button:not(.p-datepicker-month, .p-datepicker-year) {
+  padding: 0;
+  background: transparent;
+  border: 1px solid #b9b9b9;
+  margin: 0;
+}
+.p-datepicker button:not(.p-datepicker-month, .p-datepicker-year):hover {
+  background: #000;
+}
+.p-datepicker button:not(.p-datepicker-month, .p-datepicker-year) svg path {
+  fill: #000000;
+}
+.p-datepicker button:not(.p-datepicker-month, .p-datepicker-year):hover svg path {
+  fill: #fff;
+}
+.p-datepicker .p-timepicker {
+  padding: 20px 10px 13px;
+}
+.p-datepicker .p-timepicker button {
+  margin: 0;
+  border: none;
+  width: auto;
+  height: auto;
+  background: transparent;
+  align-self: center;
+}
+.p-datepicker .p-timepicker button:hover {
+  background: transparent;
+}
+.p-datepicker .p-timepicker button:hover svg path {
+  fill: #6b6b6b;
+}
+.p-timepicker .p-ampm-picker,
+.p-timepicker .p-minute-picker,
+.p-timepicker .p-hour-picker {
+  gap: 5px;
+}
+.p-datepicker table td > span.p-highlight {
+  color: #000000;
+  background: #dedede;
+  font-weight: 400;
+}
+.popup-location-map > div {
+  width: 100% !important;
+  border-radius: 10px;
+  border: 1px solid #b2b1b0;
 }
 
 /* About */
@@ -1128,9 +1285,33 @@ ul.popup-filter-results + ul.popup-filter-results::before {
   left: 0;
 }
 
-
-
-
+.btn-wrap-delete {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+}
+.btn-wrap-delete .btn {
+  margin: 0;
+}
+h2.deletepopup {
+  font-size: 20px;
+  line-height: normal;
+  text-align: center;
+}
+.btn-wrap-delete .btn {
+  min-width: 110px;
+}
+.deletebtn {
+  background: red;
+  border-color: red;
+}
+.deletebtn:hover {
+  background: #d50707;
+}
+.cancelbtn:hover {
+  background: #3a3939;
+}
 /* Responsive  */
 
 @media (max-width: 991px) {
@@ -1249,6 +1430,7 @@ ul.popup-filter-results + ul.popup-filter-results::before {
 @media (max-width: 767px) {  
   .vehicle-options .p-tabview-panels {
     padding-left: 20px;
+    padding-right: 0;
   }
   .show-mobile{
     display: block;
@@ -1335,6 +1517,21 @@ ul.popup-filter-results + ul.popup-filter-results::before {
   .vehicle-routeschedule-signaturebox {
     margin-left: -15px;
     margin-right: -15px;
+  }
+  .car-info-banner-content {
+    padding: 0 25px 20px;
+  }
+  .carinfo-popup-bottom {
+    padding: 20px 25px;
+  }
+  .carinfo-popup-middle .carinfo-bottom-left {
+    flex: 0 0 100%;
+    width: 100%;
+    padding: 0 0 20px;
+  }
+  .carinfo-popup-middle .carinfo-bottom-right {
+    flex: 0 0 auto;
+    width: 100%;
   } 
 }
 @media (max-width: 575px) { 
@@ -1406,15 +1603,24 @@ ul.popup-filter-results + ul.popup-filter-results::before {
   }
 }
 
-
-
-
 /* Center the login box */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  position: relative;
+}
+
+.login-container:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
 }
 
 .login-box {
@@ -1425,6 +1631,8 @@ ul.popup-filter-results + ul.popup-filter-results::before {
   width: 100%;
   max-width: 350px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 /* Title */
@@ -1645,6 +1853,8 @@ button[type="button"]:hover {
   background-color: #218838;
 }
 
-
+.pac-container {
+  z-index: 9999 !important;  /* Ensure it stays on top of other elements */
+}
 
 

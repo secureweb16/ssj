@@ -36,3 +36,33 @@
     color: #f44336;
   }
   
+  .modal-content-wrapper {
+    overflow-y: auto;
+    max-height: 510px;
+  }
+
+  .modal-content-wrapper::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .modal-content-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  .modal-content-wrapper::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  .modal-content-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  } 
+
+  .modal-content button.close-btn {
+    top: -40px !important;
+    right: -40px !important;
+  }
+  
+  .modal-content button.close-btn img {
+    width: 100%;
+    filter: invert(1);
+  }

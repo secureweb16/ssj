@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {Link } from "react-router-dom";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
@@ -6,94 +6,444 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea  } from "primereact/inputtextarea";
 import { InputNumber } from 'primereact/inputnumber';
 import { FloatLabel } from "primereact/floatlabel";
-
+import { Autocomplete, GoogleMap, Marker, useJsApiLoader, DirectionsService, DirectionsRenderer } from '@react-google-maps/api'; 
 import Location1 from '../assets/images/signaturebox-location-1.png';
 import Closeicon from '../assets/images/close.svg';
 import Editicon from '../assets/images/edit-icon.png';
-import LocationMap from '../assets/images/location-map.jpg';
 import WhatsappIcon from '../assets/images/whatsapp-icon.svg';
-
-
-
-import CarThumb from '../assets/images/mercedes-v-class.jpg';
-
+import mapIcon from '../assets/images/map-icon.svg';
+import { Calendar } from 'primereact/calendar';
 import UserIcon from '../assets/images/user.svg';
 import SuitcaseIcon from '../assets/images/suitcase.svg';
+import LocationMap from '../assets/images/location-map.jpg';
+import CarThumb from '../assets/images/mercedes-v-class.jpg';
+import config from '../config'; 
 
 
 
-function CarInfoPopup(props) {
+const containerStyle = {width: '550px',height: '250px'}
+const geocoder = new window.google.maps.Geocoder();
+
+function BookingPopup({cars}) {
     const [visible, setVisible] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [innerActiveIndex, innerSetActiveIndex] = useState(0);
-    const [pickupValue, pickupSetValue] = useState('');
-    const [destinationValue, destinationSetValue] = useState('');
-    const [daytimeValue, daytimeSetValue] = useState('');
+    const [selectedCars, setSelectedCars] = useState([]);
+    const [showWarning, setShowWarning] = useState(false);
+    const [pickupValue, setPickupValue] = useState('');
+    const [destinationValue, setDestinationValue] = useState('');
+    const [pickupAutocomplete, setPickupAutocomplete] = useState(null);
+    const [destinationAutocomplete, setDestinationAutocomplete] = useState(null);
+    const [datetime12h, setDateTime12h] = useState(null);
+    const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
+    const [zoomLevel, setZoomLevel] = useState(10); // Default zoom level
+    const mapRef = useRef(null); // Store map instance
+    const [startPoint, setStartPoint] = useState(null);
+    const [endPoint, setEndPoint] = useState(null);
+    const [directions, setDirections] = useState(null);
+    const vehicleTypes = [...new Set(cars.map(car => car.type))];
+    const [passengerCount, setPassengerCount] = useState(null);
+    const [additionalRequests, setAdditionalRequests] = useState(null);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const onPickupLoad = (autocomplete) => setPickupAutocomplete(autocomplete);
+    const onDestinationLoad = (autocomplete) => setDestinationAutocomplete(autocomplete);
 
-    const [value2, setValue2] = useState();
+    /* Handle Car Selection */ 
+    const handleSelectCar = (car) => {
+        if (selectedCars.some((selectedCar) => selectedCar._id === car._id)) {
+          setSelectedCars(selectedCars.filter((selectedCar) => selectedCar._id !== car._id));
+        } else {
+          setSelectedCars([...selectedCars, car]);
+        }
+    };
     
+    /* Handle Remove Car */
+    const handleRemoveCar = (car) => {
+        const updatedCars = selectedCars.filter((selectedCar) => selectedCar._id !== car._id);
+        setSelectedCars(updatedCars);
+        if (updatedCars.length === 0) {
+            setActiveIndex(0);
+        }
+    };
 
+    /* Handle Pickup Change */ 
+    const handlePickupChange = (e) => {
+        const newPickupValue = e.target.value;
+        setPickupValue(newPickupValue);
+    };
+
+    /* Handle Destination Change */ 
+    const handleDestinationChange = (e) => {
+        const  newDestinationValue = e.target.value;
+        setDestinationValue(newDestinationValue);
+    };
+
+    /* Marker Start */ 
+    const startMarkerIcon = {
+        url: mapIcon, // The image URL
+        scaledSize: new window.google.maps.Size(40, 40), // Resizing the image
+        anchor: new window.google.maps.Point(20, 40), // Anchor position
+    };
+    
+    /* Marker End */ 
+    const endMarkerIcon = {
+        url: mapIcon, 
+        scaledSize: new window.google.maps.Size(40, 40),
+        anchor: new window.google.maps.Point(20, 40),
+    };
+
+    const onLoad = (map) => {
+        mapRef.current = map;
+    };
+
+    const onUnmount = (map) => {
+        //console.log('Map Unmounted:', map);
+    };
+
+    /* Handle Start Marker Dragging */ 
+    const handleStartMarkerDragEnd = (e) => {
+        const newLat = e.latLng.lat();
+        const newLng = e.latLng.lng();
+        const newStartPoint = { lat: newLat, lng: newLng };
+        setStartPoint(newStartPoint);
+        // Get address of new location
+        geocoder.geocode({ location: newStartPoint }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            setPickupValue(results[0].formatted_address);
+          } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+    };
+
+     /* Handle End Marker Dradding */
+    const handleEndMarkerDragEnd = (e) => {
+        const newLat = e.latLng.lat();
+        const newLng = e.latLng.lng();
+        const newEndPoint = { lat: newLat, lng: newLng };
+        setEndPoint(newEndPoint);
+         // Get address of new location
+        geocoder.geocode({ location: newEndPoint }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                setDestinationValue(results[0].formatted_address);  
+            } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    };
+
+    /* Handle Fields Edition */
+    const handleEditClick = async (type) => {
+        let inputElement;
+        let tabindex;
+        tabindex = (type === 'pickupaddress' || type === 'destinationaddress' || type === 'datetime') ? 1 : (type === 'passenger' || type === 'additional') ? 2 : 0;
+        await handleTabChange(tabindex);
+        if(type == 'datetime'){
+            const spanElement = document.getElementById('datetime');
+            inputElement = spanElement.querySelector('input');
+        }else if(type == 'passenger'){
+            const spanElement = document.getElementById('passenger');
+            inputElement = spanElement?.querySelector('input');
+        }else{
+            inputElement = document.getElementById(type);
+        }
+        if (inputElement) {           
+            inputElement.focus(); // Or inputElement.click() if you need to trigger a click
+        }
+    };
+    
+    /* Handle Done Buttton Functionality */ 
+    const handleDoneClick = (type) => {
+        if ((type === 'route' && (!pickupValue || !destinationValue || !datetime12h)) ||
+            (type === 'vehicle' && selectedCars.length === 0) || 
+            (type === 'details' && (!email || !name || !phone || !passengerCount || !additionalRequests))) {
+            console.log(`${type} fields are missing or no car selected`);
+            setShowWarning(true);
+            return; // Stop further execution if condition is met
+        }
+        setShowWarning(false);
+        setActiveIndex(activeIndex + 1); // Move to the next tab or step
+        const tabIndex = (activeIndex != 3) ? activeIndex + 1 : activeIndex;
+        setActiveIndex(tabIndex); 
+        if(tabIndex === 3){
+            const carDetails = selectedCars.map(car => `${car.company_name} (${car.car_name})`).join(', ');
+            const messageBody = `
+                Car Details: ${carDetails}
+                Pickup Location: ${pickupValue}
+                Destination Location: ${destinationValue}
+                Date & Time: ${datetime12h}
+                Passengers: ${passengerCount}
+                Additional Requests: ${additionalRequests}
+                Name: ${name}
+                Email: ${email}
+                Phone: ${phone}
+            `;
+            const encodedMessage = encodeURIComponent(messageBody);
+            const whatsappLink = `${config.whatsapp.baseUrl}${config.whatsapp.recipientPhone}?text=${encodedMessage}`;
+            return whatsappLink;
+        }
+    };
+
+    /* Handle Tab Change Functionality */ 
+    const handleTabChange = (index) => {
+        if (index === 1 && selectedCars.length === 0) {
+            setShowWarning(true);
+        } else if (index === 0 || index === 1) {
+            setActiveIndex(index); 
+            setShowWarning(false);  
+        } else if (selectedCars.length === 0) {
+            setShowWarning(true);
+        } else if (!pickupValue || !destinationValue || !datetime12h) {
+            setShowWarning(true);
+        } else {
+            setActiveIndex(index);
+            setShowWarning(false);
+        }
+    };
+    
+    /* Handle Pickup changes */
+    const handlePickupPlaceChange = () => {
+        const place = pickupAutocomplete?.getPlace();
+        if (place && place.geometry) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            setStartPoint({ lat, lng });
+            setPickupValue(place.formatted_address);
+            setMapCenter({ lat, lng });
+            if (endPoint && mapRef.current) {
+                const bounds = new window.google.maps.LatLngBounds();
+                bounds.extend(new window.google.maps.LatLng(lat, lng));
+                bounds.extend(new window.google.maps.LatLng(endPoint.lat, endPoint.lng));
+                mapRef.current.fitBounds(bounds); // Adjust zoom based on markers
+            }
+        } 
+    };
+    
+    /* Handle Destination changes */
+    const handleDestinationPlaceChange = () => {
+        const place = destinationAutocomplete?.getPlace();
+        if (place && place.geometry) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            setEndPoint({ lat, lng });
+            setDestinationValue(place.formatted_address);
+            setMapCenter({ lat, lng });
+            if (startPoint && mapRef.current) {
+                const bounds = new window.google.maps.LatLngBounds();
+                bounds.extend(new window.google.maps.LatLng(lat, lng));
+                bounds.extend(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
+                mapRef.current.fitBounds(bounds); // Adjust zoom based on markers
+            }
+        } 
+    };
+
+ 
+    /* Map Initialization */ 
+    const { isLoaded } = useJsApiLoader({
+        id: 'google-map-script',
+        googleMapsApiKey: `${config.googlemap.apiKey}`,
+    })
+
+    /* Code For Change Date Format */ 
+    const formatTime = (date) => {
+        if (!date) return ''; // Return empty if no date is selected
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+        const formattedDate = date.toLocaleString('en-US', options);
+        const day = date.getDate();
+        let suffix = 'th';
+        if (day % 10 === 1 && day !== 11) {
+            suffix = 'st';
+        } else if (day % 10 === 2 && day !== 12) {
+            suffix = 'nd';
+        } else if (day % 10 === 3 && day !== 13) {
+            suffix = 'rd';
+        }
+        return formattedDate.replace(/(\d+)/, day + suffix); // Replace the day with the suffix
+    };
+
+
+    /* Handle Passenger Change */
+    const handlePassengerChange = (e) => {
+      setPassengerCount(e.value); // Set state instantly with the input value
+    };
+
+    /* Handle Additional Requests Change */ 
+    const handleAdditionalRequestsChange = (e) => {
+        setAdditionalRequests(e.target.value); // Set state instantly with the input value
+    };
+
+    /* Handle Name Change */ 
+    const handleNameChange = (e) => {
+    setName(e.target.value);
+    };
+
+    /* Handle Email Change */ 
+    const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    };
+
+    /* Handle Phone Number Change */ 
+    const handlePhoneChange = (e) => {
+    setPhone(e.value); // InputNumber gives e.value for numeric inputs
+    };
+
+
+    // Handle form submission
+    const handleSubmit = async (type) => {
+        const formData = {selectedCars,pickupValue,destinationValue,datetime12h,passengerCount,additionalRequests,name,email,phone};
+        if(type == 'email'){
+            try {
+                setIsLoading(true);
+                const response = await fetch(`${config.api.baseURL}${config.api.emailEndpoint}`, {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json', // Important to send data as JSON
+                },
+                  body: JSON.stringify(formData), // Convert formData to a JSON string
+                });
+                if (response.ok) {
+                    setSuccessMessage('Email sent successfully!');
+                    setErrorMessage(''); // Clear error message if successful
+                } else {
+                  throw new Error('Failed to send email');
+                }
+            } catch (error) {
+                setErrorMessage('Failed to send email');
+                setSuccessMessage(''); // Clear success message if failed
+            }
+            setIsLoading(false); 
+        }
+         if(type == 'whatsapp'){
+            const whatsappLink = handleDoneClick();  // Get the WhatsApp link from the handleDoneClick function
+            if (whatsappLink) {
+                window.open(whatsappLink, "_blank");
+                setSuccessMessage('Redirecting to WhatsApp...');
+                setErrorMessage(''); // Clear error message if successful
+            } else {
+                setErrorMessage('Failed to generate WhatsApp link');
+                setSuccessMessage(''); // Clear success message if failed
+            }
+         }          
+    };
 
     return (
         <>
-        <span className='border-button gray-border' onClick={() => setVisible(true)}>Book Now</span>
-        <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); }} className='booking-popup-outer'>
+        <span className='btn largebtn' onClick={() => setVisible(true)}>Book Now</span>
+            <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); }} className='booking-popup-outer' draggable={false}>
                 <div className='booking-popup'>
                     <div className='booking-popup-head d-flex align-items-center'>
                         <div className='booking-popup-head-left'>
                             <h3 className='m-0'>your <strong>trip</strong></h3>
                         </div>
                         <div className='booking-popup-head-right'>
-                            <Link to='#' class="btn largebtn">Book Now</Link>
+                            {activeIndex === 0 && (
+                                <Button className="btn largebtn" onClick={() => handleDoneClick('vehicle')}>Book Now</Button>
+                            )}
+
+                            {activeIndex === 1 && (
+                                <Button className="btn largebtn" onClick={() => handleDoneClick('route')}>Book Now</Button>
+                            )}
+
+                            {activeIndex === 2 && (
+                                <Button className="btn largebtn" onClick={() => handleDoneClick('details')}>Book Now</Button>
+                            )}
+
+                            {activeIndex === 3 && (
+                                <Button className={`btn largebtn ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book Now <span className='loader'></span></Button>
+                            )}
                         </div>
                     </div>
                     <div className="booking-popup-maintab d-flex">
-                        
                         <div className="booking-popup-maintab-left">
                             <div className="booking-popup-maintab-left-wrap">
                                 <div className="booking-popup-tableft-inner">
                                     <div className="bookingpop-left-tab">    
-                                        <Button onClick={() => setActiveIndex(0)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 0} label="Vehicle" />
+                                        {/* <Button onClick={() => setActiveIndex(0)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 0} label="Vehicle" /> */}
+                                        <Button
+                                            onClick={() => handleTabChange(0)}
+                                            className="w-2rem h-2rem p-0"
+                                            rounded
+                                            outlined={activeIndex !== 0}
+                                            label="Vehicle"
+                                        />
                                         <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            <li>
-                                                Mercedes S-Class
-                                                <span className='result-icon'><img src={Closeicon} alt="Close Icon" className="" /></span>
-                                            </li>
-                                            <li>
-                                                Rolls Royce Phantom
-                                                <span className='result-icon'><img src={Closeicon} alt="Close Icon" className="" /></span>                                        
-                                            </li>
+                                            {selectedCars.map((car) => (
+                                                <li key={car._id}>
+                                                    {car.company_name} {car.car_name}
+                                                    <span
+                                                    className="result-icon"
+                                                    onClick={() => handleRemoveCar(car)}
+                                                    >
+                                                    <img src={Closeicon} alt="Close Icon" />
+                                                    </span>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </div>
                                     <div className="bookingpop-left-tab">    
-                                        <Button onClick={() => setActiveIndex(1)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 1} label="Route + Schedule" />
+                                        {/* <Button onClick={() => setActiveIndex(1)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 1} label="Route + Schedule" /> */}
+                                        <Button
+                                            onClick={() => handleTabChange(1)}
+                                            className="w-2rem h-2rem p-0"
+                                            rounded
+                                            outlined={activeIndex !== 1}
+                                            label="Route + Schedule"
+                                        />
                                         <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            <li>
-                                                <strong>Pick-up:</strong> The Peninsula London
-                                                <span className='result-icon'><img src={Editicon} alt="Edit Icon" className="" /></span>
-                                            </li>
-                                            <li>
-                                                <strong>Destination: London Heathrow Airport</strong>
-                                                <span className='result-icon'><img src={Editicon} alt="Edit Icon" className="" /></span>                                        
-                                            </li>
+                                            {pickupValue && (
+                                                <li>
+                                                    <strong>Pick-up:</strong> {pickupValue}
+                                                    <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
+                                                        <img src={Editicon} alt="Edit Icon" className="" />
+                                                    </span>
+                                                </li>
+                                            )}
+                                            {destinationValue && (
+                                                <li>
+                                                    <strong>Destination:</strong> {destinationValue}
+                                                    <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
+                                                        <img src={Editicon} alt="Edit Icon" className="" />
+                                                    </span>
+                                                </li>
+                                            )}
                                         </ul>
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>                   
-                                            <li>
-                                                <strong>Time:</strong> Feb. 7th, 2025 9:30am
-                                                <span className='result-icon'><img src={Editicon} alt="Edit Icon" className="" /></span>                                        
-                                            </li>
+                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>   
+                                            {datetime12h && (
+                                                <li>
+                                                    <strong>Time:</strong> {formatTime(datetime12h)} {/* Display the formatted time */}
+                                                    <span className="result-icon" onClick={() => handleEditClick('datetime')}>
+                                                        <img src={Editicon} alt="Edit Icon" className="" />
+                                                    </span>
+                                                </li>
+                                            )}                
                                         </ul>
                                     </div>
                                     <div className="bookingpop-left-tab">    
-                                        <Button onClick={() => setActiveIndex(2)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 2} label="Details" />
+                                        {/* <Button onClick={() => setActiveIndex(2)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 2} label="Details" /> */}
+                                        <Button
+                                            onClick={() => handleTabChange(2)}
+                                            className="w-2rem h-2rem p-0"
+                                            rounded
+                                            outlined={activeIndex !== 2}
+                                            label="Details"
+                                        />
                                         <ul className='popup-filter-results font-12 fw-400 nostyle'>
                                             <li>
-                                                <strong>Passengers: 2</strong>
-                                                <span className='result-icon'><img src={Editicon} alt="Edit Icon" className="" /></span>
+                                                <strong>Passengers: </strong>{passengerCount ? passengerCount : 0}
+                                                <span className='result-icon' onClick={() => handleEditClick('passenger')}>
+                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                </span>
                                             </li>
                                             <li>
-                                                <strong>Additional requests: None</strong>
-                                                <span className='result-icon'><img src={Editicon} alt="Edit Icon" className="" /></span>                                        
+                                                <strong>Additional requests: </strong> {additionalRequests ? additionalRequests : 'None'}
+                                                <span className='result-icon' onClick={() => handleEditClick('additional')}>
+                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                </span>                                        
                                             </li>
                                         </ul>
                                     </div>
@@ -114,230 +464,278 @@ function CarInfoPopup(props) {
                         </div>
                         <div className='booking-popup-maintab-right'>
                             <div className='booking-popup-mainform'>
-                                <div className='vehicle-booking-content'>
-                                    <div className='vehicle-booking-category'>
-                                        <Button onClick={() => innerSetActiveIndex(0)} className="border-button gray-border" outlined={innerActiveIndex !== 0} label="Cars" /> 
-                                        <Button onClick={() => innerSetActiveIndex(1)} className="border-button gray-border" outlined={innerActiveIndex !== 1} label="Suvs" /> 
-                                        <Button onClick={() => innerSetActiveIndex(2)} className="border-button gray-border" outlined={innerActiveIndex !== 2} label="Vans" />                                 
-                                    </div>
-                                    <div className='booking-car-list'>
-                                        <div className='common-booking-car-info d-flex align-items-center'>
-                                            <div className='carpop-bottom-detail d-flex align-items-center'>
-                                                <div className='carpop-bottom-image'>
-                                                    <img src={CarThumb} alt="Car Thumb" className="" />
-                                                </div>
-                                                <div className='carpop-bottom-info'>
-                                                    <h6>Mercedes <strong>S Class</strong></h6>
-                                                    <div className='car-spec show-mobile'>
-                                                        <div className='common-car-spec d-flex align-items-center'>
-                                                            <img src={UserIcon} alt="User Icon" className="" />
-                                                            4
+                                {activeIndex === 0 && (
+                                    <>
+                                        <div className="vehicle-booking-content">
+                                            <div className="vehicle-booking-category">
+                                                {/* Tab buttons */}
+                                                {vehicleTypes.map((type, index) => (
+                                                <Button
+                                                    key={index}
+                                                    onClick={() => innerSetActiveIndex(index)}
+                                                    className="border-button gray-border"
+                                                    outlined={innerActiveIndex !== index}
+                                                    label={type}
+                                                />
+                                                ))}
+                                            </div>
+                                            <div className="booking-car-list">
+                                                {/* Loop over cars based on the active tab */}
+                                                {cars.filter((car) => vehicleTypes[innerActiveIndex] === car.type).map((car) => (
+                                                    <div key={car?._id} className="common-booking-car-info d-flex align-items-center">
+                                                        <div className="carpop-bottom-detail d-flex align-items-center">
+                                                            <div className="carpop-bottom-image">
+                                                                <img src={`${config.api.baseURL}${car?.image.replace(/\\/g, '/')}`}  alt={car?.name} />
+                                                            </div>
+                                                            <div className="carpop-bottom-info">
+                                                                <h6>{car?.company_name} <strong>{car?.car_name}</strong></h6>
+                                                                <div className="car-spec show-mobile">
+                                                                    <div className="common-car-spec d-flex align-items-center">
+                                                                        <img src={UserIcon} alt="User Icon" />
+                                                                        {car?.passengers}
+                                                                    </div>
+                                                                    <div className="common-car-spec d-flex align-items-center">
+                                                                        <img src={SuitcaseIcon} alt="Suitcase Icon" />
+                                                                        {car?.luggage_type}
+                                                                    </div>
+                                                                </div>
+                                                                <Link to="#" className="font-12 viewmorebtn">
+                                                                    view more
+                                                                </Link>
+                                                            </div>
                                                         </div>
-                                                        <div className='common-car-spec d-flex align-items-center'>
-                                                            <img src={SuitcaseIcon} alt="User Icon" className="" />
-                                                            light
+                                                        <div className="car-spec show-desktop">
+                                                            <div className="common-car-spec d-flex align-items-center">
+                                                                <img src={UserIcon} alt="User Icon" />
+                                                                <span className="hideforsmall">up to</span>&nbsp;{(car?.passengers) ? car?.passengers : 0 }&nbsp;
+                                                                <span className="hideforsmall">passengers</span>
+                                                            </div>
+                                                            <div className="common-car-spec d-flex align-items-center">
+                                                                <img src={SuitcaseIcon} alt="Suitcase Icon" />
+                                                                {car?.luggage_type}&nbsp; <span className="hideforsmall">luggage</span>
+                                                            </div>
                                                         </div>
+                                                        <span className={`border-button gray-border select-button ${
+                                                            selectedCars.some((selectedCar) => selectedCar._id === car._id) ? 'selected' : ''
+                                                        }`}
+                                                        onClick={() => handleSelectCar(car)}
+                                                        >
+                                                        {selectedCars.some((selectedCar) => selectedCar._id === car._id)
+                                                            ? 'Selected'
+                                                            : 'Select'}
+                                                        </span>
                                                     </div>
-                                                    <Link to='#' className='font-12 viewmorebtn'>view more</Link>
-                                                </div>
+                                                    ))}
                                             </div>
-                                            <div className='car-spec show-desktop'>
-                                                <div className='common-car-spec d-flex align-items-center'>
-                                                    <img src={UserIcon} alt="User Icon" className="" />
-                                                    <span className='hideforsmall'>up to</span> 4 <span className='hideforsmall'>passengers</span>
-                                                </div>
-                                                <div className='common-car-spec d-flex align-items-center'>
-                                                    <img src={SuitcaseIcon} alt="User Icon" className="" />
-                                                    light <span className='hideforsmall'>luggage</span>
-                                                </div>
-                                            </div>
-                                            <span class="border-button gray-border select-button selected">selected</span>
                                         </div>
-                                        <div className='common-booking-car-info d-flex align-items-center'>
-                                            <div className='carpop-bottom-detail d-flex align-items-center'>
-                                                <div className='carpop-bottom-image'>
-                                                    <img src={CarThumb} alt="Car Thumb" className="" />
+                                        <div className='done-button pt-40 text-right'>
+                                            <Button className="btn formbtn" onClick={() =>handleDoneClick('vehicle')}>Done</Button>
+                                            {showWarning && (
+                                            <div className="warning-message" style={{ color: 'red' }}>
+                                                Please select at least one car to proceed.
+                                            </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                                {activeIndex === 1 && (
+                                    <>
+                                        <div className='vehicle-routeschedule-content'>
+                                            <h6>Select your <strong>pick-up location and destination</strong></h6>
+                                            <div className='vehicle-routeschedule-signaturebox mb-30'>
+                                                <div className='routeschedule-signaturebox-top d-flex align-items-center'>
+                                                    <p className='text-uppercase m-0 fw-400 font-12'>Singature Routes</p>
+                                                    <Link to="#" className='viewmorebtn'>view more</Link>
                                                 </div>
-                                                <div className='carpop-bottom-info'>
-                                                    <h6>Mercedes <strong>S Class</strong></h6>
-                                                    <div className='car-spec show-mobile'>
-                                                        <div className='common-car-spec d-flex align-items-center'>
-                                                            <img src={UserIcon} alt="User Icon" className="" />
-                                                            4
-                                                        </div>
-                                                        <div className='common-car-spec d-flex align-items-center'>
-                                                            <img src={SuitcaseIcon} alt="User Icon" className="" />
-                                                            light
-                                                        </div>
+                                                <div className='routeschedule-signaturebox-bottom'>
+                                                    <div className='routeschedule-signaturebox-locations d-grid'>
+                                                        {pickupValue && (
+                                                            <div className='routeschedule-signaturebox-location d-flex align-items-center'>
+                                                                <img src={Location1} alt="Location Image" className="" />
+                                                                <p className='m-0'>{pickupValue} </p>
+                                                            </div>
+                                                        )}
+                                                        {destinationValue && (
+                                                            <div className='routeschedule-signaturebox-location d-flex align-items-center'>
+                                                                <img src={Location1} alt="Location Image" className="" />
+                                                                <p className='m-0'>{destinationValue} </p>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                    <Link to='#' className='font-12 viewmorebtn'>view more</Link>
                                                 </div>
                                             </div>
-                                            <div className='car-spec show-desktop'>
-                                                <div className='common-car-spec d-flex align-items-center'>
-                                                    <img src={UserIcon} alt="User Icon" className="" />
-                                                    <span className='hideforsmall'>up to</span> 4 <span className='hideforsmall'>passengers</span>
-                                                </div>
-                                                <div className='common-car-spec d-flex align-items-center'>
-                                                    <img src={SuitcaseIcon} alt="User Icon" className="" />
-                                                    light <span className='hideforsmall'>luggage</span>
-                                                </div>
+                                            <div className='form-group position-relative'>
+                                                <FloatLabel>
+                                                    <Autocomplete
+                                                        onLoad={onPickupLoad}
+                                                        onPlaceChanged={handlePickupPlaceChange}
+                                                        ref={pickupAutocomplete}
+                                                    >
+                                                        <InputText
+                                                            id="pickupaddress"
+                                                            value={pickupValue}
+                                                            onChange={handlePickupChange}
+                                                            className='w-100'
+                                                        />
+                                                    </Autocomplete>
+                                                    <label htmlFor="pickupaddress">Type a <strong>pickup</strong> address or location</label>
+                                                </FloatLabel>
                                             </div>
-                                            <span class="border-button gray-border select-button">Select</span>
-                                        </div>
-                                        <div className='common-booking-car-info d-flex align-items-center'>
-                                            <div className='carpop-bottom-detail d-flex align-items-center'>
-                                                <div className='carpop-bottom-image'>
-                                                    <img src={CarThumb} alt="Car Thumb" className="" />
-                                                </div>
-                                                <div className='carpop-bottom-info'>
-                                                    <h6>Mercedes <strong>S Class</strong></h6>
-                                                    <div className='car-spec show-mobile'>
-                                                        <div className='common-car-spec d-flex align-items-center'>
-                                                            <img src={UserIcon} alt="User Icon" className="" />
-                                                            4
-                                                        </div>
-                                                        <div className='common-car-spec d-flex align-items-center'>
-                                                            <img src={SuitcaseIcon} alt="User Icon" className="" />
-                                                            light
-                                                        </div>
-                                                    </div>
-                                                    <Link to='#' className='font-12 viewmorebtn'>view more</Link>
-                                                </div>
+                                            <div className='form-group position-relative'>
+                                                <FloatLabel>
+                                                    <Autocomplete
+                                                        onLoad={onDestinationLoad}
+                                                        onPlaceChanged={handleDestinationPlaceChange}
+                                                        ref={destinationAutocomplete}
+                                                    >
+                                                        <InputText
+                                                            id="destinationaddress"
+                                                            value={destinationValue}
+                                                            onChange={handleDestinationChange}
+                                                            className='w-100'
+                                                        />
+                                                    </Autocomplete>
+                                                    <label htmlFor="destinationaddress">Type a <strong>destination</strong> address or location</label>
+                                                </FloatLabel>
                                             </div>
-                                            <div className='car-spec show-desktop'>
-                                                <div className='common-car-spec d-flex align-items-center'>
-                                                    <img src={UserIcon} alt="User Icon" className="" />
-                                                    <span className='hideforsmall'>up to</span> 4 <span className='hideforsmall'>passengers</span>
-                                                </div>
-                                                <div className='common-car-spec d-flex align-items-center'>
-                                                    <img src={SuitcaseIcon} alt="User Icon" className="" />
-                                                    light <span className='hideforsmall'>luggage</span>
-                                                </div>
-                                            </div>
-                                            <span class="border-button gray-border select-button">Select</span>
-                                        </div>
-                                        <div className='common-booking-car-info d-flex align-items-center'>
-                                            <div className='carpop-bottom-detail d-flex align-items-center'>
-                                                <div className='carpop-bottom-image'>
-                                                    <img src={CarThumb} alt="Car Thumb" className="" />
-                                                </div>
-                                                <div className='carpop-bottom-info'>
-                                                    <h6>Mercedes <strong>S Class</strong></h6>
-                                                    <div className='car-spec show-mobile'>
-                                                        <div className='common-car-spec d-flex align-items-center'>
-                                                            <img src={UserIcon} alt="User Icon" className="" />
-                                                            4
-                                                        </div>
-                                                        <div className='common-car-spec d-flex align-items-center'>
-                                                            <img src={SuitcaseIcon} alt="User Icon" className="" />
-                                                            light
-                                                        </div>
-                                                    </div>
-                                                    <Link to='#' className='font-12 viewmorebtn'>view more</Link>
-                                                </div>
-                                            </div>
-                                            <div className='car-spec show-desktop'>
-                                                <div className='common-car-spec d-flex align-items-center'>
-                                                    <img src={UserIcon} alt="User Icon" className="" />
-                                                    <span className='hideforsmall'>up to</span> 4 <span className='hideforsmall'>passengers</span>
-                                                </div>
-                                                <div className='common-car-spec d-flex align-items-center'>
-                                                    <img src={SuitcaseIcon} alt="User Icon" className="" />
-                                                    light <span className='hideforsmall'>luggage</span>
-                                                </div>
-                                            </div>
-                                            <span class="border-button gray-border select-button">Select</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='vehicle-routeschedule-content'>
-                                    <h6>Select your <strong>pick-up location and destination</strong></h6>
-                                    <div className='vehicle-routeschedule-signaturebox mb-30'>
-                                        <div className='routeschedule-signaturebox-top d-flex align-items-center'>
-                                            <p className='text-uppercase m-0 fw-400 font-12'>Singature Routes</p>
-                                            <Link to="#" className='viewmorebtn'>view more</Link>
-                                        </div>
-                                        <div className='routeschedule-signaturebox-bottom'>
-                                            <div className='routeschedule-signaturebox-locations d-grid'>
-                                                <div className='routeschedule-signaturebox-location d-flex align-items-center'>
-                                                    <img src={Location1} alt="Location Image" className="" />
-                                                    <p className='m-0'>London Central - Heathrow </p>
-                                                </div>
-                                                <div className='routeschedule-signaturebox-location d-flex align-items-center'>
-                                                    <img src={Location1} alt="Location Image" className="" />
-                                                    <p className='m-0'>London Central - Cotswolds </p>
-                                                </div>
+                                            <div className='popup-location-map mb-20 mt-20'>
+                                                {/* <img src={LocationMap} alt="Location Image" className="" /> */}
+                                                <GoogleMap
+                                                    mapContainerStyle={containerStyle}
+                                                    center={mapCenter}
+                                                    zoom={zoomLevel}
+                                                    onLoad={onLoad} // Load map instance
+                                                    onUnmount={onUnmount}
+                                                >
+                                                    {/* Markers */}
+                                                    {startPoint && <Marker position={startPoint} draggable onDragEnd={handleStartMarkerDragEnd}  icon={startMarkerIcon} />}
+                                                    {endPoint && <Marker position={endPoint} draggable onDragEnd={handleEndMarkerDragEnd}  icon={endMarkerIcon} />}
+                                                    {directions && <DirectionsRenderer directions={directions} />}
+                                                </GoogleMap>
+                                            </div>                                
+                                            <h6 className='mb-10'>Select a <strong>pick-up time</strong></h6>
+                                            <div className='form-group position-relative m-0'>
+                                                <FloatLabel>
+                                                    <Calendar
+                                                        value={datetime12h}
+                                                        onChange={(e) => setDateTime12h(e.value)}
+                                                        showTime
+                                                        hourFormat="12"
+                                                        dateFormat="MM d,yy"
+                                                        readOnlyInput
+                                                        id="datetime"
+                                                        className='w-100'
+                                                    />
+                                                    <label htmlFor="username">type a day and time here</label>
+                                                </FloatLabel>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className='form-group position-relative'>
-                                        <FloatLabel>
-                                            <InputText id="pickupaddress" value={pickupValue} onChange={(e) => pickupSetValue(e.target.pickupValue)} className='w-100' />
-                                            <label htmlFor="username">type a <strong>pick up</strong> address or location</label>
-                                        </FloatLabel>
-                                    </div>
-                                    <div className='form-group position-relative'>
-                                        <FloatLabel>
-                                            <InputText id="destinationadress" value={destinationValue} onChange={(e) => destinationSetValue(e.target.destinationValue)} className='w-100' />
-                                            <label htmlFor="username">type a <strong>destination</strong> address or location</label>
-                                        </FloatLabel>
-                                    </div>
-                                    <div className='popup-location-map mb-20 mt-20'>
-                                        <img src={LocationMap} alt="Location Image" className="" />
-                                    </div>                                
-                                    <h6 className='mb-10'>Select a <strong>pick-up time</strong></h6>
-                                    <div className='form-group position-relative m-0'>
-                                        <FloatLabel>
-                                            <InputText id="destinationadress" value={daytimeValue} onChange={(e) => daytimeSetValue(e.target.daytimeValue)} className='w-100' />
-                                            <label htmlFor="username">type a day and time here</label>
-                                        </FloatLabel>
-                                    </div>
-                                </div>
-                                <div className='vehicle-details-content'>
-                                    <h6 className='mb-10 label'>Add details about your trip here</h6>
-                                    <div className='form-group'>
-                                        <InputNumber placeholder='type the number of passengers' useGrouping={false} className='w-100' />
-                                    </div>
-                                    <div className='form-group'>
-                                        <InputTextarea placeholder="any additional notes?" className='w-100'></InputTextarea>
-                                    </div>
-                                    <h6 className='mb-10 pt-20 label'>Your contact details</h6>
-                                    <div className='form-group'>
-                                        <InputText type="text" placeholder="your name" className='w-100'/>
-                                    </div>
-                                    <div className='form-group'>
-                                        <InputText type="email" placeholder="your email" className='w-100'/>
-                                    </div>
-                                    <div className='form-group'>
-                                        <InputNumber type="text" placeholder="phone number" className='w-100'/>
-                                    </div>
-                                </div>
-                                <div className='done-button pt-40 text-right'>
-                                    <Button className="btn formbtn">Done</Button>
-                                </div>
+                                        <div className='done-button pt-40 text-right'>
+                                            <Button className="btn formbtn" onClick={() =>handleDoneClick('route')}>Done</Button>
+                                            {showWarning && (
+                                                <div className="warning-message" style={{ color: 'red' }}>
+                                                    Please fill in all the required fields.
+                                                </div>
+                                            )}
+                                            {/* <Button className="btn formbtn">Done</Button> */}
+                                        </div>
+                                    </>
+                                )}
+                                {activeIndex === 2 && (
+                                    <>
+                                        <div className='vehicle-details-content'>
+                                            <h6 className='mb-10 label'>Add details about your trip here</h6>
+                                            <div className='form-group'>
+                                                {/* <InputNumber placeholder='type the number of passengers' useGrouping={false} className='w-100' /> */}
+                                                <InputNumber
+                                                    value={passengerCount} // Bind the value of InputNumber to the state
+                                                    onChange={handlePassengerChange} // Handle value change
+                                                    placeholder='Type the number of passengers'
+                                                    useGrouping={false} // Disable grouping (comma separation)
+                                                    className='w-100'
+                                                    id='passenger'
+                                                />
+                                            </div>
+                                            <div className='form-group'>
+                                                <InputTextarea value={additionalRequests || ""} placeholder="any additional notes?" className='w-100' id='additional' onChange={handleAdditionalRequestsChange}></InputTextarea>
+                                            </div>
+                                            <h6 className='mb-10 pt-20 label'>Your contact details</h6>
+                                            {/* <div className='form-group'>
+                                                <InputText type="text" placeholder="your name" className='w-100'/>
+                                            </div>
+                                            <div className='form-group'>
+                                                <InputText type="email" placeholder="your email" className='w-100'/>
+                                            </div>
+                                            <div className='form-group'>
+                                                <InputNumber type="text" placeholder="phone number" className='w-100'/>
+                                            </div> */}
+
+                                            <div className="form-group">
+                                                <InputText
+                                                type="text"
+                                                placeholder="Your name"
+                                                value={name}
+                                                onChange={handleNameChange} // Bind to state
+                                                className="w-100"
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <InputText
+                                                type="email"
+                                                placeholder="Your email"
+                                                value={email}
+                                                onChange={handleEmailChange} // Bind to state
+                                                className="w-100"
+                                                />
+                                            </div>
+                                            <div className="form-group">
+                                                <InputNumber
+                                                type="tel"
+                                                placeholder="Phone number"
+                                                value={phone}
+                                                onValueChange={handlePhoneChange} // Bind to state
+                                                className="w-100"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='done-button pt-40 text-right'>
+                                            {/* <Button className="btn formbtn">Done</Button> */}
+                                            <Button className="btn formbtn"  onClick={() =>handleDoneClick('details')}>Done</Button>
+                                            {showWarning && (
+                                                <div className="warning-message" style={{ color: 'red' }}>
+                                                    Please fill in all the required fields.
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                            <div className='popup-how-continue'>
-                                <h6>Choose how to continue with our team</h6>
-                                <p>We will email you details of your request and respond there or you can get in touch with us immediately via WhatsApp.</p>
-                                <ul className='nostyle p-0 d-flex align-items-center gap-10 mt-30'>
-                                    <li>
-                                        <Button className="btn">Send Now</Button>
-                                    </li>
-                                    <li>
-                                        <Button className="btn d-flex align-items-center connect-whatsappbtn">Connect Via Whatsapp
-                                            <img src={WhatsappIcon} alt='Icon' />
-                                        </Button>
-                                    </li>
-                                </ul>
-                            </div>
+                            {activeIndex === 3 && (
+                                <div className='popup-how-continue'>
+                                    <h6>Choose how to continue with our team</h6>
+                                    <p>We will email you details of your request and respond there or you can get in touch with us immediately via WhatsApp.</p>
+                                    <ul className='nostyle p-0 d-flex align-items-center gap-10 mt-30'>
+                                        <li>
+                                            <Button className={`btn ${isLoading ? 'loading' : ''}`}  onClick={() =>handleSubmit('email')}>Send Now <span className='loader'></span></Button>
+                                        </li>
+                                        <li>
+                                            <Button className="btn d-flex align-items-center connect-whatsappbtn" onClick={() =>handleSubmit('whatsapp')}>Connect Via Whatsapp
+                                                <img src={WhatsappIcon} alt='Icon' />
+                                            </Button>
+                                        </li>
+                                    </ul>
+                                    {/* Success Message */}
+                                    {successMessage && <p className="success-message">{successMessage}</p>}
+                                    {/* Error Message */}
+                                    {errorMessage && <p className="error-message">{errorMessage}</p>}
+                                </div>
+                            )}
                         </div>                        
                     </div>
                 </div>
-            
-        </Dialog>
+            </Dialog>
         </>
     );
 }
 
-export default CarInfoPopup;
+export default BookingPopup;

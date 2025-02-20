@@ -20,13 +20,8 @@ function Header() {
     }, []);
     return (
         <>
-            <header 
-            style={{
-                zIndex:-1
-            }}
-                className={`position-absolute w-100 ${scroll ? "main-header sticky" : "main-header"}`}                 
-            >
-                <div className='header-inner d-flex justify-content-between'>
+            <header className={`position-absolute w-100 ${scroll ? "main-header sticky" : "main-header"}`} >
+                <div className='header-inner w-100 d-flex justify-content-between'>
                     <div className='header-left d-flex align-items-center'> 
                         <Link to='/' className='header_logo'>
                             <img src={Logo} alt="Logo" />

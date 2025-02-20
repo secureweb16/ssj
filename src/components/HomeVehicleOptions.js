@@ -7,13 +7,11 @@ import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 import CarInfoPopup from '../components/CarInfoPopup';
 import { Link } from 'react-router-dom';
+import config from '../config'; 
 
 function HomeVehicleOptions({ cars }) {
     const [activeIndex, setActiveIndex] = useState(0);
-
-    // Get unique vehicle types for tabs
-    const vehicleTypes = [...new Set(cars.map(car => car.type))];
-    const backendBaseUrl = 'http://localhost:5000';
+    const vehicleTypes = Array.isArray(cars) && cars.length > 0 ? [...new Set(cars.map(car => car.type))] : [];
     return (
         <div className='vehicle-options pb-90'>
             <div className='vehicle-options-inner'>
@@ -21,7 +19,7 @@ function HomeVehicleOptions({ cars }) {
                 <div className='tabs-style pt-40'>
                     <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
                         {vehicleTypes.map((type, index) => (
-                            <TabPanel key={index} header={type}>
+                            <TabPanel key={index} header={type+''}>
                                 <div className="slider_wrapper position-relative pt-50">
                                     <Swiper
                                         modules={[Navigation, A11y, Scrollbar]}
@@ -35,25 +33,28 @@ function HomeVehicleOptions({ cars }) {
                                             1025: { slidesPerView: 4.3, spaceBetween: 5 },
                                         }}
                                     >
-                                        {cars.filter(car => car.type === type).map((car) => (
-                                            <SwiperSlide key={car.id}>
-                                                <div className='common-vehicle-option position-relative'>
-                                                    <div className='common-vehicle-image position-relative'>
+                                        {cars.filter(car => car.type === type).map((car, carIndex, carArray) => {
+                                            const nextCar = carArray[carIndex + 1] || carArray[0];
+                                            return (
+                                                <SwiperSlide key={car._id}>
+                                                    <div className='common-vehicle-option position-relative'>
+                                                        <div className='common-vehicle-image position-relative'>
 
-                                                        {/* <img src={require(`../assets/images/${car.image}`)} alt={car.name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" /> */}
-                                                        <img src={`${backendBaseUrl}/${car.image.replace(/\\/g, '/')}`}  alt={car.name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
+                                                            {/* <img src={require(`../assets/images/${car.image}`)} alt={car.name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" /> */}
+                                                            <img src={`${config.api.baseURL}${car.image.replace(/\\/g, '/')}`}  alt={car.car_name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
+                                                        </div>
+                                                        <div className='common-vehicle-content'>
+                                                            <h6>{car.car_name}</h6>
+                                                            <p className='font-12 text-uppercase letter-spacing-15'>({car.modal} model + above)</p>
+                                                            <Link to='#' className='font-12'>view more</Link>
+                                                        </div>
+                                                        <div className='vehicle-option-bookbtn'>
+                                                            <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} />
+                                                        </div>
                                                     </div>
-                                                    <div className='common-vehicle-content'>
-                                                        <h6>{car.name}</h6>
-                                                        <p className='font-12 text-uppercase letter-spacing-15'>({car.model} model + above)</p>
-                                                        <Link to='#' className='font-12'>view more</Link>
-                                                    </div>
-                                                    <div className='vehicle-option-bookbtn'>
-                                                        <CarInfoPopup />
-                                                    </div>
-                                                </div>
-                                            </SwiperSlide>
-                                        ))}
+                                                </SwiperSlide>
+                                            );
+                                        })}
                                     </Swiper>
                                 </div>
                             </TabPanel>

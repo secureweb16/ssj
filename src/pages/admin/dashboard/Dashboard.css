@@ -1,12 +1,100 @@
 /* Dashboard.css */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  color: white;
+  height: 80px;
+  font-size: 24px;
+  padding: 0 20px;
+}
+
+header.admin-dashboard {
+  background: #000;
+}
+
+.logout-btn {
+  padding: 10px 20px;
+  margin: 20px;
+  background-color: red;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-size: 36px;
+  margin: 40px 0 0 0;
+}
+
+.upload-btn {
+  padding: 10px 20px;
+  margin: 40px;
+}
+
+.car-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 20px;
+}
+
+.modal-title {
+  text-align: center;
+  font-weight: bold;
+}
+
+.submit-btn {
+  background-color: green;
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: gray;
+  color: white;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
 .dashboard-container {
-    padding: 20px;
-    background-color: #f5f5f5;
+  padding: 20px;
+  background-color: #f5f5f5;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+  .dashboard-header {
+    width: 100%;
+    position: relative;
+    padding: 30px 0 0;
   }
-  
+  .dashboard-header button.upload-btn {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    margin: 0 !important;
+  }
+  .dashboard-header h1 {
+      margin: 0 !important;
+      font-weight: 600;
+  }
   h1 {
     text-align: center;
-    margin-bottom: 20px;
     color: #333;
   }
   
@@ -25,30 +113,55 @@
   }
   
   .car-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
     justify-content: center;
+    width: 100%;
+    padding: 50px 50px;
+    margin: 50px 0 0;
+    background: #fff;
+    border-radius: 10px;
   }
   
   .car-card {
     background-color: white;
-    width: 250px;
-    padding: 20px;
+    width: 100%;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
   }
-  
-  .car-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
+
+  .car-list .car-card {
+    padding: 0;
   }
   
+  .car-list .car-card .car-image-box {
+    width: 100%;
+    position: relative;
+    padding-bottom: 60%;
+    height: 0;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+  }
+
+    
+  .car-card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+  }
+  
+  .car-list .car-details {
+    padding: 10px 10px 12px;
+  }
+
   .car-card h3 {
-    margin-top: 10px;
+    margin-top: 0;
     font-size: 1.2em;
     font-weight: 600;
   }
@@ -73,6 +186,10 @@
     color: #0056b3;
   }
   
+  .car-card .actions svg.edit:hover {
+    color: #46a900;
+  }
+
   .modal-form input,
   .modal-form select,
   .modal-form button {
@@ -106,3 +223,124 @@
     padding: 10px;
   }
   
+  .modal-content-wrapper .modal-form {
+    padding-right: 10px;
+  }
+
+  .dashboard-container .modal-form input,
+  .dashboard-container .modal-form select,
+  .dashboard-container .modal-form textarea
+   {
+    border-color: #b2b1b0;
+    background: #edecea;
+    border-radius: 50px;
+    padding: 0 20px;
+    font-weight: 500;
+    color: #000;
+    font-size: 14px;
+    height: 46px;
+    margin: 8px 0;
+  }
+
+  .dashboard-container .modal-form input[type="file"] {
+    line-height: 44px;
+  }
+
+  .dashboard-container .modal-form select {
+    color: #6b7280;
+  }
+
+  .dashboard-container .modal-form textarea {
+    height: 150px;
+    border-radius: 20px;
+    padding: 10px 20px;
+  }
+
+  .modal-form .upload-car-image {
+    position: relative;
+    border: 1px solid #b2b1b0;
+    border-radius: 20px;
+    margin: 8px 0 10px 0;
+    overflow: hidden;
+  }
+
+  .modal-form .upload-car-image img {
+    width: 100%;
+  }
+
+  .upload-car-image svg {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    fill: #f00;
+  }
+
+  .dashboard-container .error-message {
+    margin: 0;
+  }
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 0 10px;
+    gap: 20px;
+  }
+
+  .pagination button {
+    margin: 0;
+    background: #000;
+    border-radius: 4px;
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  .pagination button[disabled] {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+  .pagination button img {
+    width: 100%;
+    max-width: 17px;
+    filter: invert(1);
+  }
+  .loading-message,
+  .no-cars-message {
+    padding: 50px 30px;
+    background: #fff;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 26px;
+    line-height: 30px;
+    font-weight: 400;
+    margin: 50px 0 0;
+  }
+
+  /* Responsive */
+  @media(max-width: 840px ) {
+    .car-list {
+      grid-template-columns: repeat(2,1fr);
+    }
+  }
+
+
+  @media(max-width: 768px) {
+    .dashboard-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .dashboard-header button.upload-btn {
+      position: static;
+    }
+  }
+
+  @media(max-width: 575px) {
+    .car-list {
+      grid-template-columns: repeat(1,1fr);
+      padding: 25px;
+      gap: 20px;
+    }
+  }
