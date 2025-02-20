@@ -17,7 +17,7 @@ const sendEmail = (req, res) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,  // Sender email (same as in the transporter)
     to: process.env.TO_EMAIL,  // Recipient email (you can customize this)
-    subject: 'Form Submission - New Request',
+    subject: 'Form Submission - Booking Request',
     text: `
       Car Details: ${carDetails}
       Pickup Location: ${pickupValue}
@@ -40,4 +40,27 @@ const sendEmail = (req, res) => {
   });
 };
 
-module.exports = { sendEmail };
+const sendContactEmail = (req, res) => {
+  const { name, email, phone, message } = req.body;
+  const mailOptions = {
+    from: process.env.EMAIL_USER,  // Sender email (same as in the transporter)
+    to: process.env.TO_EMAIL,  // Recipient email (you can customize this)
+    subject: 'Form Submission - Contact Us',
+    text: `
+      Name: ${name}
+      Email: ${email}
+      Phone: ${phone}
+      Message: ${message}
+    `
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+      return res.status(500).send('Error sending email');
+    }
+    console.log('Email sent:', info.response);
+    return res.status(200).send('Email sent successfully');
+  });
+}
+
+module.exports = { sendEmail, sendContactEmail };

@@ -3,6 +3,7 @@ const router = express.Router();
 const emailController = require('../controllers/emailController');
 
 // Define the POST route to send email
-router.post('/', emailController.sendEmail);
+router.post('/email', emailController.sendEmail);
+router.post('/contact-us', emailController.sendContactEmail);
 
 module.exports = router;
