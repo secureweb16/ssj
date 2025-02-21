@@ -51,7 +51,7 @@ function CarInfoPopup({ car, nextCar, allCars }) {
                                     </div>
                                     <div className='carpop-bottom-info'>
                                         <h6>{nextCar?.company_name} <strong>{nextCar?.car_name}</strong></h6>
-                                        <Link to='#' className='font-12 viewmorebtn'>view more</Link>
+                                        <Link to='/signature-routes' className='font-12 viewmorebtn'>view more</Link>
                                     </div>
                                 </div>
                             </div>

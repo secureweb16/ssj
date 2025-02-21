@@ -11,16 +11,13 @@ import Slide5Top from '../assets/images/route-location5-top.jpg';
 import Slide5Bottom from '../assets/images/route-location5-bottom.jpg';
 import Slide6Top from '../assets/images/route-location6-top.jpg';
 import Slide6Bottom from '../assets/images/route-location6-bottom.jpg';
-// import LeftArrow from '../assets/images/left-arrow.svg';
-// import RightArrow from '../assets/images/right-arrow.svg';
 import {Link } from "react-router-dom";
-import { Navigation, Scrollbar, A11y } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import BookingPopup from '../components/BookingPopup';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 
-function SignatureRoutes(){    
+function SignatureRoutes({cars}){    
     return(
     <div className="signature-routes-list pb-90">      
         <div className="signature-routes-list-wrap position-relative plr-100">            
@@ -43,8 +40,8 @@ function SignatureRoutes(){
                         </span>
                     </div>
                 </div>
-                <div className='text-center mt-30'>
-                    <span className='border-button gray-border'>Book Now</span>
+                <div className='text-center mt-30 signature'>
+                    <BookingPopup cars={cars} />
                 </div>
             </div>                
             <div className='common-routepack-slide position-relative'>  
@@ -66,8 +63,8 @@ function SignatureRoutes(){
                         </span>
                     </div>
                 </div>
-                <div className='text-center mt-30'>
-                    <span className='border-button gray-border'>Book Now</span>
+                <div className='text-center mt-30 signature'>
+                    <BookingPopup cars={cars} />
                 </div>
             </div>
             <div className='common-routepack-slide position-relative'>   
@@ -89,8 +86,8 @@ function SignatureRoutes(){
                         </span>
                     </div>
                 </div>
-                <div className='text-center mt-30'>
-                    <span className='border-button gray-border'>Book Now</span>
+                <div className='text-center mt-30 signature'>
+                    <BookingPopup cars={cars} />
                 </div>
             </div>
             <div className='common-routepack-slide position-relative'>    
@@ -112,8 +109,8 @@ function SignatureRoutes(){
                         </span>
                     </div>
                 </div>
-                <div className='text-center mt-30'>
-                    <span className='border-button gray-border'>Book Now</span>
+                <div className='text-center mt-30 signature'>
+                    <BookingPopup cars={cars} />
                 </div>
             </div>
             <div className='common-routepack-slide position-relative'>   
@@ -135,8 +132,8 @@ function SignatureRoutes(){
                         </span>
                     </div>
                 </div>
-                <div className='text-center mt-30'>
-                    <span className='border-button gray-border'>Book Now</span>
+                <div className='text-center mt-30 signature'>
+                    <BookingPopup cars={cars} />
                 </div>
             </div>
             <div className='common-routepack-slide position-relative'>
@@ -158,8 +155,9 @@ function SignatureRoutes(){
                         </span>
                     </div>
                 </div>
-                <div className='text-center mt-30'>
-                    <span className='border-button gray-border'>Book Now</span>
+                <div className='text-center mt-30 signature'>
+                    <BookingPopup cars={cars} />
+                    {/* <span className='border-button gray-border'>Book Now</span> */}
                 </div>
             </div>
             {/* <div className="slider_nav d-flex align-items-center justify-content-center nowrap">                

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MercedesSClass from '../assets/images/mercedes-s-class.jpg';
 import { TabView, TabPanel } from 'primereact/tabview';
-import {Link } from "react-router-dom";
+import {Link, useLocation } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea  } from "primereact/inputtextarea";
 import { InputNumber } from 'primereact/inputnumber';
@@ -20,6 +20,20 @@ function About(){
     const [isLoading, setIsLoading] = useState(false); // Loading state
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [activeTab, setActiveTab] = useState(1); // Default to 1st tab
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const tab = queryParams.get('tab');
+
+    useEffect(() => {
+        if (tab) {
+            const tabIndex = parseInt(tab, 10); // Convert tab to an integer
+            if (!isNaN(tabIndex)) {
+                setActiveIndex(tabIndex);
+                innerSetActiveIndex(tabIndex);
+            }
+        }
+    }, [location.search, tab]);
 
     // Handle change for form inputs
     const handleChange = (e) => {
@@ -85,6 +99,13 @@ function About(){
         }
     };
 
+    const handleClick = (e) => {
+        e.preventDefault();
+        const whatsappUrl = `${config.whatsapp.baseUrl}${config.whatsapp.recipientPhone}`;
+        window.open(whatsappUrl, '_blank');
+    };
+    
+
     return(
     <div className='about-tabs pb-90'> 
         <div className='about-tabs-inner plr-100'> 
@@ -100,10 +121,10 @@ function About(){
                             </div>
                             <ul className='d-flex align-items-center justify-content-center nostyle pt-40 about-social-icon'>
                                 <li>
-                                    <Link to=""><img src={InstagramIcon} alt='Icon' /></Link>
+                                <Link to={`mailto:${config.email.email}`}><img src={EnvelopeIcon} alt='Icon' /></Link>
                                 </li>
                                 <li>
-                                    <Link to=""><img src={EnvelopeIcon} alt='Icon' /></Link>
+                                <Link onClick={handleClick} to='#'><img src={WhatsappIcon} alt='Icon' /></Link>
                                 </li>                                                                
                             </ul>
                         </div>
@@ -112,13 +133,10 @@ function About(){
                         <h6 className='font-18 text-center'>contact <strong>us</strong></h6>
                         <ul className='d-flex align-items-center justify-content-center nostyle pt-20 about-social-icon'>
                             <li>
-                                <Link to=""><img src={InstagramIcon} alt='Icon' /></Link>
+                                <Link to={`mailto:${config.email.email}`}><img src={EnvelopeIcon} alt='Icon' /></Link>
                             </li>
                             <li>
-                                <Link to=""><img src={EnvelopeIcon} alt='Icon' /></Link>
-                            </li>
-                            <li>
-                                <Link to=""><img src={WhatsappIcon} alt='Icon' /></Link>
+                                <Link onClick={handleClick} to='#'><img src={WhatsappIcon} alt='Icon' /></Link>
                             </li>
                         </ul>
                         <form onSubmit={handleSubmit} className="pt-70">
@@ -167,7 +185,7 @@ function About(){
 
                             <div className="done-button text-right">
                                 <button className={`btn formbtn ${isLoading ? 'loading' : ''}`} type="submit" disabled={isLoading}>Done 
-                                    <span className='loader'></span>
+                                    <div className="loader-wrap"><span className='loader'></span></div>
                                 </button>
                             </div>
                             {/* Display Success or Error Messages */}

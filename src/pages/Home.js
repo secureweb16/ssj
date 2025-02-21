@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-      <HomeBanner />
+      <HomeBanner  cars={cars} />
       <TitleWithText
         title={
           <>
@@ -43,7 +43,7 @@ function App() {
         }
         description="Whether individually or corporate, work with our decades-experienced team in organizing your transport."
       />
-      <CarServicesSlider />
+      <CarServicesSlider cars={cars} />
       <HomeSignatureRoutesPackages />
       {/* Show loading indicator while fetching cars */}
       {loading ? (

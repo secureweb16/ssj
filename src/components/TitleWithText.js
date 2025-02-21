@@ -8,7 +8,7 @@ function HomeWelcome(props) {
                 <div className="title-text-wrap">
                     <h6 className="text-uppercase font-14 d-flex flex-column align-items-center fw-400">{props.title}</h6>
                     <p className="font-16 fw-300">{props.description}</p>
-                    {props.buttonurl && <Link to="{props.buttonurl}" className="btn largebtn mt-40">{props.buttontext}</Link> }                   
+                    {props.buttonurl && <Link to={{ pathname: props.buttonurl, search: '?tab=1' }} className="btn largebtn mt-40">{props.buttontext}</Link> }                   
                 </div>
             </div>
         </div>

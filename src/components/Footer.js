@@ -1,11 +1,20 @@
-import React from 'react'; // Added useState import
+import React, { useState } from 'react'; // Added useState import
 import { Link } from "react-router-dom";
 import Logo from "../assets/images/ssj-logo.svg";
 import FooterBackground from "../assets/images/footer-bg.jpg";
+import BookingPopup from '../components/BookingPopup';
 
 
-function Footer() {
+function Footer({cars}) {
+    const [isPopupVisible, setPopupVisible] = useState(false);
 
+    const showPopup = () => {
+        setPopupVisible(true);
+    };
+    
+    const closePopup = () => {
+        setPopupVisible(false);
+    };
     return (
         <>
             <footer className='main-footer position-relative ptb-90 overflow-hidden' style={{ backgroundImage: `url(${FooterBackground})` }}>
@@ -14,7 +23,14 @@ function Footer() {
                         <Link to='/' className='footer-logo'>
                             <img src={Logo} alt="Logo" />
                         </Link>
-                        <span className='border-button'>Book Now</span>
+                        <span className='border-button' onClick={showPopup}>Book Now</span>
+                        {isPopupVisible &&  
+                            <BookingPopup
+                                cars={cars}
+                                isHomeBanner={true}
+                                closePopup={closePopup}
+                            />
+                        }
                         <ul className='nostyle text-white footer-menu-list'>
                             <li>
                                 <Link to='/about' className='text-white'>Booking Terms & Conditions</Link>

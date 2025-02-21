@@ -317,7 +317,7 @@ const Dashboard = () => {
 
             <button type="button" className={`${isLoading ? 'loading' : ''}`} onClick={handleSubmit}>
               {editCar ? "Update Car" : "Add Car"}
-              <span className='loader'></span>
+              <div className="loader-wrap"><span className='loader'></span></div>
             </button>
           </form>
         </Modal>
@@ -326,7 +326,7 @@ const Dashboard = () => {
         <Modal isOpen={deleteModalIsOpen} onClose={closeModal}>
           <h2 className="deletepopup">Are you sure you want to delete this car?</h2>
           <div className="btn-wrap-delete">
-            <button className={`btn deletebtn ${isLoading ? 'loading' : ''}`} onClick={handleDeleteSubmit}>Delete  <span className='loader'></span></button>
+            <button className={`btn deletebtn ${isLoading ? 'loading' : ''}`} onClick={handleDeleteSubmit}>Delete   <div className="loader-wrap"><span className='loader'></span></div></button>
             <button className="btn cancelbtn" onClick={closeModal}>Cancel</button>
           </div>
         </Modal>

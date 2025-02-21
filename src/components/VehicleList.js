@@ -32,7 +32,7 @@ function VehicleList({ cars }) {
                                                     <div className='common-vehicle-content'>
                                                         <h6>{car.company_name} <strong>{car.car_name}</strong></h6>
                                                         <p className='font-12 text-uppercase letter-spacing-15'>({car.modal} model + above)</p>
-                                                        <Link to='#' className='font-12'>view more</Link>
+                                                        <Link to='/signature-routes' className='font-12'>view more</Link>
                                                     </div>
                                                     <div className='vehicle-option-bookbtn'>
                                                         <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} />

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {Link } from "react-router-dom";
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
@@ -24,7 +24,7 @@ import config from '../config';
 const containerStyle = {width: '550px',height: '250px'}
 const geocoder = new window.google.maps.Geocoder();
 
-function BookingPopup({cars}) {
+function BookingPopup({cars,isHomeBanner,closePopup }) {
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -42,7 +42,7 @@ function BookingPopup({cars}) {
     const [startPoint, setStartPoint] = useState(null);
     const [endPoint, setEndPoint] = useState(null);
     const [directions, setDirections] = useState(null);
-    const vehicleTypes = [...new Set(cars.map(car => car.type))];
+    const vehicleTypes = [...new Set(cars?.map(car => car.type))];
     const [passengerCount, setPassengerCount] = useState(null);
     const [additionalRequests, setAdditionalRequests] = useState(null);
     const [name, setName] = useState('');
@@ -332,10 +332,18 @@ function BookingPopup({cars}) {
          }          
     };
 
+    useEffect(() => {
+        if (isHomeBanner) {
+          setVisible(true);
+        }
+    }, [isHomeBanner]);
+
     return (
         <>
-        <span className='btn largebtn' onClick={() => setVisible(true)}>Book Now</span>
-        <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); }} className='booking-popup-outer' draggable={false}>
+        {!isHomeBanner && (
+            <span className='btn largebtn' onClick={() => setVisible(true)}>Book Now</span>
+        )}
+        <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); if(closePopup) {closePopup(); }  }} className='booking-popup-outer' draggable={false}>
             <div className='booking-popup'>
                 <div className='booking-popup-head d-flex align-items-center'>
                     <div className='booking-popup-head-left'>
@@ -355,7 +363,7 @@ function BookingPopup({cars}) {
                         )}
 
                         {activeIndex === 3 && (
-                            <Button className={`btn largebtn ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book Now <span className='loader'></span></Button>
+                            <Button className={`btn largebtn ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book Now  <div className="loader-wrap"><span className='loader'></span></div></Button>
                         )}
                     </div>
                 </div>
@@ -500,7 +508,7 @@ function BookingPopup({cars}) {
                                                                     {car?.luggage_type}
                                                                 </div>
                                                             </div>                                                            
-                                                            <Link to="#" className="font-12 viewmorebtn">
+                                                            <Link to="/signature-routes" className="font-12 viewmorebtn">
                                                                 view more
                                                             </Link>
                                                         </div>
@@ -543,10 +551,9 @@ function BookingPopup({cars}) {
                                 <>
                                     <div className='vehicle-routeschedule-content'>
                                         <h6>Select your <strong>pick-up location and destination</strong></h6>
-                                        <div className='vehicle-routeschedule-signaturebox mb-30'>
+                                        {/* <div className='vehicle-routeschedule-signaturebox mb-30'>
                                             <div className='routeschedule-signaturebox-top d-flex align-items-center'>
                                                 <p className='text-uppercase m-0 fw-400 font-12'>Singature Routes</p>
-                                                {/* <Link to="#" className='viewmorebtn'>view more</Link> */}
                                                 <span className='viewmorebtn' onClick={() => setVisible2(true)}>view more</span>
                                             </div>
                                             <div className='routeschedule-signaturebox-bottom'>
@@ -565,7 +572,7 @@ function BookingPopup({cars}) {
                                                     )}
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className='form-group position-relative'>
                                             <FloatLabel>
                                                 <Autocomplete
@@ -718,7 +725,7 @@ function BookingPopup({cars}) {
                                 <p>We will email you details of your request and respond there or you can get in touch with us immediately via WhatsApp.</p>
                                 <ul className='nostyle p-0 d-flex align-items-center gap-10 mt-30'>
                                     <li>
-                                        <Button className={`btn ${isLoading ? 'loading' : ''}`}  onClick={() =>handleSubmit('email')}>Send Now <span className='loader'></span></Button>
+                                        <Button className={`btn ${isLoading ? 'loading' : ''}`}  onClick={() =>handleSubmit('email')}>Send Now  <div className="loader-wrap"><span className='loader'></span></div></Button>
                                     </li>
                                     <li>
                                         <Button className="btn d-flex align-items-center connect-whatsappbtn" onClick={() =>handleSubmit('whatsapp')}>Connect Via Whatsapp
@@ -757,7 +764,7 @@ function BookingPopup({cars}) {
                                         {car?.luggage_type}
                                     </div>
                                 </div>                                                            
-                                <Link to="#" className="font-12 viewmorebtn">
+                                <Link to="/signature-routes" className="font-12 viewmorebtn">
                                     view more
                                 </Link>
                             </div>

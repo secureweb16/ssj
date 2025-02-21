@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from 'react'; // Added useState import
+import { Routes, Route, useLocation } from "react-router-dom";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import './assets/css/App.css';
 import ScrollToTop from './components/ScrollToTop';
@@ -12,18 +12,39 @@ import About from './pages/About';
 import ForCorporate from './pages/ForCorporate';
 import Login from './pages/admin/login';
 import Dashboard from './pages/admin/dashboard/Dashboard';
-
+import config from './config'; 
 
 function App() {
   const location = useLocation();  // Access current location
-
-  // Check if the current route is "/admin/login"
   const isLoginPage = location.pathname === '/admin/login';
   const isDashboardPage = location.pathname === '/admin/dashboard';
+  const[cars,setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchCars = async () => {
+    try {
+      const response = await fetch(`${config.api.baseURL}${config.api.carsEndpoint}`);
+      const data = await response.json();
+      if (Array.isArray(data.cars)) {
+        setCars(data.cars);
+      } else {
+        console.error("Cars data is not an array", data);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCars();
+  }, []);
+
   return (    
     <div>
       <ScrollToTop/>
-      {!isLoginPage && !isDashboardPage && <Header />}   
+      {!isLoginPage && !isDashboardPage && <Header cars={cars} />}   
       <Routes> 
         <Route index element={<Home />} />
         <Route path="signature-routes" element={<SignatureRoutes />} />
@@ -34,7 +55,7 @@ function App() {
         <Route path="/admin/dashboard" element={<Dashboard />} />
    
       </Routes> 
-      {!isLoginPage && !isDashboardPage && <Footer />}
+      {!isLoginPage && !isDashboardPage && <Footer cars={cars} />}
     </div>
   );
 }

@@ -8,11 +8,12 @@ import RightArrow from '../assets/images/right-arrow.svg';
 import {Link } from "react-router-dom";
 import { Navigation, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import BookingPopup from '../components/BookingPopup';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 
-function CarServiceSlider(){    
+function CarServiceSlider({cars}){    
     return(
     <div className="car-service-slider">  
         <div className="slider_wrapper position-relative">
@@ -43,15 +44,13 @@ function CarServiceSlider(){
                         spaceBetween: 2,
                     }
                 }}
-                
-                
             >                
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
                         <img src={SliderItem1} alt="Image" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>chauffeur</p>
-                            <span className='border-button'>Book Now</span>
+                           <BookingPopup cars={cars} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -60,7 +59,7 @@ function CarServiceSlider(){
                         <img src={SliderItem2} alt="Image" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>corporate services</p>
-                            <span className='border-button'>Book Now</span>
+                           <BookingPopup cars={cars} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -69,7 +68,7 @@ function CarServiceSlider(){
                         <img src={SliderItem3} alt="Image" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>black car hire</p>
-                            <span className='border-button'>Book Now</span>
+                           <BookingPopup cars={cars} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -78,7 +77,7 @@ function CarServiceSlider(){
                         <img src={SliderItem4} alt="Image" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>airport transport</p>
-                            <span className='border-button'>Book Now</span>
+                           <BookingPopup cars={cars} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -87,7 +86,7 @@ function CarServiceSlider(){
                         <img src={SliderItem1} alt="Image" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>chauffeur</p>
-                            <span className='border-button'>Book Now</span>
+                           <BookingPopup cars={cars} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -96,7 +95,7 @@ function CarServiceSlider(){
                         <img src={SliderItem2} alt="Image" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>corporate services</p>
-                            <span className='border-button'>Book Now</span>
+                           <BookingPopup cars={cars} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -105,7 +104,7 @@ function CarServiceSlider(){
                         <img src={SliderItem3} alt="Image" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>black car hire</p>
-                            <span className='border-button'>Book Now</span>
+                           <BookingPopup cars={cars} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -114,7 +113,7 @@ function CarServiceSlider(){
                         <img src={SliderItem4} alt="Image" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>airport transport</p>
-                            <span className='border-button'>Book Now</span>
+                            <BookingPopup cars={cars} />
                         </div>
                     </div>
                 </SwiperSlide>
