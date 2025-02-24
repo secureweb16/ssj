@@ -41,7 +41,7 @@ function SignatureRoutes({cars}){
                     </div>
                 </div>
                 <div className='text-center mt-30 signature'>
-                    <BookingPopup cars={cars} />
+                    <BookingPopup cars={cars}  location={['Central London','Babington House']} />
                 </div>
             </div>                
             <div className='common-routepack-slide position-relative'>  
@@ -64,7 +64,7 @@ function SignatureRoutes({cars}){
                     </div>
                 </div>
                 <div className='text-center mt-30 signature'>
-                    <BookingPopup cars={cars} />
+                    <BookingPopup cars={cars} location={['Central London','Estelle Manor']} />
                 </div>
             </div>
             <div className='common-routepack-slide position-relative'>   
@@ -87,7 +87,7 @@ function SignatureRoutes({cars}){
                     </div>
                 </div>
                 <div className='text-center mt-30 signature'>
-                    <BookingPopup cars={cars} />
+                    <BookingPopup cars={cars} location={['Central London','Manchester']} />
                 </div>
             </div>
             <div className='common-routepack-slide position-relative'>    
@@ -110,7 +110,7 @@ function SignatureRoutes({cars}){
                     </div>
                 </div>
                 <div className='text-center mt-30 signature'>
-                    <BookingPopup cars={cars} />
+                    <BookingPopup cars={cars} location={['Central London','Cowarth Park']} />
                 </div>
             </div>
             <div className='common-routepack-slide position-relative'>   
@@ -133,7 +133,7 @@ function SignatureRoutes({cars}){
                     </div>
                 </div>
                 <div className='text-center mt-30 signature'>
-                    <BookingPopup cars={cars} />
+                    <BookingPopup cars={cars} location={['Central London','Cheltenham']} />
                 </div>
             </div>
             <div className='common-routepack-slide position-relative'>
@@ -156,7 +156,7 @@ function SignatureRoutes({cars}){
                     </div>
                 </div>
                 <div className='text-center mt-30 signature'>
-                    <BookingPopup cars={cars} />
+                    <BookingPopup cars={cars} location={['Central London','Bicester Village']} />
                     {/* <span className='border-button gray-border'>Book Now</span> */}
                 </div>
             </div>

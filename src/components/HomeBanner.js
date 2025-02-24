@@ -13,9 +13,10 @@ function HomeBanner({ cars }) {
     };
     const [index, setIndex] = useState(0);
     const words = [
-        { text: "convenience", bgColor: "#ffc703", color: "#000" },
-        { text: "Comfort", bgColor: "#004e98", color: "#fff" },
-        { text: "Accessibility", bgColor: "#8cb369", color: "#000" },
+        { text: "comfort", bgColor: "#ffc703", color: "#000" },
+        { text: "discretion", bgColor: "#004e98", color: "#fff" },
+        { text: "safety", bgColor: "#8cb369", color: "#000" },
+        { text: "personalization", bgColor: "#8cb369", color: "#000" },
     ];
 
     useEffect(() => {
@@ -32,7 +33,7 @@ function HomeBanner({ cars }) {
                 </video>
                 <div className="home-banner-content position-relative plr-100">
                     <h1 className="text-white m-0 text-center">
-                        <span>discretion</span>
+                        <span></span>
                         <span>the luxury of{" "}
                             <strong>
                                 <span
@@ -58,7 +59,6 @@ function HomeBanner({ cars }) {
                                 </span>
                             </strong>
                         </span>
-                        <span>safety</span>
                     </h1>
                     <ul className="home-banner-buttons justify-content-center d-flex nostyle">
                         <li>

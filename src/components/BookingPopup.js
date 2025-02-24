@@ -7,7 +7,8 @@ import { InputTextarea  } from "primereact/inputtextarea";
 import { InputNumber } from 'primereact/inputnumber';
 import { FloatLabel } from "primereact/floatlabel";
 import { Autocomplete, GoogleMap, Marker, useJsApiLoader, DirectionsService, DirectionsRenderer } from '@react-google-maps/api'; 
-import Location1 from '../assets/images/signaturebox-location-1.png';
+import Location1 from '../assets/images/Pickup.svg';
+import Location2 from '../assets/images/Dropoff.svg';
 import Closeicon from '../assets/images/close.svg';
 import Editicon from '../assets/images/edit-icon.png';
 import WhatsappIcon from '../assets/images/whatsapp-icon.svg';
@@ -18,13 +19,13 @@ import SuitcaseIcon from '../assets/images/suitcase.svg';
 import LocationMap from '../assets/images/location-map.jpg';
 import CarThumb from '../assets/images/mercedes-v-class.jpg';
 import config from '../config'; 
-
+import backgroundImage from '../assets/images/thank-you-image.jpg';
 
 
 const containerStyle = {width: '550px',height: '250px'}
 const geocoder = new window.google.maps.Geocoder();
 
-function BookingPopup({cars,isHomeBanner,closePopup }) {
+function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central London", "Babington House"] }) {
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -36,7 +37,11 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
     const [pickupAutocomplete, setPickupAutocomplete] = useState(null);
     const [destinationAutocomplete, setDestinationAutocomplete] = useState(null);
     const [datetime12h, setDateTime12h] = useState(null);
-    const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
+    const [mapCenter, setMapCenter] = useState({  lat: 51.5074, lng: -0.1278  });
+    // const londonBounds = {north: 51.7, south: 51.3, west: -0.5, east: 0.3,};
+    const londonBounds = {north: 60, south: 49.5, west: -11, east: 2.5 }
+
+    
     const [zoomLevel, setZoomLevel] = useState(10); // Default zoom level
     const mapRef = useRef(null); // Store map instance
     const [startPoint, setStartPoint] = useState(null);
@@ -51,8 +56,18 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const onPickupLoad = (autocomplete) => setPickupAutocomplete(autocomplete);
-    const onDestinationLoad = (autocomplete) => setDestinationAutocomplete(autocomplete);
+    const onPickupLoad = (autocomplete) => {
+        setPickupAutocomplete(autocomplete);
+        if (location?.[0]) {
+            setPickupValue(location[0]); // ✅ Set default input value
+        }
+    };
+    const onDestinationLoad = (autocomplete) => {
+        setDestinationAutocomplete(autocomplete);
+        if (location?.[1]) {
+            setDestinationValue(location[1]); // ✅ Set default input value
+        }
+    };
 
     /* Handle Car Selection */ 
     const handleSelectCar = (car) => {
@@ -100,7 +115,20 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
 
     const onLoad = (map) => {
         mapRef.current = map;
+    
+        if (startPoint && endPoint) {
+            const bounds = new window.google.maps.LatLngBounds();
+            bounds.extend(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
+            bounds.extend(new window.google.maps.LatLng(endPoint.lat, endPoint.lng));
+            map.fitBounds(bounds, { top: 100, bottom: 100, left: 100, right: 100 });
+           // north: 60.9, south: 49.8, west: -8.6, east: 1.9 
+        } else if (startPoint) {
+            // If only one point exists, center it with a reasonable zoom
+            map.setCenter(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
+            map.setZoom(10); // ✅ Adjusted zoom for a single location
+        }
     };
+    
 
     const onUnmount = (map) => {
         //console.log('Map Unmounted:', map);
@@ -308,8 +336,10 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
                   body: JSON.stringify(formData), // Convert formData to a JSON string
                 });
                 if (response.ok) {
-                    setSuccessMessage('Email sent successfully!');
-                    setErrorMessage(''); // Clear error message if successful
+                    setVisible2(true);
+                    setVisible(false);
+                    //setSuccessMessage('Email sent successfully!');
+                    //setErrorMessage(''); // Clear error message if successful
                 } else {
                   throw new Error('Failed to send email');
                 }
@@ -337,6 +367,61 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
           setVisible(true);
         }
     }, [isHomeBanner]);
+
+    useEffect(() => {
+        const fetchLocations = async () => {
+            if (!isLoaded || !location?.length) return;
+            try {
+                const startLatLng = await fetchLatLng(location[0]);
+                const endLatLng = location[1] ? await fetchLatLng(location[1]) : null;
+                if (startLatLng) setStartPoint(startLatLng);
+                if (endLatLng) setEndPoint(endLatLng);
+                if (mapRef.current) {
+                    const map = mapRef.current;
+                    if (startLatLng && endLatLng) {
+                        // Adjust zoom dynamically for both points
+                        const bounds = new window.google.maps.LatLngBounds();
+                        bounds.extend(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
+                        bounds.extend(new window.google.maps.LatLng(endLatLng.lat, endLatLng.lng));
+                        // Apply padding and auto-fit zoom
+                        map.fitBounds(bounds, { top: 80, bottom: 80, left: 80, right: 80 });
+                    } else if (startLatLng) {
+                        // If only one point, set dynamic zoom
+                        map.setCenter(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
+                        // Set zoom based on region size
+                        const zoomLevel = startLatLng.lat > 50 ? 10 : 5; // UK-focused zoom level
+                        map.setZoom(zoomLevel);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching location coordinates:", error);
+            }
+        };
+        fetchLocations();
+    }, [isLoaded, location]);
+    
+    
+    // ✅ Updated fetchLatLng function
+    const fetchLatLng = async (placeName) => {
+        return new Promise((resolve, reject) => {
+            if (!placeName) {
+                console.error("Invalid place name:", placeName);
+                resolve(null);
+                return;
+            }
+            const geocoder = new window.google.maps.Geocoder();
+            geocoder.geocode({ address: placeName }, (results, status) => {
+                if (status === "OK" && results[0]?.geometry?.location) {
+                    const { lat, lng } = results[0].geometry.location;
+                    resolve({ lat: lat(), lng: lng() });
+                } else {
+                    console.error(`Geocoding failed for ${placeName}:`, status);
+                    resolve(null);
+                }
+            });
+        });
+    };
+    
 
     return (
         <>
@@ -551,10 +636,13 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
                                 <>
                                     <div className='vehicle-routeschedule-content'>
                                         <h6>Select your <strong>pick-up location and destination</strong></h6>
-                                        {/* <div className='vehicle-routeschedule-signaturebox mb-30'>
+                                        <div className='vehicle-routeschedule-signaturebox mb-30'>
                                             <div className='routeschedule-signaturebox-top d-flex align-items-center'>
-                                                <p className='text-uppercase m-0 fw-400 font-12'>Singature Routes</p>
-                                                <span className='viewmorebtn' onClick={() => setVisible2(true)}>view more</span>
+                                                <p className='text-uppercase m-0 fw-400 font-12'>Signature Routes</p>
+                                                <a href="/signature-routes" className="font-12 viewmorebtn">
+                                                    view more
+                                                </a>
+                                                {/* <span className='viewmorebtn' onClick={() => setVisible2(true)}>view more</span> */}
                                             </div>
                                             <div className='routeschedule-signaturebox-bottom'>
                                                 <div className='routeschedule-signaturebox-locations d-grid'>
@@ -566,13 +654,13 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
                                                     )}
                                                     {destinationValue && (
                                                         <div className='routeschedule-signaturebox-location d-flex align-items-center'>
-                                                            <img src={Location1} alt="Location Image" className="" />
+                                                            <img src={Location2} alt="Location Image" className="" />
                                                             <p className='m-0'>{destinationValue} </p>
                                                         </div>
                                                     )}
                                                 </div>
                                             </div>
-                                        </div> */}
+                                        </div>
                                         <div className='form-group position-relative'>
                                             <FloatLabel>
                                                 <Autocomplete
@@ -612,9 +700,19 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
                                             <GoogleMap
                                                 mapContainerStyle={containerStyle}
                                                 center={mapCenter}
-                                                zoom={zoomLevel}
+                                                // zoom={zoomLevel}
                                                 onLoad={onLoad} // Load map instance
                                                 onUnmount={onUnmount}
+                                                options={{
+                                                    restriction: {
+                                                        latLngBounds: londonBounds,
+                                                        strictBounds: true, // Prevent dragging outside London
+                                                    },
+                                                    mapTypeId: "roadmap", // Standard view
+                                                    //streetViewControl: false, // Hide street view
+                                                    //fullscreenControl: false, // Disable full screen
+                                                    zoomControl: true, // Allow zooming
+                                                }}
                                             >
                                                 {/* Markers */}
                                                 {startPoint && <Marker position={startPoint} draggable onDragEnd={handleStartMarkerDragEnd}  icon={startMarkerIcon} />}
@@ -743,63 +841,12 @@ function BookingPopup({cars,isHomeBanner,closePopup }) {
                 </div>
             </div>
         </Dialog>
-        <Dialog visible={visible2} onHide={() => {if (!visible2) return; setVisible2(false); }} className='booking-popup-outer booking-popup-vhicles' draggable={false}>
-            <div className="booking-car-list">
-                {/* Loop over cars based on the active tab */}
-                {cars.filter((car) => vehicleTypes[innerActiveIndex] === car.type).map((car) => (
-                    <div key={car?._id} className="common-booking-car-info d-flex align-items-center">
-                        <div className="carpop-bottom-detail d-flex align-items-center">
-                            <div className="carpop-bottom-image">
-                                <img src={`${config.api.baseURL}${car?.image.replace(/\\/g, '/')}`}  alt={car?.name} />
-                            </div>
-                            <div className="carpop-bottom-info">
-                                <h6>{car?.company_name} <strong>{car?.car_name}</strong></h6>
-                                <div className="car-spec show-mobile">
-                                    <div className="common-car-spec d-flex align-items-center">
-                                        <img src={UserIcon} alt="User Icon" />
-                                        {car?.passengers}
-                                    </div>
-                                    <div className="common-car-spec d-flex align-items-center">
-                                        <img src={SuitcaseIcon} alt="Suitcase Icon" />
-                                        {car?.luggage_type}
-                                    </div>
-                                </div>                                                            
-                                <Link to="/signature-routes" className="font-12 viewmorebtn">
-                                    view more
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="car-spec show-desktop">
-                            <div className="common-car-spec d-flex align-items-center">
-                                <img src={UserIcon} alt="User Icon" />
-                                <span className="hideforsmall">up to</span>&nbsp;{(car?.passengers) ? car?.passengers : 0 }&nbsp;
-                                <span className="hideforsmall">passengers</span>
-                            </div>
-                            <div className="common-car-spec d-flex align-items-center">
-                                <img src={SuitcaseIcon} alt="Suitcase Icon" />
-                                {car?.luggage_type}&nbsp; <span className="hideforsmall">luggage</span>
-                            </div>
-                        </div>
-                        <span className={`border-button gray-border select-button ${
-                            selectedCars.some((selectedCar) => selectedCar._id === car._id) ? 'selected' : ''
-                        }`}
-                        onClick={() => handleSelectCar(car)}
-                        >
-                        {selectedCars.some((selectedCar) => selectedCar._id === car._id)
-                            ? 'Selected'
-                            : 'Select'}
-                        </span>
-                    </div>
-                    ))}
-                <div className='done-button text-right'>
-                    <Button className="btn formbtn" onClick={() =>handleDoneClick('vehicle')}>Done</Button>
-                    {showWarning && (
-                    <div className="warning-message" style={{ color: 'red' }}>
-                        Please select at least one car to proceed.
-                    </div>
-                    )}
-                </div>
-            </div>
+        <Dialog visible={visible2} onHide={() => {if (!visible2) return; setVisible2(false); }} style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }} className='booking-popup-outer thank-you-popup booking-popup-vhicles' draggable={false}>
+           <div className="popup-wrapper">
+                <h2>your <span>trip has been requested!</span></h2>
+                <p>Our team will reply as soon as possible to confirm. </p>
+                <a href="#" onClick={(e) => { e.preventDefault(); setVisible2(false); }}>Done</a>
+           </div>
         </Dialog>
         </>
     );

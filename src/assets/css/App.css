@@ -564,7 +564,7 @@ header.main-header {
   line-height: 31px;
   font-weight: 200;
   text-align: right;
-  max-width: 300px;
+  max-width: 330px;
   margin: auto;
 }
 .home-banner video {
@@ -576,6 +576,7 @@ header.main-header {
 .home-banner-content h1 {
   margin-top: 204px;
   margin-bottom: 190px;
+  text-align: center;
 }
 .home-banner-content {
   z-index: 2;
@@ -593,10 +594,10 @@ header.main-header {
   gap: 10px;
 }
 .home-banner-content h1 > span:first-child {
-  padding-right: 32px;
+  padding-right: 0;
 }
 .home-banner-content h1 > span:last-child {
-  padding-right: 75px;
+  padding-right: 0;
 }
 .home-banner-buttons .btn, .home-banner-buttons 
  .transparent-btn {
@@ -843,6 +844,59 @@ body .vehicle-options .swiper-scrollbar {
 }
 .customer-review-slider .swiper-slide.swiper-slide-next + .swiper-slide {
   opacity: 40%;
+}
+
+/* Thanks popup */
+.thank-you-popup {
+  background-position: center;
+  max-width: 1014px;
+  height: 85%;
+  padding: 20px;
+}
+.p-dialog-mask .thank-you-popup .p-dialog-content {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: left;
+  border: 1px solid #00000080;
+  padding: 20px 15%;
+}
+.thank-you-popup .popup-wrapper h2 {
+  color: #FFFF;
+  font-size: 28px;
+  line-height: 31px;
+  font-weight: 200;
+}
+.thank-you-popup .popup-wrapper h2 span {
+  font-weight: 500;
+  color: #FFFFFF80;
+}
+.p-dialog-mask .thank-you-popup .popup-wrapper p {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 300;
+  margin: 0px 0 30px;
+}
+.thank-you-popup .popup-wrapper a {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  min-width: 162px;
+  text-align: center;
+  backdrop-filter: blur(10.38px);
+  border: 0.5px solid #FFFFFF80;
+  transition: all ease 0.3s;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.thank-you-popup .popup-wrapper a:hover {
+  background: #fff;
+  color: #000;
 }
 
 /* Footer  */
@@ -1421,6 +1475,11 @@ h2.deletepopup {
   .booking-popup-vhicles .booking-car-list {
     padding: 20px 15px;
   }
+  .thank-you-popup {
+    max-width: 90%;
+    height: 70%;
+    margin: 0;
+}
 }
 
 @media (max-width: 991px) {
@@ -1644,6 +1703,9 @@ h2.deletepopup {
   .carinfo-popup-middle .carinfo-bottom-right {
     flex: 0 0 auto;
     width: 100%;
+  }
+  .p-dialog-mask .thank-you-popup .p-dialog-content {
+    padding: 20px 25px;
   } 
 }
 @media (max-width: 575px) { 
@@ -1703,6 +1765,14 @@ h2.deletepopup {
   .about-tabs-main > .p-component > .p-tabview-panels {
     padding: 110px 0 0;
   }
+  .thank-you-popup .popup-wrapper h2 {
+    font-size: 24px;
+    line-height: 28px;
+    margin: 0 0 10px;
+  }
+  .p-dialog-mask .thank-you-popup .popup-wrapper p {
+    margin: 0px 0 25px;
+}
 }
 @media (max-width: 440px) { 
   .header-right ul {
