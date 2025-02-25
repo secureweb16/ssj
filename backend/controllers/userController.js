@@ -11,8 +11,6 @@ const fixedPassword = process.env.FIXED_PASSWORD;
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-    console.log('email-',fixedEmail);
-    console.log('password-',fixedPassword);
     if (email === fixedEmail && password === fixedPassword) {
     try {
         const token = jwt.sign({ user: "admin" }, process.env.JWT_SECRET, {
@@ -34,8 +32,6 @@ exports.login = async (req, res) => {
 // Signup function to create a new user
 exports.signup = async (req, res) => {
     const { email, password } = req.body;
-    console.log('email',req.body);
-    console.log('password',password);
     if (!email || !password ) {
         return res.status(400).json({ message: "Please provide email, password, and name." });
     }
