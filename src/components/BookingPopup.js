@@ -17,15 +17,12 @@ import mapIcon from '../assets/images/map-icon.svg';
 import { Calendar } from 'primereact/calendar';
 import UserIcon from '../assets/images/user.svg';
 import SuitcaseIcon from '../assets/images/suitcase.svg';
-import LocationMap from '../assets/images/location-map.jpg';
-import CarThumb from '../assets/images/mercedes-v-class.jpg';
 import config from '../config'; 
 import backgroundImage from '../assets/images/thank-you-image.jpg';
 import rightIcon from '../assets/images/arrow-right.svg';
 import checkIcpn from '../assets/images/check-icon.svg';
 import rightBlackIcon from '../assets/images/arrow_right_black_icon.svg';
 import timerIcon from '../assets/images/timer.svg';
-
 
 
 const containerStyle = {width: '550px',height: '250px'}
@@ -49,7 +46,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     // const londonBounds = {north: 51.7, south: 51.3, west: -0.5, east: 0.3,};
     const londonBounds = {north: 60, south: 49.5, west: -11, east: 2.5 }
     const [progressBar, setprogressBar] = useState(25);
-    
     const [zoomLevel, setZoomLevel] = useState(10); // Default zoom level
     const mapRef = useRef(null); // Store map instance
     const [startPoint, setStartPoint] = useState(null);
@@ -67,15 +63,20 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     const onPickupLoad = (autocomplete) => {
         setPickupAutocomplete(autocomplete);
         if (location?.[0]) {
-            setPickupValue(location[0]); // ✅ Set default input value
+            setPickupValue(location[0]);
         }
     };
     const onDestinationLoad = (autocomplete) => {
         setDestinationAutocomplete(autocomplete);
         if (location?.[1]) {
-            setDestinationValue(location[1]); // ✅ Set default input value
+            setDestinationValue(location[1]); 
         }
     };
+    const autoCompleteOptions = {
+        componentRestrictions: { country: "uk" }, 
+        types: ["geocode"], 
+    };
+    
 
     /* Handle Car Selection */ 
     const handleSelectCar = (car) => {
@@ -142,7 +143,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
         }
     };
     
-
     const onUnmount = (map) => {
         //console.log('Map Unmounted:', map);
     };
@@ -389,80 +389,68 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
         }
     }, [isHomeBanner]);
 
-        useEffect(() => {
-            const fetchLocations = async () => {
-                if (!isLoaded || !location?.length) return;
-                try {
-                    const startLatLng = await fetchLatLng(location[0]);
-                    const endLatLng = location[1] ? await fetchLatLng(location[1]) : null;
-                    if (startLatLng) setStartPoint(startLatLng);
-                    if (endLatLng) setEndPoint(endLatLng);
-                    if (mapRef.current) {
-                        const map = mapRef.current;
-                        if (startLatLng && endLatLng) {
-                            // Adjust zoom dynamically for both points
-                            const bounds = new window.google.maps.LatLngBounds();
-                            bounds.extend(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
-                            bounds.extend(new window.google.maps.LatLng(endLatLng.lat, endLatLng.lng));
-                            // Apply padding and auto-fit zoom
-                            map.fitBounds(bounds, { top: 80, bottom: 80, left: 80, right: 80 });
-                        } else if (startLatLng) {
-                            // If only one point, set dynamic zoom
-                            map.setCenter(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
-                            // Set zoom based on region size
-                            const zoomLevel = startLatLng.lat > 50 ? 10 : 5; // UK-focused zoom level
-                            map.setZoom(zoomLevel);
-                        }
+    useEffect(() => {
+        const fetchLocations = async () => {
+            if (!isLoaded || !location?.length) return;
+            try {
+                const startLatLng = await fetchLatLng(location[0]);
+                const endLatLng = location[1] ? await fetchLatLng(location[1]) : null;
+                if (startLatLng) setStartPoint(startLatLng);
+                if (endLatLng) setEndPoint(endLatLng);
+                if (mapRef.current) {
+                    const map = mapRef.current;
+                    if (startLatLng && endLatLng) {
+                        const bounds = new window.google.maps.LatLngBounds();
+                        bounds.extend(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
+                        bounds.extend(new window.google.maps.LatLng(endLatLng.lat, endLatLng.lng));
+                        map.fitBounds(bounds, { top: 80, bottom: 80, left: 80, right: 80 });
+                    } else if (startLatLng) {
+                        map.setCenter(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
+                        const zoomLevel = startLatLng.lat > 50 ? 10 : 5;
+                        map.setZoom(zoomLevel);
                     }
-                } catch (error) {
-                    console.error("Error fetching location coordinates:", error);
                 }
-            };
-            fetchLocations();
-        }, [isLoaded, location]);
+            } catch (error) {
+                console.error("Error fetching location coordinates:", error);
+            }
+        };
+        fetchLocations();
+    }, [isLoaded, location]);
         
         
-        // ✅ Updated fetchLatLng function
-        const fetchLatLng = async (placeName) => {
-            return new Promise((resolve, reject) => {
-                if (!placeName) {
-                    console.error("Invalid place name:", placeName);
+    // Updated fetchLatLng function
+    const fetchLatLng = async (placeName) => {
+        return new Promise((resolve, reject) => {
+            if (!placeName) {
+                console.error("Invalid place name:", placeName);
+                resolve(null);
+                return;
+            }
+            const geocoder = new window.google.maps.Geocoder();
+            geocoder.geocode({ address: placeName }, (results, status) => {
+                if (status === "OK" && results[0]?.geometry?.location) {
+                    const { lat, lng } = results[0].geometry.location;
+                    resolve({ lat: lat(), lng: lng() });
+                } else {
+                    console.error(`Geocoding failed for ${placeName}:`, status);
                     resolve(null);
-                    return;
                 }
-                const geocoder = new window.google.maps.Geocoder();
-                geocoder.geocode({ address: placeName }, (results, status) => {
-                    if (status === "OK" && results[0]?.geometry?.location) {
-                        const { lat, lng } = results[0].geometry.location;
-                        resolve({ lat: lat(), lng: lng() });
-                    } else {
-                        console.error(`Geocoding failed for ${placeName}:`, status);
-                        resolve(null);
-                    }
-                });
             });
-        };
+        });
+    };
         
-        // Handle Select Button Click
-        const handleSelectButtonClick = () => {
-            setCalendarVisible(false);  // Manually hide the calendar
-        };
-    
-        // Handle visibility change of the calendar
-        const handleVisibleChange = (e) => {
-            setCalendarVisible(e.visible);  // Set visibility based on user interaction
-        };
+    const handleSelectButtonClick = () => {
+        setCalendarVisible(false); 
+    };
 
-        // Handle the change in date selection
-        const handleDateChange = (e) => {
-            setDateTime12h(e.value);  // Update the selected date
-            setIsDateSelected(true);  // Enable "Select" button when a date is selected
-        };
+    const handleVisibleChange = (e) => {
+        setCalendarVisible(e.visible);
+    };
 
-        const autoCompleteOptions = {
-            componentRestrictions: { country: "uk" }, // ✅ Only UK locations allowed
-            types: ["geocode"], // You can change this based on your needs
-        };
+    const handleDateChange = (e) => {
+        setDateTime12h(e.value); 
+        setIsDateSelected(true); 
+    };
 
     return (
         <>
