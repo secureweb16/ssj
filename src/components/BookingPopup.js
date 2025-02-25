@@ -6,6 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea  } from "primereact/inputtextarea";
 import { InputNumber } from 'primereact/inputnumber';
 import { FloatLabel } from "primereact/floatlabel";
+import { ProgressBar } from 'primereact/progressbar';
 import { Autocomplete, GoogleMap, Marker, useJsApiLoader, DirectionsService, DirectionsRenderer } from '@react-google-maps/api'; 
 import Location1 from '../assets/images/Pickup.svg';
 import Location2 from '../assets/images/Dropoff.svg';
@@ -20,12 +21,17 @@ import LocationMap from '../assets/images/location-map.jpg';
 import CarThumb from '../assets/images/mercedes-v-class.jpg';
 import config from '../config'; 
 import backgroundImage from '../assets/images/thank-you-image.jpg';
+import rightIcon from '../assets/images/arrow-right.svg';
+import checkIcpn from '../assets/images/check-icon.svg';
+import rightBlackIcon from '../assets/images/arrow_right_black_icon.svg';
+import timerIcon from '../assets/images/timer.svg';
+
 
 
 const containerStyle = {width: '550px',height: '250px'}
 const geocoder = new window.google.maps.Geocoder();
 
-function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central London", "Babington House"] }) {
+function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -37,10 +43,12 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
     const [pickupAutocomplete, setPickupAutocomplete] = useState(null);
     const [destinationAutocomplete, setDestinationAutocomplete] = useState(null);
     const [datetime12h, setDateTime12h] = useState(null);
+    const [calendarVisible, setCalendarVisible] = useState(false);  // Track visibility
+    const [isDateSelected, setIsDateSelected] = useState(false); 
     const [mapCenter, setMapCenter] = useState({  lat: 51.5074, lng: -0.1278  });
     // const londonBounds = {north: 51.7, south: 51.3, west: -0.5, east: 0.3,};
     const londonBounds = {north: 60, south: 49.5, west: -11, east: 2.5 }
-
+    const [progressBar, setprogressBar] = useState(25);
     
     const [zoomLevel, setZoomLevel] = useState(10); // Default zoom level
     const mapRef = useRef(null); // Store map instance
@@ -84,6 +92,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
         setSelectedCars(updatedCars);
         if (updatedCars.length === 0) {
             setActiveIndex(0);
+            setprogressBar(25);
         }
     };
 
@@ -126,6 +135,10 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
             // If only one point exists, center it with a reasonable zoom
             map.setCenter(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
             map.setZoom(10); // ✅ Adjusted zoom for a single location
+        } else {
+            // If no start point, center on London
+            map.setCenter(mapCenter);
+            map.setZoom(5); // Default zoom for London
         }
     };
     
@@ -197,8 +210,10 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
         }
         setShowWarning(false);
         setActiveIndex(activeIndex + 1); // Move to the next tab or step
+        setprogressBar((activeIndex < 3) ? progressBar + 25 : 100);
         const tabIndex = (activeIndex != 3) ? activeIndex + 1 : activeIndex;
         setActiveIndex(tabIndex); 
+        setprogressBar((tabIndex < 3) ? progressBar + 25 : 100);
         if(tabIndex === 3){
             const carDetails = selectedCars.map(car => `${car.company_name} (${car.car_name})`).join(', ');
             const messageBody = `
@@ -225,6 +240,10 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
         } else if (index === 0 || index === 1) {
             setActiveIndex(index); 
             setShowWarning(false);  
+            console.log('index',index);
+            setprogressBar(index === 0 ? 25 : index === 1 ? 50 : index === 2 ? 75 : 100);
+
+            console.log('index -------++',index * progressBar);
         } else if (selectedCars.length === 0) {
             setShowWarning(true);
         } else if (!pickupValue || !destinationValue || !datetime12h) {
@@ -232,6 +251,8 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
         } else {
             setActiveIndex(index);
             setShowWarning(false);
+            setprogressBar(index === 0 ? 25 : index === 1 ? 50 : index === 2 ? 75 : 100);
+            console.log('index -------',index * progressBar);
         }
     };
     
@@ -368,60 +389,80 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
         }
     }, [isHomeBanner]);
 
-    useEffect(() => {
-        const fetchLocations = async () => {
-            if (!isLoaded || !location?.length) return;
-            try {
-                const startLatLng = await fetchLatLng(location[0]);
-                const endLatLng = location[1] ? await fetchLatLng(location[1]) : null;
-                if (startLatLng) setStartPoint(startLatLng);
-                if (endLatLng) setEndPoint(endLatLng);
-                if (mapRef.current) {
-                    const map = mapRef.current;
-                    if (startLatLng && endLatLng) {
-                        // Adjust zoom dynamically for both points
-                        const bounds = new window.google.maps.LatLngBounds();
-                        bounds.extend(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
-                        bounds.extend(new window.google.maps.LatLng(endLatLng.lat, endLatLng.lng));
-                        // Apply padding and auto-fit zoom
-                        map.fitBounds(bounds, { top: 80, bottom: 80, left: 80, right: 80 });
-                    } else if (startLatLng) {
-                        // If only one point, set dynamic zoom
-                        map.setCenter(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
-                        // Set zoom based on region size
-                        const zoomLevel = startLatLng.lat > 50 ? 10 : 5; // UK-focused zoom level
-                        map.setZoom(zoomLevel);
+        useEffect(() => {
+            const fetchLocations = async () => {
+                if (!isLoaded || !location?.length) return;
+                try {
+                    const startLatLng = await fetchLatLng(location[0]);
+                    const endLatLng = location[1] ? await fetchLatLng(location[1]) : null;
+                    if (startLatLng) setStartPoint(startLatLng);
+                    if (endLatLng) setEndPoint(endLatLng);
+                    if (mapRef.current) {
+                        const map = mapRef.current;
+                        if (startLatLng && endLatLng) {
+                            // Adjust zoom dynamically for both points
+                            const bounds = new window.google.maps.LatLngBounds();
+                            bounds.extend(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
+                            bounds.extend(new window.google.maps.LatLng(endLatLng.lat, endLatLng.lng));
+                            // Apply padding and auto-fit zoom
+                            map.fitBounds(bounds, { top: 80, bottom: 80, left: 80, right: 80 });
+                        } else if (startLatLng) {
+                            // If only one point, set dynamic zoom
+                            map.setCenter(new window.google.maps.LatLng(startLatLng.lat, startLatLng.lng));
+                            // Set zoom based on region size
+                            const zoomLevel = startLatLng.lat > 50 ? 10 : 5; // UK-focused zoom level
+                            map.setZoom(zoomLevel);
+                        }
                     }
+                } catch (error) {
+                    console.error("Error fetching location coordinates:", error);
                 }
-            } catch (error) {
-                console.error("Error fetching location coordinates:", error);
-            }
-        };
-        fetchLocations();
-    }, [isLoaded, location]);
-    
-    
-    // ✅ Updated fetchLatLng function
-    const fetchLatLng = async (placeName) => {
-        return new Promise((resolve, reject) => {
-            if (!placeName) {
-                console.error("Invalid place name:", placeName);
-                resolve(null);
-                return;
-            }
-            const geocoder = new window.google.maps.Geocoder();
-            geocoder.geocode({ address: placeName }, (results, status) => {
-                if (status === "OK" && results[0]?.geometry?.location) {
-                    const { lat, lng } = results[0].geometry.location;
-                    resolve({ lat: lat(), lng: lng() });
-                } else {
-                    console.error(`Geocoding failed for ${placeName}:`, status);
+            };
+            fetchLocations();
+        }, [isLoaded, location]);
+        
+        
+        // ✅ Updated fetchLatLng function
+        const fetchLatLng = async (placeName) => {
+            return new Promise((resolve, reject) => {
+                if (!placeName) {
+                    console.error("Invalid place name:", placeName);
                     resolve(null);
+                    return;
                 }
+                const geocoder = new window.google.maps.Geocoder();
+                geocoder.geocode({ address: placeName }, (results, status) => {
+                    if (status === "OK" && results[0]?.geometry?.location) {
+                        const { lat, lng } = results[0].geometry.location;
+                        resolve({ lat: lat(), lng: lng() });
+                    } else {
+                        console.error(`Geocoding failed for ${placeName}:`, status);
+                        resolve(null);
+                    }
+                });
             });
-        });
-    };
+        };
+        
+        // Handle Select Button Click
+        const handleSelectButtonClick = () => {
+            setCalendarVisible(false);  // Manually hide the calendar
+        };
     
+        // Handle visibility change of the calendar
+        const handleVisibleChange = (e) => {
+            setCalendarVisible(e.visible);  // Set visibility based on user interaction
+        };
+
+        // Handle the change in date selection
+        const handleDateChange = (e) => {
+            setDateTime12h(e.value);  // Update the selected date
+            setIsDateSelected(true);  // Enable "Select" button when a date is selected
+        };
+
+        const autoCompleteOptions = {
+            componentRestrictions: { country: "uk" }, // ✅ Only UK locations allowed
+            types: ["geocode"], // You can change this based on your needs
+        };
 
     return (
         <>
@@ -434,21 +475,22 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                     <div className='booking-popup-head-left'>
                         <h3 className='m-0'>your <strong>trip</strong></h3>
                     </div>
+                    <ProgressBar value={progressBar}  style={{ height: '3px' }}></ProgressBar>
                     <div className='booking-popup-head-right'>
                         {activeIndex === 0 && (
-                            <Button className="btn largebtn" onClick={() => handleDoneClick('vehicle')}>Book Now</Button>
+                            <Button className="btn largebtn" onClick={() => handleDoneClick('vehicle')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
                         )}
 
                         {activeIndex === 1 && (
-                            <Button className="btn largebtn" onClick={() => handleDoneClick('route')}>Book Now</Button>
+                            <Button className="btn largebtn" onClick={() => handleDoneClick('route')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
                         )}
 
                         {activeIndex === 2 && (
-                            <Button className="btn largebtn" onClick={() => handleDoneClick('details')}>Book Now</Button>
+                            <Button className="btn largebtn" onClick={() => handleDoneClick('details')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
                         )}
 
                         {activeIndex === 3 && (
-                            <Button className={`btn largebtn ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book Now  <div className="loader-wrap"><span className='loader'></span></div></Button>
+                            <Button className={`btn largebtn booked ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book  <span className='icon'><img src={checkIcpn} /></span><div className="loader-wrap"><span className='loader'></span></div></Button>
                         )}
                     </div>
                 </div>
@@ -491,7 +533,8 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                     <ul className='popup-filter-results font-12 fw-400 nostyle'>
                                         {pickupValue && (
                                             <li>
-                                                <strong>Pick-up:</strong> {pickupValue}
+                                                <span className="location-title"><strong>Pick-up:&nbsp;</strong></span>
+                                                <span className="content">{pickupValue}</span> 
                                                 <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
                                                     <img src={Editicon} alt="Edit Icon" className="" />
                                                 </span>
@@ -499,7 +542,9 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                         )}
                                         {destinationValue && (
                                             <li>
-                                                <strong>Destination:</strong> {destinationValue}
+                                                <span className="location-title"><span className='icon'><img src={rightBlackIcon}/></span>
+                                                <strong>Destination:&nbsp;</strong></span>
+                                                <span className="content">{destinationValue}</span>
                                                 <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
                                                     <img src={Editicon} alt="Edit Icon" className="" />
                                                 </span>
@@ -509,7 +554,9 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                     <ul className='popup-filter-results font-12 fw-400 nostyle'>   
                                         {datetime12h && (
                                             <li>
-                                                <strong>Time:</strong> {formatTime(datetime12h)} {/* Display the formatted time */}
+                                                <span className="location-title"><span className='icon'><img src={timerIcon}/></span>
+                                                <strong>Time:&nbsp;</strong></span>
+                                                <span className="content">{formatTime(datetime12h)}</span>
                                                 <span className="result-icon" onClick={() => handleEditClick('datetime')}>
                                                     <img src={Editicon} alt="Edit Icon" className="" />
                                                 </span>
@@ -528,13 +575,15 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                     />
                                     <ul className='popup-filter-results font-12 fw-400 nostyle'>
                                         <li>
-                                            <strong>Passengers: </strong>{passengerCount ? passengerCount : 0}
+                                            <span className="location-title"><strong>Passengers:&nbsp;</strong></span>
+                                            <span className="content">{passengerCount ? passengerCount : 0}</span>
                                             <span className='result-icon' onClick={() => handleEditClick('passenger')}>
                                                 <img src={Editicon} alt="Edit Icon" className="" />
                                             </span>
                                         </li>
                                         <li>
-                                            <strong>Additional requests: </strong> {additionalRequests ? additionalRequests : 'None'}
+                                            <span className="location-title"><strong>Additional requests:&nbsp;</strong></span>
+                                            <span className="content"> {additionalRequests ? additionalRequests : 'None'}</span>
                                             <span className='result-icon' onClick={() => handleEditClick('additional')}>
                                                 <img src={Editicon} alt="Edit Icon" className="" />
                                             </span>                                        
@@ -542,8 +591,22 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                     </ul>
                                 </div>
                             </div>
-                            <div className='mobile-tab-results show-mobile'>
+                            {activeIndex === 0 && (
+                            <div className='mobile-tab-results show-mobile' >
                                 <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                    {selectedCars.map((car) => (
+                                        <li key={car._id}>
+                                            {car.company_name} {car.car_name}
+                                            <span
+                                            className="result-icon"
+                                            onClick={() => handleRemoveCar(car)}
+                                            >
+                                            <img src={Closeicon} alt="Close Icon" />
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                {/* <ul className='popup-filter-results font-12 fw-400 nostyle'>
                                     <li>
                                         Mercedes S-Class
                                         <span className='result-icon'><img src={Closeicon} alt="Close Icon" className="" /></span>
@@ -552,8 +615,66 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                         Rolls Royce Phantom
                                         <span className='result-icon'><img src={Closeicon} alt="Close Icon" className="" /></span>                                        
                                     </li>
+                                </ul> */}
+                            </div>
+                            )}
+                             {activeIndex === 1 && (
+                            <div className='mobile-tab-results show-mobile'>
+                                <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                    {pickupValue && (
+                                        <li>
+                                            <span className="location-title"><strong>Pick-up:&nbsp;</strong></span>
+                                            <span className="content">{pickupValue}</span> 
+                                            <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
+                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                            </span>
+                                        </li>
+                                    )}
+                                    {destinationValue && (
+                                        <li>
+                                            <span className="location-title"><span className='icon'><img src={rightBlackIcon}/></span>
+                                            <strong>Destination:&nbsp;</strong></span>
+                                            <span className="content">{destinationValue}</span>
+                                            <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
+                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                            </span>
+                                        </li>
+                                    )}
+                                </ul>
+                                <ul className='popup-filter-results font-12 fw-400 nostyle'>   
+                                    {datetime12h && (
+                                        <li>
+                                            <span className="location-title"><span className='icon'><img src={timerIcon}/></span>
+                                            <strong>Time:&nbsp;</strong></span>
+                                            <span className="content">{formatTime(datetime12h)}</span>
+                                            <span className="result-icon" onClick={() => handleEditClick('datetime')}>
+                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                            </span>
+                                        </li>
+                                    )}                
                                 </ul>
                             </div>
+                            )}
+                            {activeIndex === 2 && (
+                            <div className='mobile-tab-results show-mobile'>
+                                <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                    <li>
+                                        <span className="location-title"><strong>Passengers:&nbsp;</strong></span>
+                                        <span className="content">{passengerCount ? passengerCount : 0}</span>
+                                        <span className='result-icon' onClick={() => handleEditClick('passenger')}>
+                                            <img src={Editicon} alt="Edit Icon" className="" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span className="location-title"><strong>Additional requests:&nbsp;</strong></span>
+                                        <span className="content"> {additionalRequests ? additionalRequests : 'None'}</span>
+                                        <span className='result-icon' onClick={() => handleEditClick('additional')}>
+                                            <img src={Editicon} alt="Edit Icon" className="" />
+                                        </span>                                        
+                                    </li>
+                                </ul>
+                            </div>
+                            )}
                         </div>
                     </div>
                     <div className='booking-popup-maintab-right'>
@@ -622,8 +743,8 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                                 ))}
                                         </div>
                                     </div>
-                                    <div className='done-button pt-40 text-right'>
-                                        <Button className="btn formbtn" onClick={() =>handleDoneClick('vehicle')}>Done</Button>
+                                    <div className='done-button text-right'>
+                                        {/* <Button className="btn formbtn" onClick={() =>handleDoneClick('vehicle')}>Done</Button> */}
                                         {showWarning && (
                                         <div className="warning-message" style={{ color: 'red' }}>
                                             Please select at least one car to proceed.
@@ -667,6 +788,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                                     onLoad={onPickupLoad}
                                                     onPlaceChanged={handlePickupPlaceChange}
                                                     ref={pickupAutocomplete}
+                                                    options={autoCompleteOptions}
                                                 >
                                                     <InputText
                                                         id="pickupaddress"
@@ -684,6 +806,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                                     onLoad={onDestinationLoad}
                                                     onPlaceChanged={handleDestinationPlaceChange}
                                                     ref={destinationAutocomplete}
+                                                    options={autoCompleteOptions}
                                                 >
                                                     <InputText
                                                         id="destinationaddress"
@@ -725,20 +848,25 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                             <FloatLabel>
                                                 <Calendar
                                                     value={datetime12h}
-                                                    onChange={(e) => setDateTime12h(e.value)}
+                                                    onChange={handleDateChange}
                                                     showTime
                                                     hourFormat="12"
-                                                    dateFormat="MM d,yy"
-                                                    readOnlyInput
+                                                    dateFormat="MM dd,yy"
+                                                    readOnlyInput={false}  // This will open the calendar when the input is clicked
                                                     id="datetime"
-                                                    className='w-100'
+                                                    className="w-100"
+                                                    footerTemplate={() => (
+                                                        <button className="btn largebtn p-button p-component date-select-btn"  disabled={!isDateSelected}  type="button" onClick={handleSelectButtonClick}>Select</button>
+                                                    )}
+                                                    onVisibleChange={handleVisibleChange}  // Track visibility change
+                                                    visible={calendarVisible}  // Manually control visibility
                                                 />
                                                 <label htmlFor="username">type a day and time here</label>
                                             </FloatLabel>
                                         </div>
                                     </div>
-                                    <div className='done-button pt-40 text-right'>
-                                        <Button className="btn formbtn" onClick={() =>handleDoneClick('route')}>Done</Button>
+                                    <div className='done-button text-right'>
+                                        {/* <Button className="btn formbtn" onClick={() =>handleDoneClick('route')}>Done</Button> */}
                                         {showWarning && (
                                             <div className="warning-message" style={{ color: 'red' }}>
                                                 Please fill in all the required fields.
@@ -805,9 +933,9 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
                                             />
                                         </div>
                                     </div>
-                                    <div className='done-button pt-40 text-right'>
+                                    <div className='done-button text-right'>
                                         {/* <Button className="btn formbtn">Done</Button> */}
-                                        <Button className="btn formbtn"  onClick={() =>handleDoneClick('details')}>Done</Button>
+                                        {/* <Button className="btn formbtn"  onClick={() =>handleDoneClick('details')}>Done</Button> */}
                                         {showWarning && (
                                             <div className="warning-message" style={{ color: 'red' }}>
                                                 Please fill in all the required fields.
@@ -842,11 +970,11 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = ["Central Lon
             </div>
         </Dialog>
         <Dialog visible={visible2} onHide={() => {if (!visible2) return; setVisible2(false); }} style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }} className='booking-popup-outer thank-you-popup booking-popup-vhicles' draggable={false}>
-           <div className="popup-wrapper">
+            <div className="popup-wrapper">
                 <h2>your <span>trip has been requested!</span></h2>
                 <p>Our team will reply as soon as possible to confirm. </p>
                 <a href="#" onClick={(e) => { e.preventDefault(); setVisible2(false); }}>Done</a>
-           </div>
+            </div>
         </Dialog>
         </>
     );

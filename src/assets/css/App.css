@@ -498,13 +498,17 @@ input.p-inputtext {
   display: inline-block;
 }
 
-.loading .loader-wrap {
+.loader-wrap {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
+}
+
+.booking-popup-head button.loading .icon {
+  opacity: 0;
 }
 
 .btn.loading.deletebtn{
@@ -1086,12 +1090,31 @@ footer.main-footer::before {
   padding: 20px 25px;
   border-bottom: 0.5px solid #d2d2d2;
   gap: 20px;
+  justify-content: space-between;
 }
 .booking-popup-head button {
   margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
-.booking-popup-head .booking-popup-head-left {
-  flex: 0 0 calc(100% - 181px);
+.booking-popup-head button .icon {
+  display: inline-block;
+  max-width: 17px;
+}
+.booking-popup-head button.booked .icon img {
+  max-width: 14px;
+}
+.booking-popup-head .p-progressbar {
+  flex: 0 0 auto;
+  width: calc(70% - 40px);
+}
+.booking-popup-head .p-progressbar .p-progressbar-value {
+  background: #000000;
+}
+.booking-popup-head .p-progressbar-determinate .p-progressbar-label {
+  display: none;
 }
 .booking-popup-head-left h3 strong {
   color: #00000059;
@@ -1238,14 +1261,23 @@ ul.popup-filter-results {
   padding: 20px 0 0 20px;
   position: relative;
 }
+.booking-popup-maintab-left-wrap {
+  width: 100%;
+}
 .popup-filter-results li {
-  gap: 8px;
+  gap: 0;
+}
+.popup-filter-results .icon {
+  max-width: 16px;
+  display: inline-block;
+  width: 100%;
+  margin: 0 5px -4px 0;
 }
 .popup-filter-results li:not(:last-child) {
   margin-bottom: 14px;
 }
 ul.popup-filter-results li span.result-icon {
-  margin-left: 8px;
+  margin-left: 6px;
   position: relative;
   top: 2px;
   cursor: pointer;
@@ -1341,6 +1373,20 @@ ul.popup-filter-results + ul.popup-filter-results::before {
   width: 100% !important;
   border-radius: 10px;
   border: 1px solid #b2b1b0;
+}
+.p-datepicker-footer {
+  text-align: end;
+  padding-right: 20px;
+  height: 0;
+}
+.p-datepicker-footer button.date-select-btn {
+  background: #000;
+  padding: 14px 20px;
+  border-radius: 30px;
+  width: auto;
+  min-width: auto;
+  margin-top: -130px;
+  margin-bottom: 45px;
 }
 
 /* About */
@@ -1457,6 +1503,7 @@ h2.deletepopup {
 .cancelbtn:hover {
   background: #3a3939;
 }
+
 /* Responsive  */
 
 @media (max-width: 1199px) {
@@ -1599,6 +1646,17 @@ h2.deletepopup {
   .header_logo img {
     max-width: 30px;
   }
+  .booking-popup-head .booking-popup-head-left {
+    order: 1;
+  }
+  .booking-popup-head .booking-popup-head-right {
+    order: 2;
+  }
+  .booking-popup-head .p-progressbar {
+    flex: 0 0 auto;
+    width: 100%;
+    order: 3;
+  }
   .vehicle-options .p-tabview-panels {
     padding-left: 20px;
     padding-right: 0;
@@ -1665,7 +1723,8 @@ h2.deletepopup {
     min-height: 546px;
   }
   .common-routepack-slide div.text-center {
-    display: none;
+    display: block;
+    margin-top: 0;
   }
   .signature-routes-list-wrap,
   .vhicle-list-wrap {
@@ -1772,7 +1831,16 @@ h2.deletepopup {
   }
   .p-dialog-mask .thank-you-popup .popup-wrapper p {
     margin: 0px 0 25px;
-}
+  }
+  .p-datepicker-footer {
+    text-align: center;
+    padding-right: 0;
+    height: auto;
+  }
+  .p-datepicker-footer button.date-select-btn {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
 }
 @media (max-width: 440px) { 
   .header-right ul {

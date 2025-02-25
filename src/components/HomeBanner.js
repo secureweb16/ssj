@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import BannerVideo from "../assets/videos/banner-home-video.mp4";
+import BannerVideo from "../assets/videos/banner-video.mp4";
 import BookingPopup from "../components/BookingPopup";
 import { motion } from "framer-motion";
 
@@ -13,10 +13,10 @@ function HomeBanner({ cars }) {
     };
     const [index, setIndex] = useState(0);
     const words = [
-        { text: "comfort", bgColor: "#ffc703", color: "#000" },
-        { text: "discretion", bgColor: "#004e98", color: "#fff" },
-        { text: "safety", bgColor: "#8cb369", color: "#000" },
-        { text: "personalization", bgColor: "#8cb369", color: "#000" },
+        { text: "convenience", bgColor: "#ffc703", color: "#000" },
+        { text: "safety", bgColor: "#004e98", color: "#fff" },
+        { text: "discretion", bgColor: "#8cb369", color: "#000" },
+        { text: "simplicity", bgColor: "#8cb369", color: "#000" },
     ];
 
     useEffect(() => {
@@ -28,7 +28,7 @@ function HomeBanner({ cars }) {
     return (
         <>
             <div className="home-banner page-banner position-relative overflow-hidden">
-                <video width="100%" height="100%" autoPlay muted playsInline className="position-absolute h-100 w-100">
+                <video width="100%" height="100%" autoPlay muted playsInline  loop preload="auto" className="position-absolute h-100 w-100">
                     <source src={BannerVideo} type="video/mp4" />
                 </video>
                 <div className="home-banner-content position-relative plr-100">
