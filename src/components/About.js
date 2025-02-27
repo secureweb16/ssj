@@ -193,7 +193,7 @@ function About(){
                             {errorMessage && <div className="error-message form-error-message">{errorMessage}</div>}
                         </form>
                     </TabPanel>
-                    <TabPanel header="Polices">
+                    <TabPanel header="Policies">
                         <div className='policies-tabs'>
                             <TabView activeIndex={innerActiveIndex} onTabChange={(e) => innerSetActiveIndex(e.index)}>
                                 <TabPanel header="Booking Policy">
@@ -445,17 +445,8 @@ function About(){
                                             <h2>Contact Us</h2>
                                             <p>If you have any questions about this Privacy Policy, You can contact us:</p>
                                             <ul>
-                                            <li>By email: info@ssjluxurytransport.com</li>
-                                            </ul>
-
-
-
-
-                                            <p>Lorem ipsum odor amet, consectetuer adipiscing elit. Dignissim tincidunt sagittis faucibus metus taciti cras. Turpis velit lectus inceptos sodales libero ex. Mauris malesuada curae nec rutrum feugiat. Nostra at bibendum nisl sed conubia senectus. Ligula nostra curabitur parturient, nisi eleifend mus mauris elementum ac. Nibh aliquet mi torquent neque orci pretium taciti ligula. Sem aliquet sed vestibulum gravida volutpat. Maximus id congue duis dolor scelerisque varius fusce elementum.</p>
-                                            <p>Magnis convallis quis est condimentum consequat; risus ac viverra blandit. Varius ligula elit taciti porttitor vivamus ornare vitae. Himenaeos nascetur euismod cursus volutpat porta hac? Integer dignissim nibh convallis velit habitasse mollis. Dis volutpat neque eros elementum fermentum nec? Integer dui enim quis est facilisis dolor.</p>
-                                            <p>Cubilia sed malesuada accumsan imperdiet efficitur est tristique convallis. Aproin magna porttitor duis curabitur diam. Nam sociosqu ipsum libero facilisis volutpat litora arcu. Curabitur augue habitant a pharetra maximus neque dis felis fames. At interdum torquent malesuada ornare blandit nascetur curabitur. Sem nascetur accumsan magna quisque aliquet ante. Phasellus semper sollicitudin velit tristique suscipit.</p>
-                                            <p>Erat tempus morbi imperdiet class rhoncus pellentesque pellentesque. Aliquet nisl per odio; id nec vitae vestibulum. Consequat ultricies gravida suspendisse, aenean non interdum ullamcorper pellentesque. Sagittis hac dictum purus malesuada nulla integer ex mus. Purus cursus pretium dapibus justo lorem nulla. Vel tortor nulla pharetra posuere massa tempus erat turpis. Morbi consectetur sem ut taciti gravida odio nec. Finibus nam lobortis amet rutrum senectus auctor.</p>
-                                            <p>Faucibus interdum consequat convallis dapibus habitant. Ipsum suscipit risus lacinia fermentum torquent duis nostra. Duis rhoncus primis euismod ad nibh facilisis? Posuere lorem etiam sem; tempor eros ex dictum. Aenean enim nisl massa at inceptos euismod cursus. Libero porttitor habitant platea platea pulvinar. Commodo tristique ultrices, facilisis primis cursus ad nibh maximus. Nascetur volutpat finibus nascetur platea eleifend mattis.</p>
+                                            <li>By email: contact@ssjluxurytransport.com</li>
+                                           </ul>
                                         </div>                                        
                                     </div>
                                 </TabPanel>

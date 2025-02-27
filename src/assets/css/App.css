@@ -1809,8 +1809,9 @@ footer.main-footer {
     min-height: 700px;
   }
   footer.main-footer::before {
-    height: 978px;
-  }
+    height: 100%;
+    opacity: 0.4;
+}
   .inner-page-banner {
     height: 546px;
   }
@@ -1860,6 +1861,10 @@ footer.main-footer {
   }
   .build-by {
     padding: 0 20px;
+  }
+  .car-info-popup-outer.p-dialog .p-dialog-header {
+    top: -40px;
+    right: -10px;
   }
 }
 @media (max-width: 575px) { 
