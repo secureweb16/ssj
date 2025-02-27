@@ -23,10 +23,8 @@ import rightIcon from '../assets/images/arrow-right.svg';
 import checkIcpn from '../assets/images/check-icon.svg';
 import rightBlackIcon from '../assets/images/arrow_right_black_icon.svg';
 import timerIcon from '../assets/images/timer.svg';
-
-
 const containerStyle = {width: '550px',height: '250px'}
-const geocoder = new window.google.maps.Geocoder();
+// const geocoder = new window.google.maps.Geocoder();
 
 function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     const [visible, setVisible] = useState(false);
@@ -60,6 +58,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [datetime, setDatetime] = useState(null); // Holds selected datetime
     const onPickupLoad = (autocomplete) => {
         setPickupAutocomplete(autocomplete);
         if (location?.[0]) {
@@ -76,6 +75,14 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
         componentRestrictions: { country: "uk" }, 
         types: ["geocode"], 
     };
+    const [geocoder, setGeocoder] = useState(null);
+    useEffect(() => {
+        if (window.google && window.google.maps) {
+            const geocoder = new window.google.maps.Geocoder();
+            setGeocoder(geocoder);
+            console.log("Geocoder initialized", geocoder);
+        }
+    }, []);
     
 
     /* Handle Car Selection */ 
@@ -201,9 +208,10 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     
     /* Handle Done Buttton Functionality */ 
     const handleDoneClick = (type) => {
+        setCalendarVisible(false);
         if ((type === 'route' && (!pickupValue || !destinationValue || !datetime12h)) ||
             (type === 'vehicle' && selectedCars.length === 0) || 
-            (type === 'details' && (!email || !name || !phone || !passengerCount || !additionalRequests))) {
+            (type === 'details' && (!email || !name || !phone || !passengerCount))) {
             console.log(`${type} fields are missing or no car selected`);
             setShowWarning(true);
             return; // Stop further execution if condition is met
@@ -240,10 +248,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
         } else if (index === 0 || index === 1) {
             setActiveIndex(index); 
             setShowWarning(false);  
-            console.log('index',index);
             setprogressBar(index === 0 ? 25 : index === 1 ? 50 : index === 2 ? 75 : 100);
-
-            console.log('index -------++',index * progressBar);
         } else if (selectedCars.length === 0) {
             setShowWarning(true);
         } else if (!pickupValue || !destinationValue || !datetime12h) {
@@ -252,7 +257,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
             setActiveIndex(index);
             setShowWarning(false);
             setprogressBar(index === 0 ? 25 : index === 1 ? 50 : index === 2 ? 75 : 100);
-            console.log('index -------',index * progressBar);
         }
     };
     
@@ -338,10 +342,20 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     };
 
     /* Handle Phone Number Change */ 
-    const handlePhoneChange = (e) => {
-    setPhone(e.value); // InputNumber gives e.value for numeric inputs
-    };
+    // const handlePhoneChange = (e) => {
+    // setPhone(e.value); // InputNumber gives e.value for numeric inputs
+    // };
 
+    const handlePhoneChange = (e) => {
+        let rawPhone = e.target.value || '' ; 
+        rawPhone = rawPhone.replace(/[^\d]/g, '');
+        if (rawPhone.length > 5) {
+            rawPhone = rawPhone.replace(/^(\d{4})(\d{1,6})$/, '$1 $2');
+        } else if (rawPhone.length > 0) {
+            rawPhone = rawPhone;
+        }
+        setPhone(rawPhone);
+    };
 
     // Handle form submission
     const handleSubmit = async (type) => {
@@ -387,6 +401,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
         if (isHomeBanner) {
           setVisible(true);
         }
+        const geocoder = new window.google.maps.Geocoder();
     }, [isHomeBanner]);
 
     useEffect(() => {
@@ -444,6 +459,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     };
 
     const handleVisibleChange = (e) => {
+        console.log(e.visible);
         setCalendarVisible(e.visible);
     };
 
@@ -451,6 +467,107 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
         setDateTime12h(e.value); 
         setIsDateSelected(true); 
     };
+
+///////////////
+
+//////=========
+
+    useEffect(() => {
+        if (!datetime) {
+            setDatetime(new Date()); // Set the current time when the component first mounts
+        }
+    }, [datetime]);
+
+    // Function to handle changes to time input (hours, minutes, AM/PM)
+    const handleTimeChange = (e, type) => {
+    let updatedDateTime = new Date(datetime);
+
+    if (!datetime || !(datetime instanceof Date) || isNaN(datetime.getTime())) {
+        return; // Early return if datetime is invalid
+    }
+
+    if (type === 'hour') {
+        let newHour = parseInt(e.target.value);
+
+        // Check if the new hour is between 1 and 12, and handle it
+        if (newHour >= 1 && newHour <= 12) {
+        updatedDateTime.setHours(newHour + (datetime.getHours() >= 12 ? 12 : 0)); // Adjust for AM/PM
+        setDatetime(updatedDateTime);
+        } else if (e.target.value === '') {
+        // If the input is cleared, leave the hour unchanged
+        return;
+        }
+    } else if (type === 'minute') {
+        let newMinute = parseInt(e.target.value);
+        if (newMinute >= 0 && newMinute < 60) {
+        updatedDateTime.setMinutes(newMinute);
+        setDatetime(updatedDateTime);
+        }
+    } else if (type === 'ampm') {
+        const isPM = e.target.value === 'PM';
+        let currentHour = updatedDateTime.getHours();
+        if (isPM && currentHour < 12) {
+        updatedDateTime.setHours(currentHour + 12); // Convert AM to PM
+        } else if (!isPM && currentHour >= 12) {
+        updatedDateTime.setHours(currentHour - 12); // Convert PM to AM
+        }
+        setDatetime(updatedDateTime);
+    }
+    };
+
+    // Function to handle auto-select on focus
+    const handleFocus = (e) => {
+    e.target.select(); // Select the content inside the input field when focused
+    setCalendarVisible(true); // Show the calendar when input is focused
+    };
+
+
+    // Custom footer template with input fields for time
+    const footerTemplate = () => {
+    if (!datetime || !(datetime instanceof Date) || isNaN(datetime.getTime())) {
+        return null;
+    }
+
+    // Get the hour and minute in two-digit format
+    const hour = String(datetime.getHours() % 12 || 12).padStart(2, '0'); // Ensure 2-digit hour
+    const minute = String(datetime.getMinutes()).padStart(2, '0'); // Ensure 2-digit minute
+    const ampm = datetime.getHours() >= 12 ? 'PM' : 'AM'; // Determine AM/PM
+
+    return (
+        <div className='custom-time-selector'>
+        <input
+            type="number"
+            value={hour}
+            onChange={(e) => handleTimeChange(e, 'hour')}
+            placeholder="HH"
+            min="1"
+            max="12"
+            onFocus={handleFocus} // Auto-select the input value when focused
+            onBlur={handleBlur}   // Optionally handle blur here (if needed)
+        />
+        <span className='divider'>:</span>
+        <input
+            type="number"
+            value={minute}
+            onChange={(e) => handleTimeChange(e, 'minute')}
+            placeholder="MM"
+            min="0"
+            max="59"
+            onFocus={handleFocus} // Auto-select the input value when focused
+            onBlur={handleBlur}   // Optionally handle blur here (if needed)
+        />
+        <span className='divider'>:</span>
+        <select value={ampm} onChange={(e) => handleTimeChange(e, 'ampm')} style={{ border: '1px solid #d9d9d9' }}>
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+        </select>
+
+        <button className="btn largebtn p-button p-component date-select-btn" disabled={!datetime} type="button" onClick={handleSelectButtonClick}>Select</button>
+        </div>
+    );
+    };
+
+    const handleBlur = (e) => {};
 
     return (
         <>
@@ -745,31 +862,34 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                 <>
                                     <div className='vehicle-routeschedule-content'>
                                         <h6>Select your <strong>pick-up location and destination</strong></h6>
-                                        <div className='vehicle-routeschedule-signaturebox mb-30'>
-                                            <div className='routeschedule-signaturebox-top d-flex align-items-center'>
-                                                <p className='text-uppercase m-0 fw-400 font-12'>Signature Routes</p>
-                                                <a href="/signature-routes" className="font-12 viewmorebtn">
-                                                    view more
-                                                </a>
-                                                {/* <span className='viewmorebtn' onClick={() => setVisible2(true)}>view more</span> */}
-                                            </div>
-                                            <div className='routeschedule-signaturebox-bottom'>
-                                                <div className='routeschedule-signaturebox-locations d-grid'>
-                                                    {pickupValue && (
-                                                        <div className='routeschedule-signaturebox-location d-flex align-items-center'>
-                                                            <img src={Location1} alt="Location Image" className="" />
-                                                            <p className='m-0'>{pickupValue} </p>
-                                                        </div>
-                                                    )}
-                                                    {destinationValue && (
-                                                        <div className='routeschedule-signaturebox-location d-flex align-items-center'>
-                                                            <img src={Location2} alt="Location Image" className="" />
-                                                            <p className='m-0'>{destinationValue} </p>
-                                                        </div>
-                                                    )}
+                                        {pickupValue  && (
+                                            <div className='vehicle-routeschedule-signaturebox mb-30'>
+                                                {/* <div className='routeschedule-signaturebox-top d-flex align-items-center'>
+                                                    <p className='text-uppercase m-0 fw-400 font-12'>Signature Routes</p>
+                                                    <a href="/signature-routes" className="font-12 viewmorebtn">
+                                                        view more
+                                                    </a>
+                                                    <span className='viewmorebtn' onClick={() => setVisible2(true)}>view more</span>
+                                                </div> */}
+                                                
+                                                <div className='routeschedule-signaturebox-bottom'>
+                                                    <div className='routeschedule-signaturebox-locations d-grid'>
+                                                        {pickupValue && (
+                                                            <div className='routeschedule-signaturebox-location d-flex align-items-center'>
+                                                                <img src={Location1} alt="Location Image" className="" />
+                                                                <p className='m-0'>{pickupValue} </p>
+                                                            </div>
+                                                        )}
+                                                        {destinationValue && (
+                                                            <div className='routeschedule-signaturebox-location d-flex align-items-center'>
+                                                                <img src={Location2} alt="Location Image" className="" />
+                                                                <p className='m-0'>{destinationValue} </p>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                          )}
                                         <div className='form-group position-relative'>
                                             <FloatLabel>
                                                 <Autocomplete
@@ -842,10 +962,9 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                                     dateFormat="MM dd,yy"
                                                     readOnlyInput={false}  // This will open the calendar when the input is clicked
                                                     id="datetime"
+                                                    inputMode="string"
                                                     className="w-100"
-                                                    footerTemplate={() => (
-                                                        <button className="btn largebtn p-button p-component date-select-btn"  disabled={!isDateSelected}  type="button" onClick={handleSelectButtonClick}>Select</button>
-                                                    )}
+                                                    footerTemplate={footerTemplate}
                                                     onVisibleChange={handleVisibleChange}  // Track visibility change
                                                     visible={calendarVisible}  // Manually control visibility
                                                 />
@@ -912,11 +1031,11 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <InputNumber
+                                            <InputText
                                             type="tel"
                                             placeholder="Phone number"
                                             value={phone}
-                                            onValueChange={handlePhoneChange} // Bind to state
+                                            onChange={handlePhoneChange} // Bind to state
                                             className="w-100"
                                             />
                                         </div>

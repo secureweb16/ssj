@@ -2,6 +2,7 @@ import React, { useState } from 'react'; // Added useState import
 import { Link } from "react-router-dom";
 import Logo from "../assets/images/ssj-logo.svg";
 import FooterBackground from "../assets/images/footer-bg.jpg";
+import milkbarImage from "../assets/images/milkbar-crop.png";
 import BookingPopup from '../components/BookingPopup';
 
 
@@ -52,7 +53,8 @@ function Footer({cars}) {
                             </li>
                         </ul>
                     </div>
-                </div>                
+                </div> 
+                <div className="build-by"><Link to="https://themilkbar.co/"><span className='small-text'>bulit by</span><img src={milkbarImage} /></Link></div>               
             </footer>            
         </>
     );

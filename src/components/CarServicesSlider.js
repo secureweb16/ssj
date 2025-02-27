@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import SliderItem1 from '../assets/images/chauffeur.jpg';
+import SliderItem1 from '../assets/images/chauffeur1.jpg';
 import SliderItem2 from '../assets/images/corporate-service.jpg';
-import SliderItem3 from '../assets/images/black-car-hire.jpg';
+import SliderItem3 from '../assets/images/black-car-hire1.jpg';
 import SliderItem4 from '../assets/images/airport-transport.jpg';
 import LeftArrow from '../assets/images/left-arrow.svg';
 import RightArrow from '../assets/images/right-arrow.svg';

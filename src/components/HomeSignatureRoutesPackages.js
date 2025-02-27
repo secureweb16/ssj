@@ -19,8 +19,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
+import BookingPopup from '../components/BookingPopup';
 
-function HomeSignatureRoutesPackages(){    
+function HomeSignatureRoutesPackages({cars}){    
     return(
     <div className="signature-routes-slider ptb-90">  
         <p className='text-uppercase font-12 plr-100 fw-400 text-center section-title'>Signature routes & packages</p>
@@ -70,6 +71,9 @@ function HomeSignatureRoutesPackages(){
                                 </span>
                             </div>
                         </div>
+                        <div className='text-center mt-30 signature'>
+                            <BookingPopup cars={cars}  location={['Central London','Babington House']} />
+                        </div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -91,6 +95,9 @@ function HomeSignatureRoutesPackages(){
                                 </svg>
                                 </span>
                             </div>
+                        </div>
+                        <div className='text-center mt-30 signature'>
+                            <BookingPopup cars={cars}  location={['Central London','Estelle Manor']} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -114,6 +121,9 @@ function HomeSignatureRoutesPackages(){
                                 </span>
                             </div>
                         </div>
+                        <div className='text-center mt-30 signature'>
+                            <BookingPopup cars={cars}  location={['Central London','Manchester']} />
+                        </div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -135,6 +145,9 @@ function HomeSignatureRoutesPackages(){
                                 </svg>
                                 </span>
                             </div>
+                        </div>
+                        <div className='text-center mt-30 signature'>
+                            <BookingPopup cars={cars}  location={['Central London','Cowarth Park']} />
                         </div>
                     </div>
                 </SwiperSlide>
@@ -158,6 +171,9 @@ function HomeSignatureRoutesPackages(){
                                 </span>
                             </div>
                         </div>
+                        <div className='text-center mt-30 signature'>
+                            <BookingPopup cars={cars}  location={['Central London','Cheltenham']} />
+                        </div>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -179,6 +195,9 @@ function HomeSignatureRoutesPackages(){
                                 </svg>
                                 </span>
                             </div>
+                        </div>
+                        <div className='text-center mt-30 signature'>
+                            <BookingPopup cars={cars}  location={['Central London','Bicester Village']} />
                         </div>
                     </div>
                 </SwiperSlide>                

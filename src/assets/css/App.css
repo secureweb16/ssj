@@ -414,6 +414,10 @@ img{
   font-weight: 500;
   color: #000;
   font-size: 14px;
+  margin: 0;
+}
+.p-calendar:not(.p-calendar-disabled).p-focus > .p-inputtext {
+  box-shadow: none;
 }
 input.p-inputtext {
   height: 46px;
@@ -1206,7 +1210,7 @@ ul.popup-filter-results:empty {
 .routeschedule-signaturebox-locations {
   grid-template-columns: repeat(2,1fr);
   gap: 30px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 .routeschedule-signaturebox-locations .routeschedule-signaturebox-location {
   gap: 10px;
@@ -1344,6 +1348,7 @@ ul.popup-filter-results + ul.popup-filter-results::before {
 }
 .p-datepicker .p-timepicker {
   padding: 20px 10px 13px;
+  display: none;
 }
 .p-datepicker .p-timepicker button {
   margin: 0;
@@ -1376,8 +1381,7 @@ ul.popup-filter-results + ul.popup-filter-results::before {
 }
 .p-datepicker-footer {
   text-align: end;
-  padding-right: 20px;
-  height: 0;
+  padding: 20px 20px;
 }
 .p-datepicker-footer button.date-select-btn {
   background: #000;
@@ -1385,8 +1389,46 @@ ul.popup-filter-results + ul.popup-filter-results::before {
   border-radius: 30px;
   width: auto;
   min-width: auto;
-  margin-top: -130px;
-  margin-bottom: 45px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.custom-time-selector {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.p-datepicker .custom-time-selector input {
+  background: none;
+  padding: 0;
+  width: 60px;
+  height: 40px;
+  border-radius: 0;
+  text-align: center;
+  padding: 0 10px;
+  margin: 0;
+  border: 1px solid #d9d9d9;
+}
+.p-datepicker .custom-time-selector input:focus {
+  border-color: #d9d9d9;
+}
+.p-datepicker .custom-time-selector input[type=number]::-webkit-inner-spin-button {
+  opacity: 1;
+}
+.p-datepicker .custom-time-selector select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  height: 40px;
+}
+.p-datepicker .custom-time-selector select:focus-visible {
+  outline: none;
+}
+.p-datepicker .divider {
+  line-height: 35px;
+  font-weight: 800;
 }
 
 /* About */
@@ -1503,6 +1545,31 @@ h2.deletepopup {
 .cancelbtn:hover {
   background: #3a3939;
 }
+
+/* Footer */
+footer.main-footer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 20px;
+}
+.build-by {
+  display: flex;
+  justify-content: right;
+  margin-top: auto;
+  padding: 0 100px;
+}
+.build-by img {
+  width: 100%;
+  max-width: 80px;
+}
+.build-by a {
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
+  gap: 10px;
+}
+
 
 /* Responsive  */
 
@@ -1646,6 +1713,17 @@ h2.deletepopup {
   .header_logo img {
     max-width: 30px;
   }
+  body .home-banner {
+    height: 100vh;
+  }
+  .home-banner-content {
+    display: flex;
+    flex-direction: column;
+  }
+  .home-banner-content ul {
+    margin-top: auto;
+    margin-bottom: 40px;
+  }
   .booking-popup-head {
     padding: 20px 0 0;
   }
@@ -1701,7 +1779,7 @@ h2.deletepopup {
     width: 1px;
     background: #fff;
     display: inline-block;
-    margin: 0 18px;
+    margin: 0 15px;
   }
   .home-banner-buttons .btn, .home-banner-buttons .transparent-btn {
     font-size: 10px;
@@ -1734,7 +1812,7 @@ h2.deletepopup {
     height: 978px;
   }
   .inner-page-banner {
-    min-height: 546px;
+    height: 546px;
   }
   .common-routepack-slide div.text-center {
     display: block;
@@ -1779,7 +1857,10 @@ h2.deletepopup {
   }
   .p-dialog-mask .thank-you-popup .p-dialog-content {
     padding: 20px 25px;
-  } 
+  }
+  .build-by {
+    padding: 0 20px;
+  }
 }
 @media (max-width: 575px) { 
   .common-booking-car-info .carpop-bottom-detail {
@@ -1848,12 +1929,20 @@ h2.deletepopup {
   }
   .p-datepicker-footer {
     text-align: center;
-    padding-right: 0;
     height: auto;
+  }
+  .custom-time-selector {
+    flex-wrap: wrap;
   }
   .p-datepicker-footer button.date-select-btn {
     margin-top: 8px;
     margin-bottom: 8px;
+  }
+  .p-datepicker-footer button.date-select-btn {
+    width: 100%;
+    min-width: auto;
+    position: static;
+    transform: none;
   }
 }
 @media (max-width: 440px) { 
