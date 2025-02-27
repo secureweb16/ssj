@@ -2,6 +2,7 @@ import React, { useState } from 'react'; // Added useState import
 import { Link } from "react-router-dom";
 import Logo from "../assets/images/ssj-logo.svg";
 import FooterBackground from "../assets/images/footer-bg.jpg";
+import FooterBackgroundMobile from "../assets/images/footer-bg-mobile.jpg";
 import milkbarImage from "../assets/images/milkbar-crop.png";
 import BookingPopup from '../components/BookingPopup';
 
@@ -18,7 +19,7 @@ function Footer({cars}) {
     };
     return (
         <>
-            <footer className='main-footer position-relative ptb-90 overflow-hidden' style={{ backgroundImage: `url(${FooterBackground})` }}>
+        <footer className="main-footer position-relative ptb-90 overflow-hidden" style={{ backgroundImage: `url(${window.innerWidth > 768 ? FooterBackground : FooterBackgroundMobile})`, }}>
                 <div className='plr-100'>
                     <div className='main-footer-wrap '> 
                         <Link to='/' className='footer-logo'>
