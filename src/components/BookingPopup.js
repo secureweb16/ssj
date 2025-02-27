@@ -513,10 +513,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
         }
         setDatetime(updatedDateTime);
     }
-    console.log('datetime', datetime);
-    console.log('datetime12h', datetime12h);
-    //setDateTime12h(datetime);
-    //console.log
     };
 
     // Function to handle auto-select on focus
