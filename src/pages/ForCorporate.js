@@ -53,7 +53,7 @@ function ForCorporate() {
       </div>     
       <ForCorporateIpadImage />
       <CustomerReviews />
-      <HomeSignatureRoutesPackages />    
+      <HomeSignatureRoutesPackages cars={cars} />    
       {loading ? (
         <div className="car-loading">
             <p>Loading cars...</p>

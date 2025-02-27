@@ -60,6 +60,9 @@ ul {
   margin-top: 0;
   margin-bottom: 0;
 }
+.overflow-hidden {
+  overflow: hidden;
+}
 .about-pagedesc ul {
   margin-bottom: 20px;
 }
@@ -416,6 +419,10 @@ img{
   font-size: 14px;
   margin: 0;
 }
+.booking-popup-outer input.p-inputtext::placeholder {
+  color: #000;
+  opacity: 0.6;
+}
 .p-calendar:not(.p-calendar-disabled).p-focus > .p-inputtext {
   box-shadow: none;
 }
@@ -432,9 +439,12 @@ input.p-inputtext {
   padding-top: 16px;
 }
 .p-float-label label {
+  top: 50%;
   color: #000;
   left: 0;
   padding: 0 40px;
+  margin: 0;
+  transform: translateY(-50%);
 }
 .p-dialog .p-dialog-content {
   color: #000;
@@ -773,14 +783,15 @@ body .vehicle-options .swiper-scrollbar {
 .routepack-slide-content {
   height: 62%;
   width: 60%;
-  background: #0000001A;
-  backdrop-filter: blur(15px);
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   z-index: 1;
 }
-.routepack-slide-content > a,
+
+.routepack-slide-content .routepack-slide-content_wrapper > a, .routepack-slide-content > a,
 .routepack-slide-content > span.text-white {
   height: 50%;
   display: flex;
@@ -789,6 +800,12 @@ body .vehicle-options .swiper-scrollbar {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 1.1px;
+}
+.routepack-slide-content_wrapper {
+  height: 100%;
+  background: #0000001A;
+  -webkit-backdrop-filter: blur(15px);
+          backdrop-filter: blur(15px);
 }
 .routepack-slide-content > a{
   padding: 10px;
@@ -1445,6 +1462,8 @@ ul.popup-filter-results + ul.popup-filter-results::before {
   padding: 10px;
   border: 1px solid #ddd;
   height: 40px;
+  color:#000;
+  background: transparent;
 }
 .p-datepicker .custom-time-selector select:focus-visible {
   outline: none;
@@ -1737,6 +1756,9 @@ footer.main-footer {
   }
 }
 @media (max-width: 767px) {  
+  .p-float-label label {
+    margin-top: -4px;
+  }
   .header_logo img {
     max-width: 30px;
   }
@@ -1898,7 +1920,7 @@ footer.main-footer {
   .back-to-top .back-to-top-inner {
     background: #FFFFFF33;
     border: 1px solid #FFFFFF80;
-    padding: 15px 20px;
+    padding: 10px 20px;
     border-radius: 30px;
     color: #fff;
     backdrop-filter: blur(10.38px);
@@ -1907,7 +1929,8 @@ footer.main-footer {
     align-items: center;
     gap: 5px;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    font-size: 12px;
   }
   .back-to-top .back-to-top-inner .icon-top {
     transform: rotate(-90deg);
@@ -1918,11 +1941,20 @@ footer.main-footer {
     padding: 30px 0 0;
   }
   .slider_view_all .view_all_btn {
-    padding: 12px 28px;
+    padding: 6px 20px;
+    font-size: 12px;
   }
   .car-info-popup-outer.p-dialog .p-dialog-header {
     top: -40px;
     right: -10px;
+  }
+  .p-datepicker .custom-time-selector select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    font-size: 13px;
+    border-radius: 0;
   }
 }
 @media (max-width: 575px) { 

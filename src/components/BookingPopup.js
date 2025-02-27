@@ -23,7 +23,9 @@ import rightIcon from '../assets/images/arrow-right.svg';
 import checkIcpn from '../assets/images/check-icon.svg';
 import rightBlackIcon from '../assets/images/arrow_right_black_icon.svg';
 import timerIcon from '../assets/images/timer.svg';
+import { format } from "date-fns";
 const containerStyle = {width: '550px',height: '250px'}
+
 // const geocoder = new window.google.maps.Geocoder();
 
 function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
@@ -359,7 +361,8 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
 
     // Handle form submission
     const handleSubmit = async (type) => {
-        const formData = {selectedCars,pickupValue,destinationValue,datetime12h,passengerCount,additionalRequests,name,email,phone};
+        const updatedDate = format(new Date(datetime12h), "MMMM do, yyyy 'at' hh:mm a");
+        const formData = {selectedCars,pickupValue,destinationValue,updatedDate,passengerCount,additionalRequests,name,email,phone};
         if(type == 'email'){
             try {
                 setIsLoading(true);
@@ -459,18 +462,15 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     };
 
     const handleVisibleChange = (e) => {
-        console.log(e.visible);
         setCalendarVisible(e.visible);
     };
 
     const handleDateChange = (e) => {
         setDateTime12h(e.value); 
+        setDatetime(e.value)
         setIsDateSelected(true); 
     };
 
-///////////////
-
-//////=========
 
     useEffect(() => {
         if (!datetime) {
@@ -513,6 +513,10 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
         }
         setDatetime(updatedDateTime);
     }
+    console.log('datetime', datetime);
+    console.log('datetime12h', datetime12h);
+    //setDateTime12h(datetime);
+    //console.log
     };
 
     // Function to handle auto-select on focus
@@ -580,15 +584,25 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     };
   
     useEffect(() => {
-      // Ensures scroll happens after the DOM is ready
-      if (visible && targetDivRef.current) {
-        handleScrollToDiv();
-      }
+        if (visible && targetDivRef.current) {
+            handleScrollToDiv();
+        }
+        if (visible) {
+            document.body.classList.add('overflow-hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+        }
+        
+        return () => {
+            document.body.classList.remove('overflow-hidden');
+        };
     }, [visible]);
+ 
+
     return (
         <>
         {!isHomeBanner && (
-            <span className='btn largebtn' onClick={() => setVisible(true)}>Book Now</span>
+            <span className='btn largebtn' onClick={() => setVisible(true) }>Book Now</span>
         )}
         <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); if(closePopup) {closePopup(); }  }} className='booking-popup-outer' draggable={false}>
             <div className='booking-popup' ref={targetDivRef}
@@ -674,11 +688,11 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                         )}
                                     </ul>
                                     <ul className='popup-filter-results font-12 fw-400 nostyle'>   
-                                        {datetime12h && (
+                                        {datetime && (
                                             <li>
                                                 <span className="location-title"><span className='icon'><img src={timerIcon}/></span>
                                                 <strong>Time:&nbsp;</strong></span>
-                                                <span className="content">{formatTime(datetime12h)}</span>
+                                                <span className="content">{formatTime(datetime)}</span>
                                                 <span className="result-icon" onClick={() => handleEditClick('datetime')}>
                                                     <img src={Editicon} alt="Edit Icon" className="" />
                                                 </span>
@@ -764,11 +778,11 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                     )}
                                 </ul>
                                 <ul className='popup-filter-results font-12 fw-400 nostyle'>   
-                                    {datetime12h && (
+                                    {datetime && (
                                         <li>
                                             <span className="location-title"><span className='icon'><img src={timerIcon}/></span>
                                             <strong>Time:&nbsp;</strong></span>
-                                            <span className="content">{formatTime(datetime12h)}</span>
+                                            <span className="content">{formatTime(datetime)}</span>
                                             <span className="result-icon" onClick={() => handleEditClick('datetime')}>
                                                 <img src={Editicon} alt="Edit Icon" className="" />
                                             </span>
@@ -912,7 +926,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                                 <Autocomplete
                                                     onLoad={onPickupLoad}
                                                     onPlaceChanged={handlePickupPlaceChange}
-                                                    ref={pickupAutocomplete}
+                                                   // ref={pickupAutocomplete}
                                                     options={autoCompleteOptions}
                                                 >
                                                     <InputText
@@ -930,7 +944,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                                 <Autocomplete
                                                     onLoad={onDestinationLoad}
                                                     onPlaceChanged={handleDestinationPlaceChange}
-                                                    ref={destinationAutocomplete}
+                                                    //ref={destinationAutocomplete}
                                                     options={autoCompleteOptions}
                                                 >
                                                     <InputText
@@ -972,7 +986,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                         <div className='form-group position-relative m-0'>
                                             <FloatLabel>
                                                 <Calendar
-                                                    value={datetime12h}
+                                                    value={datetime}
                                                     onChange={handleDateChange}
                                                     showTime
                                                     hourFormat="12"
@@ -981,11 +995,12 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                                     id="datetime"
                                                     inputMode="string"
                                                     className="w-100"
+                                                    placeholder='type a day and time here'
                                                     footerTemplate={footerTemplate}
                                                     onVisibleChange={handleVisibleChange}  // Track visibility change
                                                     visible={calendarVisible}  // Manually control visibility
                                                 />
-                                                <label htmlFor="username">type a day and time here</label>
+                                                {/* <label htmlFor="username">type a day and time here</label> */}
                                             </FloatLabel>
                                         </div>
                                     </div>
