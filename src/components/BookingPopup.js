@@ -561,21 +561,38 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
             <option value="AM">AM</option>
             <option value="PM">PM</option>
         </select>
-
         <button className="btn largebtn p-button p-component date-select-btn" disabled={!datetime} type="button" onClick={handleSelectButtonClick}>Select</button>
         </div>
     );
     };
 
     const handleBlur = (e) => {};
+    const targetDivRef = useRef(null); // Ref for the popup div
 
+    const handleScrollToDiv = () => {
+      if (targetDivRef.current) {
+        // Scroll the popup content to the top
+        targetDivRef.current.scrollTo({
+          top: 0,
+          behavior: 'smooth', // Smooth scroll to the top
+        });
+      }
+    };
+  
+    useEffect(() => {
+      // Ensures scroll happens after the DOM is ready
+      if (visible && targetDivRef.current) {
+        handleScrollToDiv();
+      }
+    }, [visible]);
     return (
         <>
         {!isHomeBanner && (
             <span className='btn largebtn' onClick={() => setVisible(true)}>Book Now</span>
         )}
         <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); if(closePopup) {closePopup(); }  }} className='booking-popup-outer' draggable={false}>
-            <div className='booking-popup'>
+            <div className='booking-popup' ref={targetDivRef}
+        style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                 <div className='booking-popup-head d-flex align-items-center'>
                     <div className='booking-popup-head-left'>
                         <h3 className='m-0'>your <strong>trip</strong></h3>
@@ -1072,7 +1089,16 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                 {errorMessage && <p className="error-message">{errorMessage}</p>}
                             </div>
                         )}
-                    </div>                        
+                    </div>
+                    <div className='back-to-top mobile-only'><button className='back-to-top-inner'onClick={(e) => {
+              e.preventDefault();
+              // Scroll the popup to the top when the button is clicked
+              targetDivRef.current.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+              });
+            }}>Back To Top <span className='icon-top'><img src={rightIcon}/></span></button></div>  
+                                         
                 </div>
             </div>
         </Dialog>

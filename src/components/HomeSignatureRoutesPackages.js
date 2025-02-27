@@ -22,6 +22,14 @@ import 'swiper/css/scrollbar';
 import BookingPopup from '../components/BookingPopup';
 
 function HomeSignatureRoutesPackages({cars}){    
+    const [isPopupVisible, setPopupVisible] = useState(false);
+    const [popupIndex, setPopupIndex] = useState(null);
+    const showPopup = (index) => {
+        setPopupIndex(index);
+    };
+    const closePopup = () => {
+        setPopupIndex(null);
+    };
     return(
     <div className="signature-routes-slider ptb-90">  
         <p className='text-uppercase font-12 plr-100 fw-400 text-center section-title'>Signature routes & packages</p>
@@ -52,7 +60,7 @@ function HomeSignatureRoutesPackages({cars}){
                 }}
             >                
                 <SwiperSlide>
-                    <div className='common-routepack-slide position-relative'> 
+                    <div className='common-routepack-slide position-relative' onClick={() => showPopup(1)}>
                         <div className='common-routepack-slide-wrap position-relative'>
                             <div className='routepack-slide-bg position-relative'>
                                 <div className='routepack-slide-top'>
@@ -71,13 +79,13 @@ function HomeSignatureRoutesPackages({cars}){
                                 </span>
                             </div>
                         </div>
-                        <div className='text-center mt-30 signature'>
-                            <BookingPopup cars={cars}  location={['Central London','Babington House']} />
-                        </div>
                     </div>
+                     {popupIndex === 1 && (
+                        <BookingPopup cars={cars} isHomeBanner={true} closePopup={closePopup} location={['Central London','Babington House']} />
+                    )}
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className='common-routepack-slide position-relative'>
+                    <div className='common-routepack-slide position-relative' onClick={() => showPopup(2)}>
                         <div className='common-routepack-slide-wrap position-relative'>                  
                             <div className='routepack-slide-bg position-relative'>
                                 <div className='routepack-slide-top'>
@@ -96,13 +104,13 @@ function HomeSignatureRoutesPackages({cars}){
                                 </span>
                             </div>
                         </div>
-                        <div className='text-center mt-30 signature'>
-                            <BookingPopup cars={cars}  location={['Central London','Estelle Manor']} />
-                        </div>
                     </div>
+                     {popupIndex === 2 && (
+                        <BookingPopup cars={cars} isHomeBanner={true} closePopup={closePopup} location={['Central London','Estelle Manor']} />
+                    )}
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className='common-routepack-slide position-relative'>
+                    <div className='common-routepack-slide position-relative' onClick={() => showPopup(3)}>
                         <div className='common-routepack-slide-wrap position-relative'>
                             <div className='routepack-slide-bg position-relative'>
                                 <div className='routepack-slide-top'>
@@ -121,13 +129,13 @@ function HomeSignatureRoutesPackages({cars}){
                                 </span>
                             </div>
                         </div>
-                        <div className='text-center mt-30 signature'>
-                            <BookingPopup cars={cars}  location={['Central London','Manchester']} />
-                        </div>
                     </div>
+                     {popupIndex === 3 && (
+                        <BookingPopup cars={cars} isHomeBanner={true} closePopup={closePopup} location={['Central London','Manchester']} />
+                    )}
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className='common-routepack-slide position-relative'>
+                    <div className='common-routepack-slide position-relative' onClick={() => showPopup(4)}>
                         <div className='common-routepack-slide-wrap position-relative'>                
                             <div className='routepack-slide-bg position-relative'>
                                 <div className='routepack-slide-top'>
@@ -146,13 +154,13 @@ function HomeSignatureRoutesPackages({cars}){
                                 </span>
                             </div>
                         </div>
-                        <div className='text-center mt-30 signature'>
-                            <BookingPopup cars={cars}  location={['Central London','Cowarth Park']} />
-                        </div>
                     </div>
+                     {popupIndex === 4 && (
+                        <BookingPopup cars={cars} isHomeBanner={true} closePopup={closePopup} location={['Central London','Cowarth Park']} />
+                    )}
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className='common-routepack-slide position-relative'>
+                    <div className='common-routepack-slide position-relative' onClick={() => showPopup(5)}>
                         <div className='common-routepack-slide-wrap position-relative'>                 
                             <div className='routepack-slide-bg position-relative'>
                                 <div className='routepack-slide-top'>
@@ -171,13 +179,13 @@ function HomeSignatureRoutesPackages({cars}){
                                 </span>
                             </div>
                         </div>
-                        <div className='text-center mt-30 signature'>
-                            <BookingPopup cars={cars}  location={['Central London','Cheltenham']} />
-                        </div>
                     </div>
+                     {popupIndex === 5 && (
+                        <BookingPopup cars={cars} isHomeBanner={true} closePopup={closePopup}  location={['Central London','Cheltenham']} />
+                    )}
                 </SwiperSlide>
                 <SwiperSlide>
-                    <div className='common-routepack-slide position-relative'> 
+                    <div className='common-routepack-slide position-relative' onClick={() => showPopup(6)}> 
                         <div className='common-routepack-slide-wrap position-relative'>                    
                             <div className='routepack-slide-bg position-relative'>
                                 <div className='routepack-slide-top'>
@@ -196,12 +204,15 @@ function HomeSignatureRoutesPackages({cars}){
                                 </span>
                             </div>
                         </div>
-                        <div className='text-center mt-30 signature'>
-                            <BookingPopup cars={cars}  location={['Central London','Bicester Village']} />
-                        </div>
                     </div>
+                     {popupIndex === 6 && (
+                        <BookingPopup cars={cars} isHomeBanner={true} closePopup={closePopup}  location={['Central London','Bicester Village']} />
+                    )}
                 </SwiperSlide>                
-            </Swiper>             
+            </Swiper>      
+            <div className="slider_nav slider_view_all  d-flex align-items-center justify-content-center nowrap"> 
+                <Link to='/signature-routes' className='view_all_btn'>View All</Link>
+            </div>       
             {/* <div className="slider_nav d-flex align-items-center justify-content-center nowrap">                
                 <button className="arrow-left arrow common_slider_arrow d-flex align-items-center justify-content-center"><img src={LeftArrow} alt="Image" /></button>
                 

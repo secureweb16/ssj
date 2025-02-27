@@ -54,7 +54,7 @@ function Footer({cars}) {
                         </ul>
                     </div>
                 </div> 
-                <div className="build-by"><Link to="https://themilkbar.co/"><span className='small-text'>bulit by</span><img src={milkbarImage} /></Link></div>               
+                <div className="build-by"><Link to="https://themilkbar.co/" target="_blank"><span className='small-text'>bulit by</span><img src={milkbarImage} /></Link></div>               
             </footer>            
         </>
     );
