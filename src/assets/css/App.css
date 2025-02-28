@@ -1763,7 +1763,7 @@ footer.main-footer {
     max-width: 30px;
   }
   body .home-banner {
-    height: 100vh;
+    height: 89vh;
   }
   .home-banner-content {
     display: flex;
@@ -2044,6 +2044,14 @@ footer.main-footer {
   .header-right ul {
     gap: 5px;
   }  
+}
+@media (max-width: 375px) { 
+  .header-right li:first-child {
+    display: none;
+  }
+}
+body .home-banner {
+  height: 75vh;
 }
 @media (max-width: 320px) { 
   .header-right li:first-child {

@@ -56,7 +56,7 @@ function CustomerReviews(){
                             We have been working with Sohail for more than five years and his team always deliver above expectation. The fleet are modern, clean, and well equipped. As an experienced hospitality industry professional, who has worked in many countries around the globe including Japan at the highest levels, I can say that Sohail and his team are among the best in the world. We look forward to working with his organisation for many years to come.
                             ”
                         </p>
-                        <span className=' text-white font-11 text-uppercase letter-spacing-15'>Recent Customer</span>
+                        <span className=' text-white font-11 text-uppercase letter-spacing-15'>J Templeton</span>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -67,7 +67,7 @@ function CustomerReviews(){
                             We have been working with Sohail for more than five years and his team always deliver above expectation. The fleet are modern, clean, and well equipped. As an experienced hospitality industry professional, who has worked in many countries around the globe including Japan at the highest levels, I can say that Sohail and his team are among the best in the world. We look forward to working with his organisation for many years to come.
                             ”
                         </p>
-                        <span className=' text-white font-11 text-uppercase letter-spacing-15'>Recent Customer</span>
+                        <span className=' text-white font-11 text-uppercase letter-spacing-15'>J Templeton</span>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
@@ -78,7 +78,7 @@ function CustomerReviews(){
                             We have been working with Sohail for more than five years and his team always deliver above expectation. The fleet are modern, clean, and well equipped. As an experienced hospitality industry professional, who has worked in many countries around the globe including Japan at the highest levels, I can say that Sohail and his team are among the best in the world. We look forward to working with his organisation for many years to come.
                             ”
                         </p>
-                        <span className=' text-white font-11 text-uppercase letter-spacing-15'>Recent Customer</span>
+                        <span className=' text-white font-11 text-uppercase letter-spacing-15'>J Templeton</span>
                     </div>
                 </SwiperSlide>         
             </Swiper>             

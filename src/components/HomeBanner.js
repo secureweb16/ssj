@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import BannerVideo from "../assets/videos/banner-home-video.mp4";
+import BannerVideo from "../assets/videos/home-banner-video.mp4";
 import BookingPopup from "../components/BookingPopup";
 import { motion } from "framer-motion";
 
