@@ -419,7 +419,7 @@ img{
   font-size: 14px;
   margin: 0;
 }
-.booking-popup-outer input.p-inputtext::placeholder {
+.booking-popup-outer input.p-inputtext.calender-field::placeholder {
   color: #000;
   opacity: 0.6;
 }

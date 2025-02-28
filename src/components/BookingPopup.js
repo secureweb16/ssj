@@ -924,6 +924,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                                     onPlaceChanged={handlePickupPlaceChange}
                                                    // ref={pickupAutocomplete}
                                                     options={autoCompleteOptions}
+                                                    placeholder=""
                                                 >
                                                     <InputText
                                                         id="pickupaddress"
@@ -990,7 +991,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                                     readOnlyInput={false}  // This will open the calendar when the input is clicked
                                                     id="datetime"
                                                     inputMode="string"
-                                                    className="w-100"
+                                                    className="w-100 calender-field"
                                                     placeholder='type a day and time here'
                                                     footerTemplate={footerTemplate}
                                                     onVisibleChange={handleVisibleChange}  // Track visibility change
