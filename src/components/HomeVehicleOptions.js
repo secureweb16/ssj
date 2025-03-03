@@ -33,23 +33,57 @@ function HomeVehicleOptions({ cars }) {
                                             1025: { slidesPerView: 4.3, spaceBetween: 5 },
                                         }}
                                     >
-                                        {cars.filter(car => car.type === type).map((car, carIndex, carArray) => {
+                                        {/* {cars.filter(car => car.type === type).map((car, carIndex, carArray) => {
+                                            console.log('type',type);
+                                            console.log(' car.type', car.type);
                                             const nextCar = carArray[carIndex + 1] || carArray[0];
                                             return (
                                                 <SwiperSlide key={car._id}>
                                                     <div className='common-vehicle-option position-relative'>
-                                                        <div className='common-vehicle-image position-relative'>
-
+                                                        <div className='common-vehicle-image position-relative'> */}
                                                             {/* <img src={require(`../assets/images/${car.image}`)} alt={car.name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" /> */}
-                                                            <img src={`${config.api.baseURL}${car.image.replace(/\\/g, '/')}`}  alt={car.car_name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
+                                                            {/* <img src={`${config.api.baseURL}${car.image.replace(/\\/g, '/')}`}  alt={car.car_name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
                                                         </div>
                                                         <div className='common-vehicle-content'>
-                                                            <h6>{car.car_name}</h6>
+                                                            <h6>{car.company_name}&nbsp;<strong>{car.car_name}</strong></h6> */}
                                                             {/* <p className='font-12 text-uppercase letter-spacing-15'>({car.modal} model + above)</p> */}
-                                                            <Link to='/signature-routes' className='font-12'>view more</Link>
+                                                            {/* <Link to='/signature-routes' className='font-12'>view more</Link>
                                                         </div>
                                                         <div className='vehicle-option-bookbtn'>
                                                             <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} />
+                                                        </div>
+                                                    </div>
+                                                </SwiperSlide>
+                                            );
+                                        })} */}
+
+                                        {cars.filter(car => car.type === type).map((car, carIndex, carArray) => {
+                                            let nextCar;
+                                            if (type === 'CARS') {
+                                                const suvs = cars.filter((nextCarItem) => nextCarItem.type === 'SUVS');
+                                                const nextSuv = suvs[0]; 
+                                                nextCar = nextSuv || carArray[0];
+                                            } else if (type === 'SUVS') {
+                                                const vans = cars.filter((nextCarItem) => nextCarItem.type === 'VANS');
+                                                const nextVan = vans[0];
+                                                nextCar = nextVan || carArray[0];
+                                            } else if (type === 'VANS') { 
+                                               nextCar = carArray[carIndex + 1]; 
+                                            } else {
+                                               nextCar = carArray[carIndex + 1] || carArray[0];
+                                            }
+                                            return (
+                                                <SwiperSlide key={car._id}>
+                                                    <div className='common-vehicle-option position-relative'>
+                                                        <div className='common-vehicle-image position-relative'>
+                                                            <img src={`${config.api.baseURL}${car.image.replace(/\\/g, '/')}`} alt={car.car_name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
+                                                        </div>
+                                                        <div className='common-vehicle-content'>
+                                                            <h6>{car.company_name}&nbsp;<strong>{car.car_name}</strong></h6>
+                                                            <Link to='/signature-routes' className='font-12'>view more</Link>
+                                                        </div>
+                                                        <div className='vehicle-option-bookbtn'>
+                                                           <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} />
                                                         </div>
                                                     </div>
                                                 </SwiperSlide>

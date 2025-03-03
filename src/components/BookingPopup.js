@@ -475,6 +475,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     useEffect(() => {
         if (!datetime) {
             setDatetime(new Date()); // Set the current time when the component first mounts
+            setDateTime12h(new Date()); 
         }
     }, [datetime]);
 

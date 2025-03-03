@@ -19,7 +19,20 @@ function VehicleList({ cars }) {
                             <TabPanel header={vehicleType} key={index}>
                                 <div className='vhicle-list-wrap position-relative pt-50'>
                                     {cars.filter(car => car.type === vehicleType).map((car, carIndex, carArray) => {
-                                            const nextCar = carArray[carIndex + 1] || carArray[0];
+                                        let nextCar;
+                                        if (vehicleType === 'CARS') {
+                                            const suvs = cars.filter((nextCarItem) => nextCarItem.type === 'SUVS');
+                                            const nextSuv = suvs[0]; 
+                                            nextCar = nextSuv || carArray[0];
+                                        } else if (vehicleType === 'SUVS') {
+                                            const vans = cars.filter((nextCarItem) => nextCarItem.type === 'VANS');
+                                            const nextVan = vans[0];
+                                            nextCar = nextVan || carArray[0];
+                                        } else if (vehicleType === 'VANS') { 
+                                            nextCar = carArray[carIndex + 1]; 
+                                        } else {
+                                            nextCar = carArray[carIndex + 1] || carArray[0];
+                                        }  
                                             return (
                                                 <div className='common-vehicle-option position-relative' key={carIndex}>
                                                     <div className='common-vehicle-image position-relative'>

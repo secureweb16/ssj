@@ -18,7 +18,7 @@ function CarInfoPopup({ car, nextCar, allCars }) {
                         <img src={`${config.api.baseURL}${car?.image.replace(/\\/g, '/')}`} alt={car?.car_name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
                         <div className='car-info-banner-content position-absolute text-white'>
                             <h6>{car?.company_name} <strong>{car?.car_name}</strong></h6>
-                            <p className="font-12 text-uppercase letter-spacing-20">({car?.modal} model + above)</p>
+                            {/* <p className="font-12 text-uppercase letter-spacing-20">({car?.modal} model + above)</p> */}
                         </div>
                     </div>
                     <div className='carinfo-popup-bottom d-flex'>
@@ -42,8 +42,9 @@ function CarInfoPopup({ car, nextCar, allCars }) {
                                 <p>{car?.description}</p>
                             </div>
                         </div>
+                        {nextCar &&
                         <div className='carinfo-popup-down pt-30'>
-                            <p className='fw-400 font-18'>In you need more space...</p>
+                            <p className='fw-400 font-18'>If you need more space...</p>
                             <div className='carinfo-popup-down-inner pt-20'>
                                 <div className='carpop-bottom-detail d-flex align-items-center'>
                                     <div className='carpop-bottom-image'>
@@ -55,8 +56,8 @@ function CarInfoPopup({ car, nextCar, allCars }) {
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+                        }
                     </div>
                 </div>
             </Dialog>
