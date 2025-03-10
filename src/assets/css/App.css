@@ -1755,9 +1755,12 @@ footer.main-footer {
     min-width: 100px;
   }
 }
-@media (max-width: 767px) {  
+@media (max-width: 767px) {
+  .booking-popup-maintab-right:has(div.vehicle-details-content) + .back-to-top {
+    display: none;
+  }  
   .p-float-label label {
-    margin-top: -4px;
+    margin-top: 0px;
   }
   .header_logo img {
     max-width: 30px;
