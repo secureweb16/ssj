@@ -46,7 +46,7 @@ function App() {
             Book Frequent London Transport Routes In Luxury At Competitive Prices
           </>
         )}
-        description="Explore options below and get in touch with our team to finalize details."
+        description="Explore options below and get in touch with our team to finalise details."
       />
       <SignatureRoutesList cars={cars}/> 
       <CustomerReviews />

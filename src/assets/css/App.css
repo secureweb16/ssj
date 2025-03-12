@@ -803,9 +803,9 @@ body .vehicle-options .swiper-scrollbar {
 }
 .routepack-slide-content_wrapper {
   height: 100%;
-  background: #0000001A;
-  -webkit-backdrop-filter: blur(15px);
-          backdrop-filter: blur(15px);
+  background: rgba(0,0,0,0.15);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 }
 .routepack-slide-content > a{
   padding: 10px;
@@ -1756,6 +1756,12 @@ footer.main-footer {
   }
 }
 @media (max-width: 767px) {
+  .build-by {
+    font-size: 12px;
+  }
+  .build-by img {
+    max-width: 65px;
+  }
   .booking-popup-maintab-right:has(div.vehicle-details-content) + .back-to-top {
     display: none;
   }  

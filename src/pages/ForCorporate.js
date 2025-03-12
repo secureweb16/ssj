@@ -46,7 +46,7 @@ function ForCorporate() {
               Work Closely With Our Team For Discretion And Flawless Logistics For Your Company
             </>
           }
-          description="SSJ Luxury Transport has an exclusive, discreet fleet of updated luxury vehicles for a level of service and reliability beyond what apps provide. Our customer service team is available to make private transport an enjoyable and seamless experience for your business. Get in touch with us for rates and personalized organization for your needs."
+          description="SSJ Luxury Transport has an exclusive, discreet fleet of updated luxury vehicles for a level of service and reliability beyond what apps provide. Our customer service team is available to make private transport an enjoyable and seamless experience for your business. Get in touch with us for rates and personalised organisation for your needs."
           buttonurl="/about"
           buttontext="Contact us"
         />

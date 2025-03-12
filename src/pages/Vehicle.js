@@ -43,7 +43,7 @@ function App() {
             Book Luxury Transport Across London For Any Occasion Or Group
           </>
         )}
-        description="Explore options below and get in touch with our team to finalize details."
+        description="Explore options below and get in touch with our team to finalise details."
       />
       {loading ? (
         <div className="car-loading">
