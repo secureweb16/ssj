@@ -6,6 +6,7 @@ import {Link } from "react-router-dom";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
+import BookingPopup from '../components/BookingPopup';
 function VehicleList({ cars }) {
     const [activeIndex, setActiveIndex] = useState(0);
     const vehicleTypes = Array.isArray(cars) && cars.length > 0 ? [...new Set(cars.map(car => car.type))] : [];
@@ -45,10 +46,11 @@ function VehicleList({ cars }) {
                                                     <div className='common-vehicle-content'>
                                                         <h6>{car.company_name} <strong>{car.car_name}</strong></h6>
                                                         {/* <p className='font-12 text-uppercase letter-spacing-15'>({car.modal} model + above)</p> */}
-                                                        <Link to='/signature-routes' className='font-12'>view more</Link>
+                                                        {/* <Link to='/signature-routes' className='font-12'>view more</Link> */}
+                                                        <CarInfoPopup car={car} nextCar={nextCar} allCars={cars}  is_view="true"/>
                                                     </div>
                                                     <div className='vehicle-option-bookbtn'>
-                                                        <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} />
+                                                        <BookingPopup cars={cars} is_home="true" />
                                                     </div>
                                                 </div>
                                             );

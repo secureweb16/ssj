@@ -8,6 +8,7 @@ import 'swiper/css/scrollbar';
 import CarInfoPopup from '../components/CarInfoPopup';
 import { Link } from 'react-router-dom';
 import config from '../config'; 
+import BookingPopup from '../components/BookingPopup';
 
 function HomeVehicleOptions({ cars }) {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -80,10 +81,12 @@ function HomeVehicleOptions({ cars }) {
                                                         </div>
                                                         <div className='common-vehicle-content'>
                                                             <h6>{car.company_name}&nbsp;<strong>{car.car_name}</strong></h6>
-                                                            <Link to='/signature-routes' className='font-12'>view more</Link>
+                                                            {/* <Link to='/signature-routes' className='font-12'>view more</Link> */}
+                                                            <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} is_view="true" />
                                                         </div>
                                                         <div className='vehicle-option-bookbtn'>
-                                                           <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} />
+                                                           {/* <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} /> */}
+                                                           <BookingPopup cars={cars} is_home="true" />
                                                         </div>
                                                     </div>
                                                 </SwiperSlide>

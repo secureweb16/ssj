@@ -7,11 +7,30 @@ import UserIcon from '../assets/images/user.svg';
 import SuitcaseIcon from '../assets/images/suitcase.svg';
 import config from '../config';
 
-function CarInfoPopup({ car, nextCar, allCars }) {
+function CarInfoPopup({ car, nextCar, allCars, is_view = null }) {
     const [visible, setVisible] = useState(false);
+    let thirdCar;
+    if (car && allCars) {
+        if (nextCar?.type === 'SUVS') {
+            const vans = allCars.filter(nextCarItem => nextCarItem.type === 'VANS');
+            thirdCar = vans[0] || car;
+        } else if (nextCar?.type === 'VANS') {
+            const vans = allCars.filter(nextCarItem => nextCarItem.type === 'VANS');
+            thirdCar = vans[1] || car;
+        }
+    }
+
     return (
         <>
-            <span className='border-button gray-border' onClick={() => setVisible(true)}>Book Now</span>
+            {is_view === null ? (
+                <span className='border-button gray-border' onClick={() => setVisible(true)}>
+                    Book Now
+                </span>
+            ) : (
+                <span className='font-12 viewmorebtn view-details' onClick={() => setVisible(true)}>
+                     View More
+                </span>
+            )}
             <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); }} className='car-info-popup-outer' draggable={false}>
                 <div className='car-info-popup'>
                     <div className='car-info-banner'>
@@ -42,7 +61,7 @@ function CarInfoPopup({ car, nextCar, allCars }) {
                                 <p>{car?.description}</p>
                             </div>
                         </div>
-                        {nextCar &&
+                        { (nextCar && car.car_name != 'Sprinter Jet Class' ) &&
                         <div className='carinfo-popup-down pt-30'>
                             <p className='fw-400 font-18'>If you need more space...</p>
                             <div className='carinfo-popup-down-inner pt-20'>
@@ -52,7 +71,8 @@ function CarInfoPopup({ car, nextCar, allCars }) {
                                     </div>
                                     <div className='carpop-bottom-info'>
                                         <h6>{nextCar?.company_name} <strong>{nextCar?.car_name}</strong></h6>
-                                        <Link to='/signature-routes' className='font-12 viewmorebtn'>view more</Link>
+                                        <CarInfoPopup car={nextCar} nextCar={thirdCar} allCars={allCars} is_view="true"/>
+                                        {/* <Link to='/signature-routes' className='font-12 viewmorebtn'>view more</Link> */}
                                     </div>
                                 </div>
                             </div>

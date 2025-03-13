@@ -57,7 +57,21 @@ exports.getAllCars = async (req, res) => {
   }
 };
 
-
+// For Frontend
+exports.getAllCarsFrontend = async (req, res) => {
+  try {
+    const cars = await Car.find();
+    const totalCars = cars.length;
+    res.json({
+      cars,
+      totalCars,
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error fetching cars:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 /* Get a single car by ID */
 exports.getCarById = async (req, res) => {

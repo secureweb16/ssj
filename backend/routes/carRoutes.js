@@ -18,6 +18,7 @@ const upload = multer({ storage });
 // Car Routes
 router.post("/", upload.single("image"), carController.addCar);
 router.get("/", carController.getAllCars);
+router.get("/frontend", carController.getAllCarsFrontend);
 router.get("/:id", carController.getCarById);
 router.put("/:id", upload.single("image"), carController.updateCar);
 router.delete("/:id", carController.deleteCar);

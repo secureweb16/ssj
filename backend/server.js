@@ -18,6 +18,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/api", authRoutes);
 app.use("/api/cars", carRoutes);
+app.use("/api/cars/frontend", carRoutes);
 app.use("/api", emailRoutes);
 app.use("/api", emailRoutes);
 

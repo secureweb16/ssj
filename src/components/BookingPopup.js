@@ -24,11 +24,12 @@ import checkIcpn from '../assets/images/check-icon.svg';
 import rightBlackIcon from '../assets/images/arrow_right_black_icon.svg';
 import timerIcon from '../assets/images/timer.svg';
 import { format } from "date-fns";
+import CarInfoPopup from '../components/CarInfoPopup';
 const containerStyle = {width: '550px',height: '250px'}
 
 // const geocoder = new window.google.maps.Geocoder();
 
-function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
+function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home = null }) {
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -599,11 +600,10 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
     return (
         <>
         {!isHomeBanner && (
-            <span className='btn largebtn' onClick={() => setVisible(true) }>Book Now</span>
+            <span className={`${is_home == null ? 'btn largebtn' : 'border-button gray-border'}`}  onClick={() => setVisible(true) }>Book Now</span>
         )}
         <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); if(closePopup) {closePopup(); }  }} className='booking-popup-outer' draggable={false}>
-            <div className='booking-popup' ref={targetDivRef}
-        style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+            <div className='booking-popup' ref={targetDivRef} style={{ maxHeight: '80vh', overflowY: 'auto' }}>
                 <div className='booking-popup-head d-flex align-items-center'>
                     <div className='booking-popup-head-left'>
                         <h3 className='m-0'>your <strong>trip</strong></h3>
@@ -829,7 +829,22 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                         </div>
                                         <div className="booking-car-list">
                                             {/* Loop over cars based on the active tab */}
-                                            {cars.filter((car) => vehicleTypes[innerActiveIndex] === car.type).map((car) => (
+                                            {cars?.filter(car =>  car.type === vehicleTypes[innerActiveIndex]).map((car, carIndex, carArray) => {
+                                                let nextCar;
+                                                if (vehicleTypes[innerActiveIndex] === 'CARS') {
+                                                    const suvs = cars.filter((nextCarItem) => nextCarItem.type === 'SUVS');
+                                                    const nextSuv = suvs[0]; 
+                                                    nextCar = nextSuv || carArray[0];
+                                                } else if (vehicleTypes[innerActiveIndex] === 'SUVS') {
+                                                    const vans = cars.filter((nextCarItem) => nextCarItem.type === 'VANS');
+                                                    const nextVan = vans[0];
+                                                    nextCar = nextVan || carArray[0];
+                                                } else if (vehicleTypes[innerActiveIndex] === 'VANS') { 
+                                                nextCar = carArray[carIndex + 1]; 
+                                                } else {
+                                                nextCar = carArray[carIndex + 1] || carArray[0];
+                                                }
+                                                return (
                                                 <div key={car?._id} className="common-booking-car-info d-flex align-items-center">
                                                     <div className="carpop-bottom-detail d-flex align-items-center">
                                                         <div className="carpop-bottom-image">
@@ -846,10 +861,11 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                                                     <img src={SuitcaseIcon} alt="Suitcase Icon" />
                                                                     {car?.luggage_type}
                                                                 </div>
-                                                            </div>                                                            
-                                                            <Link to="/signature-routes" className="font-12 viewmorebtn">
+                                                            </div>
+                                                            <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} is_view="true"/>                                                            
+                                                            {/* <Link to="/signature-routes" className="font-12 viewmorebtn">
                                                                 view more
-                                                            </Link>
+                                                            </Link> */}
                                                         </div>
                                                     </div>
                                                     <div className="car-spec show-desktop">
@@ -873,7 +889,8 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null }) {
                                                         : 'Select'}
                                                     </span>
                                                 </div>
-                                                ))}
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                     <div className='done-button text-right'>
