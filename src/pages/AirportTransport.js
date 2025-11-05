@@ -93,11 +93,11 @@ function AirportTransport() {
             <div className="airport-transport-page airport-option-section sm-py-60 py-80">
                 <div className="plr-100">
                     <div className='summary-block'>
-                        <div className='h6 center mb-0'>WE OFFER LUXURY AIRPORT BLACK CAR TRANSFER OPTIONS FOR HEATHROW AIRPORT, LONDON CITY AIRPORT, GATWICK AIRPORT, AND BIGGIN HILL AIRPORT</div>
+                        <div className='h6 center text-uppercase font-14 d-flex flex-column align-items-center fw-400'>WE OFFER LUXURY AIRPORT BLACK CAR TRANSFER OPTIONS FOR HEATHROW AIRPORT, LONDON CITY AIRPORT, GATWICK AIRPORT, AND BIGGIN HILL AIRPORT</div>
                         <div className='divider'></div>
                         <div className='text-block center'>
-                            <p className='mb-20'>Explore options below and get in touch with our team to finalize details.</p>
-                            <p>Click on the airport options below to book:</p>
+                            <p className='mb-15 font-16'>Explore options below and get in touch with our team to finalize details.</p>
+                            <p className='font-16'>Click on the airport options below to book:</p>
                         </div>
                     </div>
                     <div className='airport-list-blocks d-grid d-column-4'>

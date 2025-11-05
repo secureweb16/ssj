@@ -41,7 +41,7 @@ function App() {
             London’s Most Discretionary Private Car Service
           </>
         }
-        description="Whether individually or corporate, work with our decades-experienced team in organizing your transport."
+        description="Whether individually or corporate, work with our decades-experienced team in organising your transport."
       />
       <CarServicesSlider cars={cars} />
       <HomeSignatureRoutesPackages cars={cars} />
