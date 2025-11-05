@@ -7,26 +7,26 @@ import milkbarImage from "../assets/images/milkbar-crop.png";
 import BookingPopup from '../components/BookingPopup';
 
 
-function Footer({cars}) {
+function Footer({ cars }) {
     const [isPopupVisible, setPopupVisible] = useState(false);
 
     const showPopup = () => {
         setPopupVisible(true);
     };
-    
+
     const closePopup = () => {
         setPopupVisible(false);
     };
     return (
         <>
-        <footer className="main-footer position-relative ptb-90 overflow-hidden" style={{ backgroundImage: `url(${window.innerWidth > 768 ? FooterBackground : FooterBackgroundMobile})`, }}>
+            <footer className="main-footer position-relative ptb-90 overflow-hidden" style={{ backgroundImage: `url(${window.innerWidth > 768 ? FooterBackground : FooterBackgroundMobile})`, }}>
                 <div className='plr-100'>
-                    <div className='main-footer-wrap '> 
+                    <div className='main-footer-wrap '>
                         <Link to='/' className='footer-logo'>
                             <img src={Logo} alt="Logo" />
                         </Link>
                         <span className='border-button' onClick={showPopup}>Book Now</span>
-                        {isPopupVisible &&  
+                        {isPopupVisible &&
                             <BookingPopup
                                 cars={cars}
                                 isHomeBanner={true}
@@ -39,7 +39,7 @@ function Footer({cars}) {
                             </li>
                             <li>
                                 <Link to='/about' className='text-white'>Privacy Policy</Link>
-                            </li>                            
+                            </li>
                             <li>
                                 <Link to='/about' className='text-white'>About Us</Link>
                             </li>
@@ -48,15 +48,19 @@ function Footer({cars}) {
                             </li>
                             <li>
                                 <Link to='/vehicle' className='text-white'>Vehicles</Link>
-                            </li>    
+                            </li>
                             <li>
                                 <Link to='/for-corporate' className='text-white'>For Corporate</Link>
                             </li>
+                            <li>
+                                <Link to='/airport-transport' className='text-white'>Airport Transport</Link>
+                            </li>
+                            
                         </ul>
                     </div>
-                </div> 
-                <div className="build-by"><Link to="https://themilkbar.co/" target="_blank"><span className='small-text'>bulit by</span><img src={milkbarImage} /></Link></div>               
-            </footer>            
+                </div>
+                <div className="build-by"><Link to="https://themilkbar.co/" target="_blank"><span className='small-text'>bulit by</span><img src={milkbarImage} /></Link></div>
+            </footer>
         </>
     );
 }

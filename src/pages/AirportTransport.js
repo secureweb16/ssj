@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination } from 'swiper/modules'
 import HeroBanner from '../assets/images/AirportTransportBanner.jpg'
@@ -9,6 +9,7 @@ import vehicleImage from '../assets/images/vehicleImage.jpg'
 import { Link } from 'react-router-dom'
 import CustomerReviews from '../components/CustomerReviews';
 import HomeVehicleOptions from '../components/HomeVehicleOptions';
+import config from '../config';
 
 function AirportTransport() {
     const airports = [
@@ -32,54 +33,77 @@ function AirportTransport() {
 
     const vehicles = [
         {
-        name: 'Mercedes S Class',
-        model: '(2022 model + above)',
-        image: vehicleImage,
+            name: 'Mercedes S Class',
+            model: '(2022 model + above)',
+            image: vehicleImage,
         },
         {
-        name: 'BMW 7 Series',
-        model: '(2021 model + above)',
-        image: vehicleImage,
+            name: 'BMW 7 Series',
+            model: '(2021 model + above)',
+            image: vehicleImage,
         },
         {
-        name: 'Audi A8',
-        model: '(2022 model + above)',
-        image: vehicleImage,
+            name: 'Audi A8',
+            model: '(2022 model + above)',
+            image: vehicleImage,
         },
         {
-        name: 'Range Rover',
-        model: '(2023 model)',
-        image: vehicleImage,
+            name: 'Range Rover',
+            model: '(2023 model)',
+            image: vehicleImage,
         },
         {
-        name: 'Lexus LS',
-        model: '(2021 model)',
-        image: vehicleImage,
+            name: 'Lexus LS',
+            model: '(2021 model)',
+            image: vehicleImage,
         },
         {
-        name: 'Bentley Flying Spur',
-        model: '(2023 model)',
-        image: vehicleImage,
+            name: 'Bentley Flying Spur',
+            model: '(2023 model)',
+            image: vehicleImage,
         },
         {
-        name: 'Range Rover',
-        model: '(2023 model)',
-        image: vehicleImage,
+            name: 'Range Rover',
+            model: '(2023 model)',
+            image: vehicleImage,
         },
         {
-        name: 'Lexus LS',
-        model: '(2021 model)',
-        image: vehicleImage,
+            name: 'Lexus LS',
+            model: '(2021 model)',
+            image: vehicleImage,
         },
         {
-        name: 'Bentley Flying Spur',
-        model: '(2023 model)',
-        image: vehicleImage,
+            name: 'Bentley Flying Spur',
+            model: '(2023 model)',
+            image: vehicleImage,
         }
     ]
+
+
+    const [cars, setCars] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const fetchCars = async () => {
+        try {
+            const response = await fetch(`${config.api.baseURL}${config.api.carsEndpoint}`);
+            const data = await response.json();
+            if (Array.isArray(data.cars)) {
+                setCars(data.cars);
+            } else {
+                console.error("Cars data is not an array", data);
+            }
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching cars:", error);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCars();
+    }, []);
     return (
         <>
-        <div className="airport-transport-banner hero-banner d-flex align-center top-overlay sm-bottom-overlay position-relative color-light">
+            <div className="airport-transport-banner hero-banner d-flex align-center top-overlay sm-bottom-overlay position-relative color-light">
                 <img className="cover" src={HeroBanner} />
                 <div className="wrapper-block position-absolute w-100 h-100">
                     <div className="plr-100 container h-100">
@@ -125,8 +149,8 @@ function AirportTransport() {
                 </div>
             </div>
 
-            <div className="explore-our-vehicles sm-py-60 py-100">
-                <div className='plr-100'>
+            <div className="explore-our-vehicles sm-pt-60 pt-100">
+                {/* <div className='plr-100'>
                     <div className='text-uppercase font-12 plr-100 fw-400 text-center section-title'>EXPLORE OUR VEHICLE OPTIONS</div>
                 </div>
                 <div className="our-vehicles-slider sm-pt-30 pt-60">
@@ -187,7 +211,15 @@ function AirportTransport() {
                 </div>
                 <div className='vehicle-slider-pagination'>
                     <div class="swiper-pagination"></div>
-                </div>
+                </div> */}
+                {loading ? (
+                    <div className="car-loading">
+                        <p>Loading cars...</p>
+                    </div>
+
+                ) : (
+                    <HomeVehicleOptions cars={cars} />
+                )}
             </div>
 
             <div className="booking-process text-with-image bg-gray sm-pt-60 pt-20">

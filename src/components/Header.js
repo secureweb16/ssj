@@ -49,7 +49,7 @@ function Header({cars}) {
                                 <Link onClick={handleClick} to='/' className='btn transparent-btn'><span className='show-desktop'>Whatsapp</span><img src={WhatsappIcon} alt="Icon" className='show-mobile'/></Link>
                             </li>
                             <li>
-                                <Link to={`${config.telegram.baseUrl}`} className='btn transparent-btn'><span className='show-desktop'>Telegram</span><img src={EmailIcon} alt="Icon" className='show-mobile'/></Link>
+                                {/* <Link to={`${config.telegram.baseUrl}`} className='btn transparent-btn'><span className='show-desktop'>Telegram</span><img src={EmailIcon} alt="Icon" className='show-mobile'/></Link> */}
                             </li>
                             <li className='show-mobile'>
                                 <Link onClick={handleClick} to='/' className='btn transparent-btn'><span className='show-desktop'>Whatsapp</span><img src={WhatsappIcon} alt="Icon" className='show-mobile'/></Link>

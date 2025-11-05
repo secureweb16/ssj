@@ -6,6 +6,8 @@ const authRoutes = require("./routes/authRoutes");
 const carRoutes = require("./routes/carRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 const path = require('path');
+
+const sitemapRoute = require('./routes/sitemap');
 require('dotenv').config(); // Load environment variables from a .env file
 connectDB();
 
@@ -13,6 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use('/', sitemapRoute);
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
