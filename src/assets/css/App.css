@@ -8,6 +8,9 @@
   --color-white: #fff;
   --font-albert: "Albert Sans", serif;;
   --font-lato: "Lato", serif;
+  --color-gray: #DEDEDE;
+  --color-light: #fff;
+  --color-dark: #000;
 }* {
   box-sizing: border-box;
 }
@@ -41,7 +44,7 @@ h1,h2,h3,h4,h5,h6{
   margin-top: 0;
   margin-bottom: 15px;
 }
-h1,h2{
+h1, .h1, h2, .h2 {
   font-size: 32px;
   line-height: 38px;
 }
@@ -151,6 +154,62 @@ img{
 }
 .border-button.gray-border {
   color: #000;
+}
+/*---- Background ----*/
+.bg-gray{
+    background: var(--color-gray);
+}
+/*---- Color ----*/
+.color-light,
+.color-light *{
+    color: var(--color-light);
+}
+.color-dark,
+.color-dark *{
+    color: var(--color-dark);
+}
+/*---- Overlay ----*/
+.overlay:before{
+    width: 100%;
+    height: 100%;
+    background: rgb(0,0,0,0.3);
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;    
+}
+.top-overlay:before{
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(rgb(0,0,0,0.5) 0%, transparent 100%);
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;    
+    pointer-events: none;
+}
+.bottom-overlay:after{
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(transparent 50%, rgb(0,0,0,0.7) 100%);
+    display: block;    
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;    
+    pointer-events: none;    
+}
+.left-overlay:before{
+    width: calc(50% - 40px);
+    height: 100%;
+    background: rgb(0,0,0,0.2);
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;    
 }
 .overlay-15::before,
 .overlay-50::before {
@@ -326,6 +385,400 @@ img{
 .gap-10{
   gap: 10px;
 }
+/*---- Flexbox ----*/
+.d-flex{
+    display: flex;    
+}
+.flex-wrap{
+    flex-wrap: wrap;
+}
+.d-inline-flex{
+    display: inline-flex;
+}
+.flex-wrap{
+    flex-wrap: wrap;
+}
+.flex-column{
+    flex-direction: column;
+}
+.justify-start{
+    justify-content: flex-start;
+}
+.justify-center{
+    justify-content: center;
+}
+.justify-end{
+    justify-content: flex-end;
+}
+.justify-between{
+    justify-content: space-between;
+}
+.align-start{
+    align-items: flex-start;
+}
+.align-center{
+    align-items: center;
+}
+.align-end{
+    align-items: flex-end
+}
+.align-stretch{
+    align-items: stretch;
+}
+
+/*---- Grid ----*/
+.d-grid{
+    display: grid;    
+}
+.column-2{
+    grid-template-columns: 1fr 1fr;
+}
+.column-5{
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+/*---- Gap ----*/
+.gap-5{
+    gap: 5px;
+}
+.gap-10{
+    gap: 10px;
+}
+.gap-15{
+    gap: 15px;
+}
+.gap-20{
+    gap: 20px;
+}
+.gap-30{
+    gap: 30px;
+}
+.gap-40{
+    gap: 40px;
+}
+.gap-50{
+    gap: 50px;
+}
+.gap-60{
+    gap: 60px;
+}
+.gap-70{
+    gap: 70px;
+}
+.gap-80{
+    gap: 80px;
+}
+.gap-90{
+    gap: 90px;
+}
+.gap-100{
+    gap: 100px;
+}
+.gap-150{
+    gap: 150px;
+}
+
+/*---- Margin Top ----*/
+.mt-0 {
+    margin-top: 0;
+  }
+  .mt-10 {
+    margin-top: 10px;
+  }
+  .mt-15 {
+    margin-top: 15px;
+  }
+  .mt-20 {
+    margin-top: 20px;
+  }
+  .mt-30 {
+    margin-top: 30px;
+  }
+  .mt-40 {
+    margin-top: 40px;
+  }
+  .mt-50 {
+    margin-top: 50px;
+  }
+  .mt-60 {
+    margin-top: 60px;
+  }
+  .mt-70 {
+    margin-top: 70px;
+  }
+  .mt-80 {
+    margin-top: 80px;
+  }
+  .mt-90 {
+    margin-top: 90px;
+  }
+  .mt-100 {
+    margin-top: 100px;
+  }
+  
+  /*---- Margin Bottom ----*/
+  .mb-0 {
+    margin-bottom: 0;
+  }
+  .mb-10 {
+    margin-bottom: 10px;
+  }
+  .mb-15 {
+    margin-bottom: 15px;
+  }
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+  .mb-30 {
+    margin-bottom: 30px;
+  }
+  .mb-40 {
+    margin-bottom: 40px;
+  }
+  .mb-50 {
+    margin-bottom: 50px;
+  }
+  .mb-60 {
+    margin-bottom: 60px;
+  }
+  .mb-70 {
+    margin-bottom: 70px;
+  }
+  .mb-80 {
+    margin-bottom: 80px;
+  }
+  .mb-90 {
+    margin-bottom: 90px;
+  }
+  .mb-100 {
+    margin-bottom: 100px;
+  }
+  
+
+
+/*---- Padding ----*/
+.p-40{
+    padding: 40px;
+}
+.px-20{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.px-30{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+.px-60{
+    padding-left: 60px;
+    padding-right: 60px;
+}
+.px-70{
+    padding-left: 70px;
+    padding-right: 70px;
+}
+.px-80{
+    padding-left: 80px;
+    padding-right: 80px;
+}
+.px-90{
+    padding-left: 90px;
+    padding-right: 90px;
+}
+.px-100{
+    padding-left: 100px;
+    padding-right: 100px;
+}
+.py-10{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.py-20{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.py-30{
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.py-40{
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.py-50{
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.py-60{
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+.py-70{
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+.py-80{
+    padding-top: 80px;
+    padding-bottom: 80px;
+}
+.py-90{
+    padding-top: 90px;
+    padding-bottom: 90px;
+}
+.py-100{
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+.py-110{
+    padding-top: 110px;
+    padding-bottom: 110px;
+}
+.py-120{
+    padding-top: 120px;
+    padding-bottom: 120px;
+}
+.py-130{
+    padding-top: 130px;
+    padding-bottom: 130px;
+}
+.py-140{
+    padding-top: 140px;
+    padding-bottom: 140px;
+}
+.py-150{
+    padding-top: 150px;
+    padding-bottom: 150px;
+}
+.pt-10{
+    padding-top: 10px;
+}
+.pt-20{
+    padding-top: 20px;
+}
+.pt-25{
+    padding-top: 25px;
+}
+.pt-30{
+    padding-top: 30px;
+}
+.pt-40{
+    padding-top: 40px;
+}
+.pt-50{
+    padding-top: 50px;
+}
+.pt-60{
+    padding-top: 60px;
+}
+.pt-70{
+    padding-top: 70px;
+}
+.pt-80{
+    padding-top: 80px;
+}
+.pt-90{
+    padding-top: 90px;
+}
+.pt-100{
+    padding-top: 100px;
+}
+.pt-110{
+    padding-top: 110px;
+}
+.pt-120{
+    padding-top: 120px;
+}
+.pt-130{
+    padding-top: 130px;
+}
+.pt-140{
+    padding-top: 140px;
+}
+.pt-150{
+    padding-top: 150px;
+}
+.pb-10{
+    padding-bottom: 10px;
+}
+.pb-20{
+    padding-bottom: 20px;
+}
+.pb-30{
+    padding-bottom: 30px;
+}
+.pb-40{
+    padding-bottom: 40px;
+}
+.pb-50{
+    padding-bottom: 50px;
+}
+.pb-60{
+    padding-bottom: 60px;
+}
+.pb-70{
+    padding-bottom: 70px;
+}
+.pb-80{
+    padding-bottom: 80px;
+}
+.pb-90{
+    padding-bottom: 90px;
+}
+.pb-100{
+    padding-bottom: 100px;
+}
+.pb-110{
+    padding-bottom: 110px;
+}
+.pb-120{
+    padding-bottom: 120px;
+}
+.pb-130{
+    padding-bottom: 130px;
+}
+.pb-140{
+    padding-bottom: 140px;
+}
+.pb-150{
+    padding-bottom: 150px;
+}
+.pe-10{
+    padding-right: 10px;
+}
+.pe-60{
+    padding-right: 60px;
+}
+
+/*---- Font Size ----*/
+.fs-24 {
+    font-size: 24px;
+    line-height: 31px;
+}
+/*---- Common classes ----*/
+.w-100{
+    width: 100%;
+}
+.h-100{
+    height: 100%;
+}
+.cover{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+}
+/*---- Text alignment ----*/
+.center{
+    text-align: center;
+}
+.right{
+    text-align: right;
+}
+.uppercase{
+    text-transform: uppercase;
+}
+.lowercase{
+    text-transform: lowercase;
+}
 .position-relative{
   position: relative;
   z-index: 1;
@@ -338,6 +791,12 @@ img{
 } 
 .start-0{
   left: 0;
+}
+.bottom-0{
+    bottom: 0;
+}
+.end-0{
+    right: 0;
 }
 .z-1{
   z-index: 1;
@@ -391,6 +850,194 @@ img{
 }
 .d-grid{
   display: grid;
+}
+
+/*---- Grid ----*/
+.d-grid{
+    display: grid;    
+}
+.column-2{
+    grid-template-columns: 1fr 1fr;
+}
+.column-5{
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+/*---- Gap ----*/
+.gap-5{
+    gap: 5px;
+}
+.gap-10{
+    gap: 10px;
+}
+.gap-15{
+    gap: 15px;
+}
+.gap-20{
+    gap: 20px;
+}
+.gap-30{
+    gap: 30px;
+}
+.gap-40{
+    gap: 40px;
+}
+.gap-50{
+    gap: 50px;
+}
+.gap-60{
+    gap: 60px;
+}
+.gap-70{
+    gap: 70px;
+}
+.gap-80{
+    gap: 80px;
+}
+.gap-90{
+    gap: 90px;
+}
+.gap-100{
+    gap: 100px;
+}
+.gap-150{
+    gap: 150px;
+}
+
+/*---- Hero Banner ----*/
+.airport-transport-banner.hero-banner {
+    height: 495px;
+    border-radius: 0 0 75px 75px;
+    overflow: hidden;
+}
+.airport-transport-banner.hero-banner.top-overlay:before {
+    background-image: linear-gradient(rgb(0 0 0 / 82%) 0%, transparent 100%);
+}
+.airport-transport-banner.hero-banner .summary-block h1 {
+    max-width: 460px;
+    width: 100%;
+    margin: 50px auto 0;
+}
+
+/*---- Airport Options ----*/
+.airport-option-section .summary-block .h6 {
+    font-size: 14px;
+    line-height: 20px;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+}
+.airport-option-section .divider {
+    display: block;
+    width: 100%;
+    max-width: 150px;
+    height: 1px;
+    background: rgba(0,0,0,0.5);
+    margin: 35px auto;
+}
+.airport-option-section .airport-list-blocks {
+    gap: 65px;
+    max-width: 800px;
+    width: 100%;
+    margin: 70px auto 0;
+}
+.airport-option-section .airport-list-block .airport-map-image {
+    max-width: 150px;
+    width: 150px;
+    border-radius: 50%;
+    height: auto;
+    aspect-ratio: 1/1;
+    margin: 0 auto 20px;
+}
+.airport-option-section .airport-list-block .h6 {
+    margin: 24px 0 0;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+/*---- Effortless Booking ----*/
+.effortless-booking {
+    height: 500px;
+}
+.effortless-booking.overlay:before {
+    background: rgba(0,0,0,0.5);
+}
+.effortless-booking .summary-block .h2 {
+    max-width: 430px;
+    width: 100%;
+}
+.effortless-booking .summary-block .text-block {
+    max-width: 640px;
+    width: 100%;
+}
+
+/*---- Explore Our Vehicles ----*/
+.vehicle-block .vehicle-image {
+    box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.1);
+}
+.vehicle-block .vehicle-image img {
+    width: 100%;
+    aspect-ratio: 27/22;
+    object-fit: cover;
+}
+.vehicle-block .vehicle-details {
+    padding: 25px 20px 0;
+}
+.vehicle-block .vehicle-details .vehicle-name {
+    font-size: 22px;
+    line-height: 26px;
+}
+.vehicle-block .vehicle-details .vehicle-model {
+    font-size: 12px;
+    line-height: 14px;
+    margin: 0 0 15px;
+}
+.vehicle-block .vehicle-details .client-name {
+    font-size: 12px;
+    line-height: 12px;
+}
+.vehicle-block .vehicle-details .readmore {
+    font-size: 12px;
+    line-height: 12px;
+    text-decoration: underline;
+    margin: 0 0 20px;
+    display: inline-block;
+    color: #000;
+}
+.vehicle-block .vehicle-details .button-block .book-now {
+    padding: 8px 30px;
+    display: inline-block;
+    border: 1px solid #000;
+    border-radius: 40px;
+    color: #000;
+    font-size: 13px;
+}
+.our-vehicles-slider .swiper-wrapper {
+    padding-left: 100px;
+}
+.vehicle-slider-pagination {
+    margin: 45px 0 0;
+    padding-left: 100px;
+}
+.vehicle-slider-pagination .swiper-pagination {
+    position: static;
+    width: 100%;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    display: flex;
+    align-items: end;
+    justify-content: start;
+}
+.vehicle-slider-pagination .swiper-pagination.swiper-pagination-bullets .swiper-pagination-bullet {
+    flex: 1;
+    border-radius: 0;
+    margin: 0;
+    height: 2px;
+    background: transparent;
+    transition: all ease 0.3s;
+}
+.vehicle-slider-pagination .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active {
+    background: rgba(0,0,0,0.2);
 }
 
 /* Prime React Css Override */
@@ -1612,13 +2259,119 @@ footer.main-footer {
   gap: 10px;
 }
 
+/*---- Text With Image ----*/
+.booking-process.text-with-image .summary-block h2 {
+    max-width: 500px;
+    width: 100%;
+}
+.booking-process.text-with-image .summary-block .text-block {
+    max-width: 390px;
+    width: 100%;
+}
+.booking-process.text-with-image .summary-block .text-block ul {
+    list-style: auto;
+    padding-left: 25px;
+}
+.booking-process .right-block .image-block {
+    height: auto;
+    max-width: 375px;
+    margin-left: auto;
+}
+.booking-process .right-block .image-block img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
 
 /* Responsive  */
+@media(min-width: 769px){
+
+    .d-hide{
+        display: none;
+    }
+    .d-d-flex{
+        display: flex;
+    }
+    .d-d-grid{
+        display: grid;
+    }
+    .d-w-50{
+        width: 50%;
+    }
+    .d-column-2{
+        grid-template-columns: 1fr 1fr;
+    }
+    .d-column-3{
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .d-column-4{
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    .d-align-center{
+        align-items: center;
+    }
+    .d-justify-between{
+        justify-content: space-between;
+    }
+    .d-gap-5{
+        gap: 5px;
+    }
+    .d-gap-10{
+        gap: 10px;
+    }
+    .d-gap-15{
+        gap: 15px;
+    }
+    .d-gap-30{
+        gap: 30px;
+    }
+    .d-gap-40{
+        gap: 40px;
+    }
+    .d-gap-50{
+        gap: 50px;
+    }
+    .d-gap-60{
+        gap: 60px;
+    }
+    .d-gap-100{
+        gap: 100px;
+    }
+    .d-gap-150{
+        gap: 150px;
+    }
+    .d-mt-0 { margin-top: 0px; }
+    .d-mt-10 { margin-top: 10px; }
+    .d-mt-20 { margin-top: 20px; }
+    .d-mt-30 { margin-top: 30px; }
+    .d-mt-40 { margin-top: 40px; }
+    .d-mt-50 { margin-top: 50px; }
+    .d-mt-60 { margin-top: 60px; }
+    .d-mt-70 { margin-top: 70px; }
+    .d-mt-80 { margin-top: 80px; }
+    .d-mt-90 { margin-top: 90px; }
+    .d-mt-100 { margin-top: 100px; }
+
+    .d-mb-0 { margin-bottom: 0px; }
+    .d-mb-10 { margin-bottom: 10px; }
+    .d-mb-20 { margin-bottom: 20px; }
+    .d-mb-30 { margin-bottom: 30px; }
+    .d-mb-40 { margin-bottom: 40px; }
+    .d-mb-50 { margin-bottom: 50px; }
+    .d-mb-60 { margin-bottom: 60px; }
+    .d-mb-70 { margin-bottom: 70px; }
+    .d-mb-80 { margin-bottom: 80px; }
+    .d-mb-90 { margin-bottom: 90px; }
+    .d-mb-100 { margin-bottom: 100px; }
+
+    
+}
 @media(min-width: 768px ) {
   .mobile-only {
     display: none;
   }
 }
+
 @media (max-width: 1199px) {
   .booking-popup-outer.p-dialog .p-dialog-header {
     top: -25px;
@@ -1756,6 +2509,55 @@ footer.main-footer {
   }
 }
 @media (max-width: 767px) {
+  .sm-px-0{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .sm-px-20{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .sm-px-30{
+        padding-left: 30px;
+        padding-right: 30px;
+    }    
+    .sm-py-60{
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+    .sm-pt-30{
+        padding-top: 30px;
+    }
+    .sm-pt-60{
+        padding-top: 60px;
+    }
+    .sm-pt-100{
+        padding-top: 100px;
+    }   
+    .sm-pb-0{
+        padding-bottom: 0;
+    }
+    .sm-pb-10{
+        padding-bottom: 10px;
+    }
+    .sm-pb-30{
+        padding-bottom: 30px;
+    }
+    .sm-pb-60{
+        padding-bottom: 60px;
+    } 
+    .sm-pb-80{
+        padding-bottom: 80px;
+    }
+    .sm-pb-100{
+        padding-bottom: 100px;
+    }
+    .sm-pe-20{
+        padding-right: 20px;
+    }    
+    .sm-mt-auto{
+        margin-top: auto;
+    }  
   .build-by {
     font-size: 12px;
   }
@@ -1965,6 +2767,14 @@ footer.main-footer {
     font-size: 13px;
     border-radius: 0;
   }
+   .airport-option-section .airport-list-blocks {
+        gap: 40px;
+        margin: 40px auto 0;
+        grid-template-columns: 1fr 1fr;
+    }
+    .our-vehicles-slider .swiper-wrapper {
+        padding-left: 20px;
+    }
 }
 @media (max-width: 575px) { 
   .common-booking-car-info .carpop-bottom-detail {
@@ -2047,6 +2857,10 @@ footer.main-footer {
     min-width: auto;
     position: static;
     transform: none;
+  }
+  .airport-option-section .airport-list-block .airport-map-image {
+      max-width: 100px;
+      width: 100px;
   }
 }
 @media (max-width: 440px) { 

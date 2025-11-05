@@ -13,6 +13,7 @@ import ForCorporate from './pages/ForCorporate';
 import Login from './pages/admin/login';
 import Dashboard from './pages/admin/dashboard/Dashboard';
 import config from './config'; 
+import AirportTransport from './pages/AirportTransport';
 
 function App() {
   const location = useLocation();  // Access current location
@@ -50,7 +51,8 @@ function App() {
         <Route path="signature-routes" element={<SignatureRoutes />} />
         <Route path="vehicle" element={<Vehicle />} />
         <Route path="about" element={<About />} />
-        <Route path="for-corporate" element={<ForCorporate />} />        
+        <Route path="for-corporate" element={<ForCorporate />} />
+        <Route path="/airport-transport" element={ <AirportTransport /> } />        
         <Route path="/admin/login" element={<Login />} />        
         <Route path="/admin/dashboard" element={<Dashboard />} />
    
