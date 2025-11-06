@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { Dialog } from 'primereact/dialog';
@@ -7,7 +9,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { InputNumber } from 'primereact/inputnumber';
 import { FloatLabel } from "primereact/floatlabel";
 import { ProgressBar } from 'primereact/progressbar';
-import { Autocomplete, GoogleMap, Marker, useJsApiLoader, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
+import { Autocomplete, GoogleMap, Marker, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
 import Location1 from '../assets/images/Pickup.svg';
 import Location2 from '../assets/images/Dropoff.svg';
 import Closeicon from '../assets/images/close.svg';
@@ -26,15 +28,14 @@ import timerIcon from '../assets/images/timer.svg';
 import { format } from "date-fns";
 import CarInfoPopup from '../components/CarInfoPopup';
 
-const containerStyle = { width: '550px', height: '250px' }
-
-// const geocoder = new window.google.maps.Geocoder();
+const containerStyle = { width: '550px', height: '250px' };
 
 function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home = null }) {
+    // Declare all Hooks at the top level
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
-    const [innerActiveIndex, innerSetActiveIndex] = useState(0);
+    const [innerActiveIndex, setInnerActiveIndex] = useState(0);
     const [selectedCars, setSelectedCars] = useState([]);
     const [showWarning, setShowWarning] = useState(false);
     const [pickupValue, setPickupValue] = useState('');
@@ -42,14 +43,12 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
     const [pickupAutocomplete, setPickupAutocomplete] = useState(null);
     const [destinationAutocomplete, setDestinationAutocomplete] = useState(null);
     const [datetime12h, setDateTime12h] = useState(null);
-    const [calendarVisible, setCalendarVisible] = useState(false);  // Track visibility
+    const [calendarVisible, setCalendarVisible] = useState(false);
     const [isDateSelected, setIsDateSelected] = useState(false);
     const [mapCenter, setMapCenter] = useState({ lat: 51.5074, lng: -0.1278 });
-    // const londonBounds = {north: 51.7, south: 51.3, west: -0.5, east: 0.3,};
-    const londonBounds = { north: 60, south: 49.5, west: -11, east: 2.5 }
-    const [progressBar, setprogressBar] = useState(25);
-    const [zoomLevel, setZoomLevel] = useState(10); // Default zoom level
-    const mapRef = useRef(null); // Store map instance
+    const [progressBar, setProgressBar] = useState(25);
+    const [zoomLevel, setZoomLevel] = useState(10);
+    const mapRef = useRef(null);
     const [startPoint, setStartPoint] = useState(null);
     const [endPoint, setEndPoint] = useState(null);
     const [directions, setDirections] = useState(null);
@@ -62,362 +61,32 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-
-
-
-    const [datetime, setDatetime] = useState(null); // Holds selected datetime
-    const onPickupLoad = (autocomplete) => {
-        setPickupAutocomplete(autocomplete);
-        if (location?.[0]) {
-            setPickupValue(location[0]);
-        }
-    };
-    const onDestinationLoad = (autocomplete) => {
-        setDestinationAutocomplete(autocomplete);
-        if (location?.[1]) {
-            setDestinationValue(location[1]);
-        }
-    };
-    const autoCompleteOptions = {
-        componentRestrictions: { country: "uk" },
-        types: ["geocode"],
-    };
-
+    const [datetime, setDatetime] = useState(null);
     const [geocoder, setGeocoder] = useState(null);
-    useEffect(() => {
-        if (window.google && window.google.maps) {
-            const geocoder = new window.google.maps.Geocoder();
-            setGeocoder(geocoder);
-            console.log("Geocoder initialized", geocoder);
-        }
-    }, []);
-
-
-    /* Handle Car Selection */
-    const handleSelectCar = (car) => {
-        if (selectedCars.some((selectedCar) => selectedCar._id === car._id)) {
-            setSelectedCars(selectedCars.filter((selectedCar) => selectedCar._id !== car._id));
-        } else {
-            setSelectedCars([...selectedCars, car]);
-        }
-    };
-
-    /* Handle Remove Car */
-    const handleRemoveCar = (car) => {
-        const updatedCars = selectedCars.filter((selectedCar) => selectedCar._id !== car._id);
-        setSelectedCars(updatedCars);
-        if (updatedCars.length === 0) {
-            setActiveIndex(0);
-            setprogressBar(25);
-        }
-    };
-
-    /* Handle Pickup Change */
-    const handlePickupChange = (e) => {
-        const newPickupValue = e.target.value;
-        setPickupValue(newPickupValue);
-    };
-
-    /* Handle Destination Change */
-    const handleDestinationChange = (e) => {
-        const newDestinationValue = e.target.value;
-        setDestinationValue(newDestinationValue);
-    };
-
-    /* Marker Start */
-    const startMarkerIcon = {
-        url: mapIcon, // The image URL
-        scaledSize: new window.google.maps.Size(40, 40), // Resizing the image
-        anchor: new window.google.maps.Point(20, 40), // Anchor position
-    };
-
-    /* Marker End */
-    const endMarkerIcon = {
-        url: mapIcon,
-        scaledSize: new window.google.maps.Size(40, 40),
-        anchor: new window.google.maps.Point(20, 40),
-    };
-
-    const onLoad = (map) => {
-        mapRef.current = map;
-
-        if (startPoint && endPoint) {
-            const bounds = new window.google.maps.LatLngBounds();
-            bounds.extend(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
-            bounds.extend(new window.google.maps.LatLng(endPoint.lat, endPoint.lng));
-            map.fitBounds(bounds, { top: 100, bottom: 100, left: 100, right: 100 });
-            // north: 60.9, south: 49.8, west: -8.6, east: 1.9 
-        } else if (startPoint) {
-            // If only one point exists, center it with a reasonable zoom
-            map.setCenter(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
-            map.setZoom(10); // ✅ Adjusted zoom for a single location
-        } else {
-            // If no start point, center on London
-            map.setCenter(mapCenter);
-            map.setZoom(5); // Default zoom for London
-        }
-    };
-
-    const onUnmount = (map) => {
-        //console.log('Map Unmounted:', map);
-    };
-
-    /* Handle Start Marker Dragging */
-    const handleStartMarkerDragEnd = (e) => {
-        const newLat = e.latLng.lat();
-        const newLng = e.latLng.lng();
-        const newStartPoint = { lat: newLat, lng: newLng };
-        setStartPoint(newStartPoint);
-        // Get address of new location
-        geocoder.geocode({ location: newStartPoint }, (results, status) => {
-            if (status === 'OK' && results[0]) {
-                setPickupValue(results[0].formatted_address);
-            } else {
-                console.log('Geocode was not successful for the following reason: ' + status);
-            }
-        });
-    };
-
-    /* Handle End Marker Dradding */
-    const handleEndMarkerDragEnd = (e) => {
-        const newLat = e.latLng.lat();
-        const newLng = e.latLng.lng();
-        const newEndPoint = { lat: newLat, lng: newLng };
-        setEndPoint(newEndPoint);
-        // Get address of new location
-        geocoder.geocode({ location: newEndPoint }, (results, status) => {
-            if (status === 'OK' && results[0]) {
-                setDestinationValue(results[0].formatted_address);
-            } else {
-                console.log('Geocode was not successful for the following reason: ' + status);
-            }
-        });
-    };
-
-    /* Handle Fields Edition */
-    const handleEditClick = async (type) => {
-        let inputElement;
-        let tabindex;
-        tabindex = (type === 'pickupaddress' || type === 'destinationaddress' || type === 'datetime') ? 1 : (type === 'passenger' || type === 'additional') ? 2 : 0;
-        await handleTabChange(tabindex);
-        if (type == 'datetime') {
-            const spanElement = document.getElementById('datetime');
-            inputElement = spanElement.querySelector('input');
-        } else if (type == 'passenger') {
-            const spanElement = document.getElementById('passenger');
-            inputElement = spanElement?.querySelector('input');
-        } else {
-            inputElement = document.getElementById(type);
-        }
-        if (inputElement) {
-            inputElement.focus(); // Or inputElement.click() if you need to trigger a click
-        }
-    };
-
-    /* Handle Done Buttton Functionality */
-    const handleDoneClick = (type) => {
-        setCalendarVisible(false);
-        if ((type === 'route' && (!pickupValue || !destinationValue || !datetime12h)) ||
-            (type === 'vehicle' && selectedCars.length === 0) ||
-            (type === 'details' && (!email || !name || !phone || !passengerCount))) {
-            console.log(`${type} fields are missing or no car selected`);
-            setShowWarning(true);
-            return; // Stop further execution if condition is met
-        }
-        setShowWarning(false);
-        setActiveIndex(activeIndex + 1); // Move to the next tab or step
-        setprogressBar((activeIndex < 3) ? progressBar + 25 : 100);
-        const tabIndex = (activeIndex != 3) ? activeIndex + 1 : activeIndex;
-        setActiveIndex(tabIndex);
-        setprogressBar((tabIndex < 3) ? progressBar + 25 : 100);
-        if (tabIndex === 3) {
-            const carDetails = selectedCars.map(car => `${car.company_name} (${car.car_name})`).join(', ');
-            const messageBody = `
-                Car Details: ${carDetails}
-                Pickup Location: ${pickupValue}
-                Destination Location: ${destinationValue}
-                Date & Time: ${datetime12h}
-                Passengers: ${passengerCount}
-                Additional Requests: ${additionalRequests}
-                Name: ${name}
-                Email: ${email}
-                Phone: ${phone}
-            `;
-            const encodedMessage = encodeURIComponent(messageBody);
-            const whatsappLink = `${config.whatsapp.baseUrl}${config.whatsapp.recipientPhone}?text=${encodedMessage}`;
-            return whatsappLink;
-        }
-    };
-
-    /* Handle Tab Change Functionality */
-    const handleTabChange = (index) => {
-        if (index === 1 && selectedCars.length === 0) {
-            setShowWarning(true);
-        } else if (index === 0 || index === 1) {
-            setActiveIndex(index);
-            setShowWarning(false);
-            setprogressBar(index === 0 ? 25 : index === 1 ? 50 : index === 2 ? 75 : 100);
-        } else if (selectedCars.length === 0) {
-            setShowWarning(true);
-        } else if (!pickupValue || !destinationValue || !datetime12h) {
-            setShowWarning(true);
-        } else {
-            setActiveIndex(index);
-            setShowWarning(false);
-            setprogressBar(index === 0 ? 25 : index === 1 ? 50 : index === 2 ? 75 : 100);
-        }
-    };
-
-    /* Handle Pickup changes */
-    const handlePickupPlaceChange = () => {
-        const place = pickupAutocomplete?.getPlace();
-        if (place && place.geometry) {
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-            setStartPoint({ lat, lng });
-            setPickupValue(place.formatted_address);
-            setMapCenter({ lat, lng });
-            if (endPoint && mapRef.current) {
-                const bounds = new window.google.maps.LatLngBounds();
-                bounds.extend(new window.google.maps.LatLng(lat, lng));
-                bounds.extend(new window.google.maps.LatLng(endPoint.lat, endPoint.lng));
-                mapRef.current.fitBounds(bounds); // Adjust zoom based on markers
-            }
-        }
-    };
-
-    /* Handle Destination changes */
-    const handleDestinationPlaceChange = () => {
-        const place = destinationAutocomplete?.getPlace();
-        if (place && place.geometry) {
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-            setEndPoint({ lat, lng });
-            setDestinationValue(place.formatted_address);
-            setMapCenter({ lat, lng });
-            if (startPoint && mapRef.current) {
-                const bounds = new window.google.maps.LatLngBounds();
-                bounds.extend(new window.google.maps.LatLng(lat, lng));
-                bounds.extend(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
-                mapRef.current.fitBounds(bounds); // Adjust zoom based on markers
-            }
-        }
-    };
-
-
-    /* Map Initialization */
-    // const { isLoaded } = useJsApiLoader({
-    //     id: 'google-map-script',
-    //     googleMapsApiKey: `${config.googlemap.apiKey}`,
-    // })
+    const targetDivRef = useRef(null);
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
         libraries: ['places'],
     });
 
-    /* Code For Change Date Format */
-    const formatTime = (date) => {
-        if (!date) return ''; // Return empty if no date is selected
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
-        const formattedDate = date.toLocaleString('en-US', options);
-        const day = date.getDate();
-        let suffix = 'th';
-        if (day % 10 === 1 && day !== 11) {
-            suffix = 'st';
-        } else if (day % 10 === 2 && day !== 12) {
-            suffix = 'nd';
-        } else if (day % 10 === 3 && day !== 13) {
-            suffix = 'rd';
+    // Initialize geocoder when Google Maps API is loaded
+    useEffect(() => {
+        if (isLoaded && window.google && window.google.maps) {
+            const geocoderInstance = new window.google.maps.Geocoder();
+            setGeocoder(geocoderInstance);
+            console.log("Geocoder initialized", geocoderInstance);
         }
-        return formattedDate.replace(/(\d+)/, day + suffix); // Replace the day with the suffix
-    };
+    }, [isLoaded]);
 
-
-    /* Handle Passenger Change */
-    const handlePassengerChange = (e) => {
-        setPassengerCount(e.value); // Set state instantly with the input value
-    };
-
-    /* Handle Additional Requests Change */
-    const handleAdditionalRequestsChange = (e) => {
-        setAdditionalRequests(e.target.value); // Set state instantly with the input value
-    };
-
-    /* Handle Name Change */
-    const handleNameChange = (e) => {
-        setName(e.target.value);
-    };
-
-    /* Handle Email Change */
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    };
-
-    /* Handle Phone Number Change */
-    // const handlePhoneChange = (e) => {
-    // setPhone(e.value); // InputNumber gives e.value for numeric inputs
-    // };
-
-    const handlePhoneChange = (e) => {
-        let rawPhone = e.target.value || '';
-        rawPhone = rawPhone.replace(/[^\d]/g, '');
-        if (rawPhone.length > 5) {
-            rawPhone = rawPhone.replace(/^(\d{4})(\d{1,6})$/, '$1 $2');
-        } else if (rawPhone.length > 0) {
-            rawPhone = rawPhone;
-        }
-        setPhone(rawPhone);
-    };
-
-    // Handle form submission
-    const handleSubmit = async (type) => {
-        const updatedDate = format(new Date(datetime12h), "MMMM do, yyyy 'at' hh:mm a");
-        const formData = { selectedCars, pickupValue, destinationValue, updatedDate, passengerCount, additionalRequests, name, email, phone };
-        if (type == 'email') {
-            try {
-                setIsLoading(true);
-                const response = await fetch(`${config.api.baseURL}${config.api.emailEndpoint}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json', // Important to send data as JSON
-                    },
-                    body: JSON.stringify(formData), // Convert formData to a JSON string
-                });
-                if (response.ok) {
-                    setVisible2(true);
-                    setVisible(false);
-                    //setSuccessMessage('Email sent successfully!');
-                    //setErrorMessage(''); // Clear error message if successful
-                } else {
-                    throw new Error('Failed to send email');
-                }
-            } catch (error) {
-                setErrorMessage('Failed to send email');
-                setSuccessMessage(''); // Clear success message if failed
-            }
-            setIsLoading(false);
-        }
-        if (type == 'whatsapp') {
-            const whatsappLink = handleDoneClick();  // Get the WhatsApp link from the handleDoneClick function
-            if (whatsappLink) {
-                window.open(whatsappLink, "_blank");
-                setSuccessMessage('Redirecting to WhatsApp...');
-                setErrorMessage(''); // Clear error message if successful
-            } else {
-                setErrorMessage('Failed to generate WhatsApp link');
-                setSuccessMessage(''); // Clear success message if failed
-            }
-        }
-    };
-
+    // Handle isHomeBanner changes
     useEffect(() => {
         if (isHomeBanner) {
             setVisible(true);
         }
-        const geocoder = new window.google.maps.Geocoder();
     }, [isHomeBanner]);
 
+    // Fetch location coordinates
     useEffect(() => {
         const fetchLocations = async () => {
             if (!isLoaded || !location?.length) return;
@@ -446,8 +115,318 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
         fetchLocations();
     }, [isLoaded, location]);
 
+    // Set default datetime
+    useEffect(() => {
+        if (!datetime) {
+            setDatetime(new Date());
+            setDateTime12h(new Date());
+        }
+    }, [datetime]);
 
-    // Updated fetchLatLng function
+    // Handle body overflow
+    useEffect(() => {
+        if (visible) {
+            document.body.classList.add('overflow-hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+        }
+        return () => {
+            document.body.classList.remove('overflow-hidden');
+        };
+    }, [visible]);
+
+    // Conditional rendering for loading state
+    if (!isLoaded) {
+        return <div>Loading map...</div>;
+    }
+
+    // Rest of the component logic remains unchanged
+    const onPickupLoad = (autocomplete) => {
+        setPickupAutocomplete(autocomplete);
+        if (location?.[0]) {
+            setPickupValue(location[0]);
+        }
+    };
+
+    const onDestinationLoad = (autocomplete) => {
+        setDestinationAutocomplete(autocomplete);
+        if (location?.[1]) {
+            setDestinationValue(location[1]);
+        }
+    };
+
+    const autoCompleteOptions = {
+        componentRestrictions: { country: "uk" },
+        types: ["geocode"],
+    };
+
+    const handleSelectCar = (car) => {
+        if (selectedCars.some((selectedCar) => selectedCar._id === car._id)) {
+            setSelectedCars(selectedCars.filter((selectedCar) => selectedCar._id !== car._id));
+        } else {
+            setSelectedCars([...selectedCars, car]);
+        }
+    };
+
+    const handleRemoveCar = (car) => {
+        const updatedCars = selectedCars.filter((selectedCar) => selectedCar._id !== car._id);
+        setSelectedCars(updatedCars);
+        if (updatedCars.length === 0) {
+            setActiveIndex(0);
+            setProgressBar(25);
+        }
+    };
+
+    const handlePickupChange = (e) => {
+        setPickupValue(e.target.value);
+    };
+
+    const handleDestinationChange = (e) => {
+        setDestinationValue(e.target.value);
+    };
+
+    const startMarkerIcon = {
+        url: mapIcon,
+        scaledSize: new window.google.maps.Size(40, 40),
+        anchor: new window.google.maps.Point(20, 40),
+    };
+
+    const endMarkerIcon = {
+        url: mapIcon,
+        scaledSize: new window.google.maps.Size(40, 40),
+        anchor: new window.google.maps.Point(20, 40),
+    };
+
+    const onLoad = (map) => {
+        mapRef.current = map;
+        if (startPoint && endPoint) {
+            const bounds = new window.google.maps.LatLngBounds();
+            bounds.extend(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
+            bounds.extend(new window.google.maps.LatLng(endPoint.lat, endPoint.lng));
+            map.fitBounds(bounds, { top: 100, bottom: 100, left: 100, right: 100 });
+        } else if (startPoint) {
+            map.setCenter(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
+            map.setZoom(10);
+        } else {
+            map.setCenter(mapCenter);
+            map.setZoom(5);
+        }
+    };
+
+    const onUnmount = (map) => {
+        // console.log('Map Unmounted:', map);
+    };
+
+    const handleStartMarkerDragEnd = (e) => {
+        const newLat = e.latLng.lat();
+        const newLng = e.latLng.lng();
+        const newStartPoint = { lat: newLat, lng: newLng };
+        setStartPoint(newStartPoint);
+        geocoder.geocode({ location: newStartPoint }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                setPickupValue(results[0].formatted_address);
+            } else {
+                console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    };
+
+    const handleEndMarkerDragEnd = (e) => {
+        const newLat = e.latLng.lat();
+        const newLng = e.latLng.lng();
+        const newEndPoint = { lat: newLat, lng: newLng };
+        setEndPoint(newEndPoint);
+        geocoder.geocode({ location: newEndPoint }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                setDestinationValue(results[0].formatted_address);
+            } else {
+                console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    };
+
+    const handleEditClick = async (type) => {
+        let inputElement;
+        let tabindex = (type === 'pickupaddress' || type === 'destinationaddress' || type === 'datetime') ? 1 : (type === 'passenger' || type === 'additional') ? 2 : 0;
+        await handleTabChange(tabindex);
+        if (type === 'datetime') {
+            const spanElement = document.getElementById('datetime');
+            inputElement = spanElement.querySelector('input');
+        } else if (type === 'passenger') {
+            const spanElement = document.getElementById('passenger');
+            inputElement = spanElement?.querySelector('input');
+        } else {
+            inputElement = document.getElementById(type);
+        }
+        if (inputElement) {
+            inputElement.focus();
+        }
+    };
+
+    const handleDoneClick = (type) => {
+        setCalendarVisible(false);
+        if ((type === 'route' && (!pickupValue || !destinationValue || !datetime12h)) ||
+            (type === 'vehicle' && selectedCars.length === 0) ||
+            (type === 'details' && (!email || !name || !phone || !passengerCount))) {
+            console.log(`${type} fields are missing or no car selected`);
+            setShowWarning(true);
+            return;
+        }
+        setShowWarning(false);
+        setActiveIndex(activeIndex + 1);
+        setProgressBar((activeIndex < 3) ? progressBar + 25 : 100);
+        const tabIndex = (activeIndex !== 3) ? activeIndex + 1 : activeIndex;
+        setActiveIndex(tabIndex);
+        setProgressBar((tabIndex < 3) ? progressBar + 25 : 100);
+        if (tabIndex === 3) {
+            const carDetails = selectedCars.map(car => `${car.company_name} (${car.car_name})`).join(', ');
+            const messageBody = `
+                Car Details: ${carDetails}
+                Pickup Location: ${pickupValue}
+                Destination Location: ${destinationValue}
+                Date & Time: ${datetime12h}
+                Passengers: ${passengerCount}
+                Additional Requests: ${additionalRequests}
+                Name: ${name}
+                Email: ${email}
+                Phone: ${phone}
+            `;
+            const encodedMessage = encodeURIComponent(messageBody);
+            return `${config.whatsapp.baseUrl}${config.whatsapp.recipientPhone}?text=${encodedMessage}`;
+        }
+    };
+
+    const handleTabChange = (index) => {
+        if (index === 1 && selectedCars.length === 0) {
+            setShowWarning(true);
+        } else if (index === 0 || index === 1) {
+            setActiveIndex(index);
+            setShowWarning(false);
+            setProgressBar(index === 0 ? 25 : index === 1 ? 50 : index === 2 ? 75 : 100);
+        } else if (selectedCars.length === 0) {
+            setShowWarning(true);
+        } else if (!pickupValue || !destinationValue || !datetime12h) {
+            setShowWarning(true);
+        } else {
+            setActiveIndex(index);
+            setShowWarning(false);
+            setProgressBar(index === 0 ? 25 : index === 1 ? 50 : index === 2 ? 75 : 100);
+        }
+    };
+
+    const handlePickupPlaceChange = () => {
+        const place = pickupAutocomplete?.getPlace();
+        if (place && place.geometry) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            setStartPoint({ lat, lng });
+            setPickupValue(place.formatted_address);
+            setMapCenter({ lat, lng });
+            if (endPoint && mapRef.current) {
+                const bounds = new window.google.maps.LatLngBounds();
+                bounds.extend(new window.google.maps.LatLng(lat, lng));
+                bounds.extend(new window.google.maps.LatLng(endPoint.lat, endPoint.lng));
+                mapRef.current.fitBounds(bounds);
+            }
+        }
+    };
+
+    const handleDestinationPlaceChange = () => {
+        const place = destinationAutocomplete?.getPlace();
+        if (place && place.geometry) {
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+            setEndPoint({ lat, lng });
+            setDestinationValue(place.formatted_address);
+            setMapCenter({ lat, lng });
+            if (startPoint && mapRef.current) {
+                const bounds = new window.google.maps.LatLngBounds();
+                bounds.extend(new window.google.maps.LatLng(lat, lng));
+                bounds.extend(new window.google.maps.LatLng(startPoint.lat, startPoint.lng));
+                mapRef.current.fitBounds(bounds);
+            }
+        }
+    };
+
+    const formatTime = (date) => {
+        if (!date) return '';
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+        const formattedDate = date.toLocaleString('en-US', options);
+        const day = date.getDate();
+        let suffix = 'th';
+        if (day % 10 === 1 && day !== 11) {
+            suffix = 'st';
+        } else if (day % 10 === 2 && day !== 12) {
+            suffix = 'nd';
+        } else if (day % 10 === 3 && day !== 13) {
+            suffix = 'rd';
+        }
+        return formattedDate.replace(/(\d+)/, day + suffix);
+    };
+
+    const handlePassengerChange = (e) => {
+        setPassengerCount(e.value);
+    };
+
+    const handleAdditionalRequestsChange = (e) => {
+        setAdditionalRequests(e.target.value);
+    };
+
+    const handleNameChange = (e) => {
+        setName(e.target.value);
+    };
+
+    const handleEmailChange = (e) => {
+        setEmail(e.target.value);
+    };
+
+    const handlePhoneChange = (e) => {
+        let rawPhone = e.target.value || '';
+        rawPhone = rawPhone.replace(/[^\d]/g, '');
+        if (rawPhone.length > 5) {
+            rawPhone = rawPhone.replace(/^(\d{4})(\d{1,6})$/, '$1 $2');
+        }
+        setPhone(rawPhone);
+    };
+
+    const handleSubmit = async (type) => {
+        const updatedDate = format(new Date(datetime12h), "MMMM do, yyyy 'at' hh:mm a");
+        const formData = { selectedCars, pickupValue, destinationValue, updatedDate, passengerCount, additionalRequests, name, email, phone };
+        if (type === 'email') {
+            try {
+                setIsLoading(true);
+                const response = await fetch(`${config.api.baseURL}${config.api.emailEndpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+                if (response.ok) {
+                    setVisible2(true);
+                    setVisible(false);
+                } else {
+                    throw new Error('Failed to send email');
+                }
+            } catch (error) {
+                setErrorMessage('Failed to send email');
+                setSuccessMessage('');
+            }
+            setIsLoading(false);
+        }
+        if (type === 'whatsapp') {
+            const whatsappLink = handleDoneClick();
+            if (whatsappLink) {
+                window.open(whatsappLink, "_blank");
+                setSuccessMessage('Redirecting to WhatsApp...');
+                setErrorMessage('');
+            } else {
+                setErrorMessage('Failed to generate WhatsApp link');
+                setSuccessMessage('');
+            }
+        }
+    };
+
     const fetchLatLng = async (placeName) => {
         return new Promise((resolve, reject) => {
             if (!placeName) {
@@ -478,35 +457,21 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
 
     const handleDateChange = (e) => {
         setDateTime12h(e.value);
-        setDatetime(e.value)
+        setDatetime(e.value);
         setIsDateSelected(true);
     };
 
-
-    useEffect(() => {
-        if (!datetime) {
-            setDatetime(new Date()); // Set the current time when the component first mounts
-            setDateTime12h(new Date());
-        }
-    }, [datetime]);
-
-    // Function to handle changes to time input (hours, minutes, AM/PM)
     const handleTimeChange = (e, type) => {
         let updatedDateTime = new Date(datetime);
-
         if (!datetime || !(datetime instanceof Date) || isNaN(datetime.getTime())) {
-            return; // Early return if datetime is invalid
+            return;
         }
-
         if (type === 'hour') {
             let newHour = parseInt(e.target.value);
-
-            // Check if the new hour is between 1 and 12, and handle it
             if (newHour >= 1 && newHour <= 12) {
-                updatedDateTime.setHours(newHour + (datetime.getHours() >= 12 ? 12 : 0)); // Adjust for AM/PM
+                updatedDateTime.setHours(newHour + (datetime.getHours() >= 12 ? 12 : 0));
                 setDatetime(updatedDateTime);
             } else if (e.target.value === '') {
-                // If the input is cleared, leave the hour unchanged
                 return;
             }
         } else if (type === 'minute') {
@@ -519,32 +484,26 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
             const isPM = e.target.value === 'PM';
             let currentHour = updatedDateTime.getHours();
             if (isPM && currentHour < 12) {
-                updatedDateTime.setHours(currentHour + 12); // Convert AM to PM
+                updatedDateTime.setHours(currentHour + 12);
             } else if (!isPM && currentHour >= 12) {
-                updatedDateTime.setHours(currentHour - 12); // Convert PM to AM
+                updatedDateTime.setHours(currentHour - 12);
             }
             setDatetime(updatedDateTime);
         }
     };
 
-    // Function to handle auto-select on focus
     const handleFocus = (e) => {
-        e.target.select(); // Select the content inside the input field when focused
-        setCalendarVisible(true); // Show the calendar when input is focused
+        e.target.select();
+        setCalendarVisible(true);
     };
 
-
-    // Custom footer template with input fields for time
     const footerTemplate = () => {
         if (!datetime || !(datetime instanceof Date) || isNaN(datetime.getTime())) {
             return null;
         }
-
-        // Get the hour and minute in two-digit format
-        const hour = String(datetime.getHours() % 12 || 12).padStart(2, '0'); // Ensure 2-digit hour
-        const minute = String(datetime.getMinutes()).padStart(2, '0'); // Ensure 2-digit minute
-        const ampm = datetime.getHours() >= 12 ? 'PM' : 'AM'; // Determine AM/PM
-
+        const hour = String(datetime.getHours() % 12 || 12).padStart(2, '0');
+        const minute = String(datetime.getMinutes()).padStart(2, '0');
+        const ampm = datetime.getHours() >= 12 ? 'PM' : 'AM';
         return (
             <div className='custom-time-selector'>
                 <input
@@ -554,8 +513,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                     placeholder="HH"
                     min="1"
                     max="12"
-                    onFocus={handleFocus} // Auto-select the input value when focused
-                    onBlur={handleBlur}   // Optionally handle blur here (if needed)
+                    onFocus={handleFocus}
                 />
                 <span className='divider'>:</span>
                 <input
@@ -565,8 +523,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                     placeholder="MM"
                     min="0"
                     max="59"
-                    onFocus={handleFocus} // Auto-select the input value when focused
-                    onBlur={handleBlur}   // Optionally handle blur here (if needed)
+                    onFocus={handleFocus}
                 />
                 <span className='divider'>:</span>
                 <select value={ampm} onChange={(e) => handleTimeChange(e, 'ampm')} style={{ border: '1px solid #d9d9d9' }}>
@@ -578,35 +535,18 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
         );
     };
 
-    const handleBlur = (e) => { };
-    const targetDivRef = useRef(null); // Ref for the popup div
+    const handleBlur = () => {};
 
     const handleScrollToDiv = () => {
         if (targetDivRef.current) {
-            // Scroll the popup content to the top
             targetDivRef.current.scrollTo({
                 top: 0,
-                behavior: 'smooth', // Smooth scroll to the top
+                behavior: 'smooth',
             });
         }
     };
 
-    useEffect(() => {
-        if (visible && targetDivRef.current) {
-            handleScrollToDiv();
-        }
-        if (visible) {
-            document.body.classList.add('overflow-hidden');
-        } else {
-            document.body.classList.remove('overflow-hidden');
-        }
-
-        return () => {
-            document.body.classList.remove('overflow-hidden');
-        };
-    }, [visible]);
-
-
+    // JSX rendering remains unchanged
     return (
         <>
             {!isHomeBanner && (
@@ -623,202 +563,184 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                             {activeIndex === 0 && (
                                 <Button className="btn largebtn" onClick={() => handleDoneClick('vehicle')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
                             )}
-
                             {activeIndex === 1 && (
                                 <Button className="btn largebtn" onClick={() => handleDoneClick('route')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
                             )}
-
                             {activeIndex === 2 && (
                                 <Button className="btn largebtn" onClick={() => handleDoneClick('details')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
                             )}
-
                             {activeIndex === 3 && (
-                                <Button className={`btn largebtn booked ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book  <span className='icon'><img src={checkIcpn} /></span><div className="loader-wrap"><span className='loader'></span></div></Button>
+                                <Button className={`btn largebtn booked ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book <span className='icon'><img src={checkIcpn} /></span><div className="loader-wrap"><span className='loader'></span></div></Button>
                             )}
                         </div>
                     </div>
                     <div className="booking-popup-maintab d-flex">
                         <div className="booking-popup-maintab-left">
                             <div className="booking-popup-maintab-left-wrap">
-                                <div className="booking-popup-tableft-inner">
-                                    <div className="bookingpop-left-tab">
-                                        {/* <Button onClick={() => setActiveIndex(0)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 0} label="Vehicle" /> */}
-                                        <Button
-                                            onClick={() => handleTabChange(0)}
-                                            className="w-2rem h-2rem p-0"
-                                            rounded
-                                            outlined={activeIndex !== 0}
-                                            label="Vehicle"
-                                        />
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            {selectedCars.map((car) => (
-                                                <li key={car._id}>
-                                                    {car.company_name} {car.car_name}
-                                                    <span
-                                                        className="result-icon"
-                                                        onClick={() => handleRemoveCar(car)}
-                                                    >
-                                                        <img src={Closeicon} alt="Close Icon" />
-                                                    </span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                    <div className="bookingpop-left-tab">
-                                        {/* <Button onClick={() => setActiveIndex(1)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 1} label="Route + Schedule" /> */}
-                                        <Button
-                                            onClick={() => handleTabChange(1)}
-                                            className="w-2rem h-2rem p-0"
-                                            rounded
-                                            outlined={activeIndex !== 1}
-                                            label="Route + Schedule"
-                                        />
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            {pickupValue && (
-                                                <li>
-                                                    <span className="location-title"><strong>Pick-up:&nbsp;</strong></span>
-                                                    <span className="content">{pickupValue}</span>
-                                                    <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
-                                                        <img src={Editicon} alt="Edit Icon" className="" />
-                                                    </span>
-                                                </li>
-                                            )}
-                                            {destinationValue && (
-                                                <li>
-                                                    <span className="location-title"><span className='icon'><img src={rightBlackIcon} /></span>
-                                                        <strong>Destination:&nbsp;</strong></span>
-                                                    <span className="content">{destinationValue}</span>
-                                                    <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
-                                                        <img src={Editicon} alt="Edit Icon" className="" />
-                                                    </span>
-                                                </li>
-                                            )}
-                                        </ul>
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            {datetime && (
-                                                <li>
-                                                    <span className="location-title"><span className='icon'><img src={timerIcon} /></span>
-                                                        <strong>Time:&nbsp;</strong></span>
-                                                    <span className="content">{formatTime(datetime)}</span>
-                                                    <span className="result-icon" onClick={() => handleEditClick('datetime')}>
-                                                        <img src={Editicon} alt="Edit Icon" className="" />
-                                                    </span>
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                    <div className="bookingpop-left-tab">
-                                        {/* <Button onClick={() => setActiveIndex(2)} className="w-2rem h-2rem p-0" rounded outlined={activeIndex !== 2} label="Details" /> */}
-                                        <Button
-                                            onClick={() => handleTabChange(2)}
-                                            className="w-2rem h-2rem p-0"
-                                            rounded
-                                            outlined={activeIndex !== 2}
-                                            label="Details"
-                                        />
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            <li>
-                                                <span className="location-title"><strong>Passengers:&nbsp;</strong></span>
-                                                <span className="content">{passengerCount ? passengerCount : 0}</span>
-                                                <span className='result-icon' onClick={() => handleEditClick('passenger')}>
-                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                <div className="bookingpop-left-tab">
+                                    <Button
+                                        onClick={() => handleTabChange(0)}
+                                        className="w-2rem h-2rem p-0"
+                                        rounded
+                                        outlined={activeIndex !== 0}
+                                        label="Vehicle"
+                                    />
+                                    <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                        {selectedCars.map((car) => (
+                                            <li key={car._id}>
+                                                {car.company_name} {car.car_name}
+                                                <span
+                                                    className="result-icon"
+                                                    onClick={() => handleRemoveCar(car)}
+                                                >
+                                                    <img src={Closeicon} alt="Close Icon" />
                                                 </span>
                                             </li>
-                                            <li>
-                                                <span className="location-title"><strong>Additional requests:&nbsp;</strong></span>
-                                                <span className="content"> {additionalRequests ? additionalRequests : 'None'}</span>
-                                                <span className='result-icon' onClick={() => handleEditClick('additional')}>
-                                                    <img src={Editicon} alt="Edit Icon" className="" />
-                                                </span>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                        ))}
+                                    </ul>
                                 </div>
-                                {activeIndex === 0 && (
-                                    <div className='mobile-tab-results show-mobile' >
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            {selectedCars.map((car) => (
-                                                <li key={car._id}>
-                                                    {car.company_name} {car.car_name}
-                                                    <span
-                                                        className="result-icon"
-                                                        onClick={() => handleRemoveCar(car)}
-                                                    >
-                                                        <img src={Closeicon} alt="Close Icon" />
-                                                    </span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        {/* <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                    <li>
-                                        Mercedes S-Class
-                                        <span className='result-icon'><img src={Closeicon} alt="Close Icon" className="" /></span>
-                                    </li>
-                                    <li>
-                                        Rolls Royce Phantom
-                                        <span className='result-icon'><img src={Closeicon} alt="Close Icon" className="" /></span>                                        
-                                    </li>
-                                </ul> */}
-                                    </div>
-                                )}
-                                {activeIndex === 1 && (
-                                    <div className='mobile-tab-results show-mobile'>
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            {pickupValue && (
-                                                <li>
-                                                    <span className="location-title"><strong>Pick-up:&nbsp;</strong></span>
-                                                    <span className="content">{pickupValue}</span>
-                                                    <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
-                                                        <img src={Editicon} alt="Edit Icon" className="" />
-                                                    </span>
-                                                </li>
-                                            )}
-                                            {destinationValue && (
-                                                <li>
-                                                    <span className="location-title"><span className='icon'><img src={rightBlackIcon} /></span>
-                                                        <strong>Destination:&nbsp;</strong></span>
-                                                    <span className="content">{destinationValue}</span>
-                                                    <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
-                                                        <img src={Editicon} alt="Edit Icon" className="" />
-                                                    </span>
-                                                </li>
-                                            )}
-                                        </ul>
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>
-                                            {datetime && (
-                                                <li>
-                                                    <span className="location-title"><span className='icon'><img src={timerIcon} /></span>
-                                                        <strong>Time:&nbsp;</strong></span>
-                                                    <span className="content">{formatTime(datetime)}</span>
-                                                    <span className="result-icon" onClick={() => handleEditClick('datetime')}>
-                                                        <img src={Editicon} alt="Edit Icon" className="" />
-                                                    </span>
-                                                </li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                )}
-                                {activeIndex === 2 && (
-                                    <div className='mobile-tab-results show-mobile'>
-                                        <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                <div className="bookingpop-left-tab">
+                                    <Button
+                                        onClick={() => handleTabChange(1)}
+                                        className="w-2rem h-2rem p-0"
+                                        rounded
+                                        outlined={activeIndex !== 1}
+                                        label="Route + Schedule"
+                                    />
+                                    <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                        {pickupValue && (
                                             <li>
-                                                <span className="location-title"><strong>Passengers:&nbsp;</strong></span>
-                                                <span className="content">{passengerCount ? passengerCount : 0}</span>
-                                                <span className='result-icon' onClick={() => handleEditClick('passenger')}>
+                                                <span className="location-title"><strong>Pick-up:&nbsp;</strong></span>
+                                                <span className="content">{pickupValue}</span>
+                                                <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
                                                     <img src={Editicon} alt="Edit Icon" className="" />
                                                 </span>
                                             </li>
+                                        )}
+                                        {destinationValue && (
                                             <li>
-                                                <span className="location-title"><strong>Additional requests:&nbsp;</strong></span>
-                                                <span className="content"> {additionalRequests ? additionalRequests : 'None'}</span>
-                                                <span className='result-icon' onClick={() => handleEditClick('additional')}>
+                                                <span className="location-title"><span className='icon'><img src={rightBlackIcon} /></span>
+                                                    <strong>Destination:&nbsp;</strong></span>
+                                                <span className="content">{destinationValue}</span>
+                                                <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
                                                     <img src={Editicon} alt="Edit Icon" className="" />
                                                 </span>
                                             </li>
-                                        </ul>
-                                    </div>
-                                )}
+                                        )}
+                                    </ul>
+                                    <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                        {datetime && (
+                                            <li>
+                                                <span className="location-title"><span className='icon'><img src={timerIcon} /></span>
+                                                    <strong>Time:&nbsp;</strong></span>
+                                                <span className="content">{formatTime(datetime)}</span>
+                                                <span className="result-icon" onClick={() => handleEditClick('datetime')}>
+                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                </span>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                                <div className="bookingpop-left-tab">
+                                    <Button
+                                        onClick={() => handleTabChange(2)}
+                                        className="w-2rem h-2rem p-0"
+                                        rounded
+                                        outlined={activeIndex !== 2}
+                                        label="Details"
+                                    />
+                                    <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                        <li>
+                                            <span className="location-title"><strong>Passengers:&nbsp;</strong></span>
+                                            <span className="content">{passengerCount ? passengerCount : 0}</span>
+                                            <span className='result-icon' onClick={() => handleEditClick('passenger')}>
+                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="location-title"><strong>Additional requests:&nbsp;</strong></span>
+                                            <span className="content"> {additionalRequests ? additionalRequests : 'None'}</span>
+                                            <span className='result-icon' onClick={() => handleEditClick('additional')}>
+                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
+                            {activeIndex === 0 && (
+                                <div className='mobile-tab-results show-mobile' >
+                                    <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                        {selectedCars.map((car) => (
+                                            <li key={car._id}>
+                                                {car.company_name} {car.car_name}
+                                                <span
+                                                    className="result-icon"
+                                                    onClick={() => handleRemoveCar(car)}
+                                                >
+                                                    <img src={Closeicon} alt="Close Icon" />
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                            {activeIndex === 1 && (
+                                <div className='mobile-tab-results show-mobile'>
+                                    <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                        {pickupValue && (
+                                            <li>
+                                                <span className="location-title"><strong>Pick-up:&nbsp;</strong></span>
+                                                <span className="content">{pickupValue}</span>
+                                                <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
+                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                </span>
+                                            </li>
+                                        )}
+                                        {destinationValue && (
+                                            <li>
+                                                <span className="location-title"><span className='icon'><img src={rightBlackIcon} /></span>
+                                                    <strong>Destination:&nbsp;</strong></span>
+                                                <span className="content">{destinationValue}</span>
+                                                <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
+                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                </span>
+                                            </li>
+                                        )}
+                                    </ul>
+                                    <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                        {datetime && (
+                                            <li>
+                                                <span className="location-title"><span className='icon'><img src={timerIcon} /></span>
+                                                    <strong>Time:&nbsp;</strong></span>
+                                                <span className="content">{formatTime(datetime)}</span>
+                                                <span className="result-icon" onClick={() => handleEditClick('datetime')}>
+                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                </span>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
+                            {activeIndex === 2 && (
+                                <div className='mobile-tab-results show-mobile'>
+                                    <ul className='popup-filter-results font-12 fw-400 nostyle'>
+                                        <li>
+                                            <span className="location-title"><strong>Passengers:&nbsp;</strong></span>
+                                            <span className="content">{passengerCount ? passengerCount : 0}</span>
+                                            <span className='result-icon' onClick={() => handleEditClick('passenger')}>
+                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span className="location-title"><strong>Additional requests:&nbsp;</strong></span>
+                                            <span className="content"> {additionalRequests ? additionalRequests : 'None'}</span>
+                                            <span className='result-icon' onClick={() => handleEditClick('additional')}>
+                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                         <div className='booking-popup-maintab-right'>
                             <div className='booking-popup-mainform'>
@@ -826,11 +748,10 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                     <>
                                         <div className="vehicle-booking-content">
                                             <div className="vehicle-booking-category">
-                                                {/* Tab buttons */}
                                                 {vehicleTypes.map((type, index) => (
                                                     <Button
                                                         key={index}
-                                                        onClick={() => innerSetActiveIndex(index)}
+                                                        onClick={() => setInnerActiveIndex(index)}
                                                         className="border-button gray-border"
                                                         outlined={innerActiveIndex !== index}
                                                         label={type}
@@ -838,7 +759,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                 ))}
                                             </div>
                                             <div className="booking-car-list">
-                                                {/* Loop over cars based on the active tab */}
                                                 {cars?.filter(car => car.type === vehicleTypes[innerActiveIndex]).map((car, carIndex, carArray) => {
                                                     let nextCar;
                                                     if (vehicleTypes[innerActiveIndex] === 'CARS') {
@@ -873,9 +793,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                                         </div>
                                                                     </div>
                                                                     <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} is_view="true" />
-                                                                    {/* <Link to="/signature-routes" className="font-12 viewmorebtn">
-                                                                view more
-                                                            </Link> */}
                                                                 </div>
                                                             </div>
                                                             <div className="car-spec show-desktop">
@@ -889,8 +806,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                                     {car?.luggage_type}&nbsp; <span className="hideforsmall">luggage</span>
                                                                 </div>
                                                             </div>
-                                                            <span className={`border-button gray-border select-button ${selectedCars.some((selectedCar) => selectedCar._id === car._id) ? 'selected' : ''
-                                                                }`}
+                                                            <span className={`border-button gray-border select-button ${selectedCars.some((selectedCar) => selectedCar._id === car._id) ? 'selected' : ''}`}
                                                                 onClick={() => handleSelectCar(car)}
                                                             >
                                                                 {selectedCars.some((selectedCar) => selectedCar._id === car._id)
@@ -903,7 +819,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                             </div>
                                         </div>
                                         <div className='done-button text-right'>
-                                            {/* <Button className="btn formbtn" onClick={() =>handleDoneClick('vehicle')}>Done</Button> */}
                                             {showWarning && (
                                                 <div className="warning-message" style={{ color: 'red' }}>
                                                     Please select at least one car to proceed.
@@ -918,14 +833,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                             <h6>Select your <strong>pick-up location and destination</strong></h6>
                                             {pickupValue && (
                                                 <div className='vehicle-routeschedule-signaturebox mb-30'>
-                                                    {/* <div className='routeschedule-signaturebox-top d-flex align-items-center'>
-                                                    <p className='text-uppercase m-0 fw-400 font-12'>Signature Routes</p>
-                                                    <a href="/signature-routes" className="font-12 viewmorebtn">
-                                                        view more
-                                                    </a>
-                                                    <span className='viewmorebtn' onClick={() => setVisible2(true)}>view more</span>
-                                                </div> */}
-
                                                     <div className='routeschedule-signaturebox-bottom'>
                                                         <div className='routeschedule-signaturebox-locations d-grid'>
                                                             {pickupValue && (
@@ -949,7 +856,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                     <Autocomplete
                                                         onLoad={onPickupLoad}
                                                         onPlaceChanged={handlePickupPlaceChange}
-                                                        // ref={pickupAutocomplete}
                                                         options={autoCompleteOptions}
                                                         placeholder=""
                                                     >
@@ -968,7 +874,6 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                     <Autocomplete
                                                         onLoad={onDestinationLoad}
                                                         onPlaceChanged={handleDestinationPlaceChange}
-                                                        //ref={destinationAutocomplete}
                                                         options={autoCompleteOptions}
                                                     >
                                                         <InputText
@@ -982,25 +887,20 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                 </FloatLabel>
                                             </div>
                                             <div className='popup-location-map mb-20 mt-20'>
-                                                {/* <img src={LocationMap} alt="Location Image" className="" /> */}
                                                 <GoogleMap
                                                     mapContainerStyle={containerStyle}
                                                     center={mapCenter}
-                                                    // zoom={zoomLevel}
-                                                    onLoad={onLoad} // Load map instance
+                                                    onLoad={onLoad}
                                                     onUnmount={onUnmount}
                                                     options={{
                                                         restriction: {
-                                                            latLngBounds: londonBounds,
-                                                            strictBounds: true, // Prevent dragging outside London
+                                                            latLngBounds: { north: 60, south: 49.5, west: -11, east: 2.5 },
+                                                            strictBounds: true,
                                                         },
-                                                        mapTypeId: "roadmap", // Standard view
-                                                        //streetViewControl: false, // Hide street view
-                                                        //fullscreenControl: false, // Disable full screen
-                                                        zoomControl: true, // Allow zooming
+                                                        mapTypeId: "roadmap",
+                                                        zoomControl: true,
                                                     }}
                                                 >
-                                                    {/* Markers */}
                                                     {startPoint && <Marker position={startPoint} draggable onDragEnd={handleStartMarkerDragEnd} icon={startMarkerIcon} />}
                                                     {endPoint && <Marker position={endPoint} draggable onDragEnd={handleEndMarkerDragEnd} icon={endMarkerIcon} />}
                                                     {directions && <DirectionsRenderer directions={directions} />}
@@ -1015,27 +915,24 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                         showTime
                                                         hourFormat="12"
                                                         dateFormat="MM dd,yy"
-                                                        readOnlyInput={false}  // This will open the calendar when the input is clicked
+                                                        readOnlyInput={false}
                                                         id="datetime"
                                                         inputMode="string"
                                                         className="w-100 calender-field"
                                                         placeholder='type a day and time here'
                                                         footerTemplate={footerTemplate}
-                                                        onVisibleChange={handleVisibleChange}  // Track visibility change
-                                                        visible={calendarVisible}  // Manually control visibility
+                                                        onVisibleChange={handleVisibleChange}
+                                                        visible={calendarVisible}
                                                     />
-                                                    {/* <label htmlFor="username">type a day and time here</label> */}
                                                 </FloatLabel>
                                             </div>
                                         </div>
                                         <div className='done-button text-right'>
-                                            {/* <Button className="btn formbtn" onClick={() =>handleDoneClick('route')}>Done</Button> */}
                                             {showWarning && (
                                                 <div className="warning-message" style={{ color: 'red' }}>
                                                     Please fill in all the required fields.
                                                 </div>
                                             )}
-                                            {/* <Button className="btn formbtn">Done</Button> */}
                                         </div>
                                     </>
                                 )}
@@ -1044,12 +941,11 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                         <div className='vehicle-details-content'>
                                             <h6 className='mb-10 label'>Add details about your trip here</h6>
                                             <div className='form-group'>
-                                                {/* <InputNumber placeholder='type the number of passengers' useGrouping={false} className='w-100' /> */}
                                                 <InputNumber
-                                                    value={passengerCount} // Bind the value of InputNumber to the state
-                                                    onChange={handlePassengerChange} // Handle value change
+                                                    value={passengerCount}
+                                                    onChange={handlePassengerChange}
                                                     placeholder='Type the number of passengers'
-                                                    useGrouping={false} // Disable grouping (comma separation)
+                                                    useGrouping={false}
                                                     className='w-100'
                                                     id='passenger'
                                                 />
@@ -1058,22 +954,12 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                 <InputTextarea value={additionalRequests || ""} placeholder="any additional notes?" className='w-100' id='additional' onChange={handleAdditionalRequestsChange}></InputTextarea>
                                             </div>
                                             <h6 className='mb-10 pt-20 label'>Your contact details</h6>
-                                            {/* <div className='form-group'>
-                                            <InputText type="text" placeholder="your name" className='w-100'/>
-                                        </div>
-                                        <div className='form-group'>
-                                            <InputText type="email" placeholder="your email" className='w-100'/>
-                                        </div>
-                                        <div className='form-group'>
-                                            <InputNumber type="text" placeholder="phone number" className='w-100'/>
-                                        </div> */}
-
                                             <div className="form-group">
                                                 <InputText
                                                     type="text"
                                                     placeholder="Your name"
                                                     value={name}
-                                                    onChange={handleNameChange} // Bind to state
+                                                    onChange={handleNameChange}
                                                     className="w-100"
                                                 />
                                             </div>
@@ -1082,7 +968,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                     type="email"
                                                     placeholder="Your email"
                                                     value={email}
-                                                    onChange={handleEmailChange} // Bind to state
+                                                    onChange={handleEmailChange}
                                                     className="w-100"
                                                 />
                                             </div>
@@ -1091,14 +977,12 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                     type="tel"
                                                     placeholder="Phone number"
                                                     value={phone}
-                                                    onChange={handlePhoneChange} // Bind to state
+                                                    onChange={handlePhoneChange}
                                                     className="w-100"
                                                 />
                                             </div>
                                         </div>
                                         <div className='done-button text-right'>
-                                            {/* <Button className="btn formbtn">Done</Button> */}
-                                            {/* <Button className="btn formbtn"  onClick={() =>handleDoneClick('details')}>Done</Button> */}
                                             {showWarning && (
                                                 <div className="warning-message" style={{ color: 'red' }}>
                                                     Please fill in all the required fields.
@@ -1114,7 +998,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                     <p>We will email you details of your request and respond there or you can get in touch with us immediately via WhatsApp.</p>
                                     <ul className='nostyle p-0 d-flex align-items-center gap-10 mt-30'>
                                         <li>
-                                            <Button className={`btn ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Send Now  <div className="loader-wrap"><span className='loader'></span></div></Button>
+                                            <Button className={`btn ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Send Now <div className="loader-wrap"><span className='loader'></span></div></Button>
                                         </li>
                                         <li>
                                             <Button className="btn d-flex align-items-center connect-whatsappbtn" onClick={() => handleSubmit('whatsapp')}>Connect Via Whatsapp
@@ -1122,22 +1006,20 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                             </Button>
                                         </li>
                                     </ul>
-                                    {/* Success Message */}
                                     {successMessage && <p className="success-message">{successMessage}</p>}
-                                    {/* Error Message */}
                                     {errorMessage && <p className="error-message">{errorMessage}</p>}
                                 </div>
                             )}
                         </div>
-                        <div className='back-to-top mobile-only'><button className='back-to-top-inner' onClick={(e) => {
-                            e.preventDefault();
-                            // Scroll the popup to the top when the button is clicked
-                            targetDivRef.current.scrollTo({
-                                top: 0,
-                                behavior: 'smooth',
-                            });
-                        }}>Back To Top <span className='icon-top'><img src={rightIcon} /></span></button></div>
-
+                        <div className='back-to-top mobile-only'>
+                            <button className='back-to-top-inner' onClick={(e) => {
+                                e.preventDefault();
+                                targetDivRef.current.scrollTo({
+                                    top: 0,
+                                    behavior: 'smooth',
+                                });
+                            }}>Back To Top <span className='icon-top'><img src={rightIcon} /></span></button>
+                        </div>
                     </div>
                 </div>
             </Dialog>
