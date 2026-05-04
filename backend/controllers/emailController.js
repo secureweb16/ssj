@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 // Create a transporter object using SMTP transport (Gmail, SendGrid, etc.)
 const transporter = nodemailer.createTransport({
-  host: process.envEMAIL_HOST, // Microsoft 365 SMTP server
+  host: process.env.EMAIL_HOST, // Microsoft 365 SMTP server
   port: process.env.EMAIL_PORT, // Use 587 for TLS
   secure: false, // Set to false for TLS
   auth: {
