@@ -82,6 +82,7 @@ function HomeVehicleOptions({ cars }) {
                                                         <div className='common-vehicle-content'>
                                                             <h6>{car.company_name}&nbsp;<strong>{car.car_name}</strong></h6>
                                                             {/* <Link to='/signature-routes' className='font-12'>view more</Link> */}
+                                                            <p className="futura-text">Hello World</p>
                                                             <CarInfoPopup car={car} nextCar={nextCar} allCars={cars} is_view="true" />
                                                         </div>
                                                         <div className='vehicle-option-bookbtn'>

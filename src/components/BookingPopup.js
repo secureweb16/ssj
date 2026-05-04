@@ -30,7 +30,7 @@ import CarInfoPopup from '../components/CarInfoPopup';
 
 const containerStyle = { width: '550px', height: '250px' };
 
-function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home = null }) {
+function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home = null ,btnlarge=true}) {
     // Declare all Hooks at the top level
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
@@ -550,7 +550,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
     return (
         <>
             {!isHomeBanner && (
-                <span className={`${is_home == null ? 'btn largebtn' : 'border-button gray-border'}`} onClick={() => setVisible(true)}>Book Now</span>
+                <span className={`${is_home == null ? `btn ${btnlarge && `largebtn`}` : 'border-button gray-border'}`} onClick={() => setVisible(true)}>Book Now</span>
             )}
             <Dialog visible={visible} onHide={() => { if (!visible) return; setVisible(false); if (closePopup) { closePopup(); } }} className='booking-popup-outer' draggable={false}>
                 <div className='booking-popup' ref={targetDivRef} style={{ maxHeight: '80vh', overflowY: 'auto' }}>

@@ -1232,6 +1232,33 @@ header.main-header {
   max-width: 330px;
   margin: auto;
 }
+.page-banner2 {
+  padding-top: 66px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom-left-radius: 75px;
+  border-bottom-right-radius: 75px;
+}
+.page-banner2::before {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 384px;
+  z-index: 1;
+}
+.page-banner2 h1 {
+  font-size: 24px;
+  line-height: 31px;
+  font-weight: 300;
+  text-align: center;
+  /* max-width: 330px; */
+  /* width: 487px; */
+  margin: auto;
+}
 .home-banner video {
   object-fit: cover;
   object-position: center center;
@@ -1319,7 +1346,29 @@ header.main-header {
   clear: both;
   margin: 38px 0 30px;
 }
-
+.title-text-wrap2{
+  max-width: 700px;
+  margin: 0 auto;
+}
+.title-text-wrap2 p {
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+}
+.title-text-wrap2 h6 {
+  letter-spacing: 1.5px;
+  line-height: 20px;
+}
+.title-text-wrap2 h6::after {
+  content: "";
+  width: 150px;
+  height: 1px;
+  background: #000;
+  display: inline-block;
+  clear: both;
+  margin: 38px 0 30px;
+}
 
 /* Service Slider */
 .common_service_slide span.border-button {
@@ -3138,3 +3187,29 @@ button[type="button"]:hover {
 }
 
 
+.london-events-text {
+  font-family: "Albert Sans";
+  font-weight: 300;
+  font-style: normal;
+  font-size: 24.93px;
+  line-height: 31.16px;
+  letter-spacing: 0%;
+  text-align: center;
+  
+}
+
+.justify-end{
+  justify-content: end;
+}
+
+
+.futura-text {
+  font-family: "Futura PT", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 10px;
+  line-height: 20px;
+  letter-spacing: 0.15em; 
+  /* text-align: center; */
+  text-transform: uppercase;
+}

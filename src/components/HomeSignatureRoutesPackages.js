@@ -21,7 +21,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 import BookingPopup from '../components/BookingPopup';
 
-function HomeSignatureRoutesPackages({cars}){    
+function HomeSignatureRoutesPackages({cars,viewCta=true,viewCtaBooking=false}){    
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [popupIndex, setPopupIndex] = useState(null);
     const showPopup = (index) => {
@@ -222,9 +222,14 @@ function HomeSignatureRoutesPackages({cars}){
                     )}
                 </SwiperSlide>                
             </Swiper>      
-            <div className="slider_nav slider_view_all  d-flex align-items-center justify-content-center nowrap"> 
+           {viewCta && <div className="slider_nav slider_view_all  d-flex align-items-center justify-content-center nowrap"> 
                 <Link to='/signature-routes' className='view_all_btn'>View All</Link>
-            </div>       
+            </div> }      
+            {viewCtaBooking && <div className="slider_nav slider_view_all  d-flex align-items-center justify-content-center nowrap"> 
+             <BookingPopup cars={cars} isHomeBanner={false} closePopup={closePopup}  btnlarge={false}location={['Central London','Bicester Village']} triggerElement={<span className='view_all_btn'>Book Now</span>} />
+           
+                {/* <Link to='/signature-routes' className='view_all_btn'>View All</Link> */}
+            </div> } 
             {/* <div className="slider_nav d-flex align-items-center justify-content-center nowrap">                
                 <button className="arrow-left arrow common_slider_arrow d-flex align-items-center justify-content-center"><img src={LeftArrow} alt="Image" /></button>
                 

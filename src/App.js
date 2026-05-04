@@ -16,6 +16,7 @@ import config from './config';
 import AirportTransport from './pages/AirportTransport';
 
 import { loadGoogleMaps } from "./utils/loadGoogleMaps";
+import EventsAroundLondon from './pages/EventsAroundLondon';
 function App() {
   const location = useLocation();  // Access current location
   const isLoginPage = location.pathname === '/admin/login';
@@ -58,6 +59,8 @@ function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="signature-routes" element={<SignatureRoutes />} />
+        
+        <Route path="events-around-london" element={<EventsAroundLondon />} />
         <Route path="vehicle" element={<Vehicle />} />
         <Route path="about" element={<About />} />
         <Route path="for-corporate" element={<ForCorporate />} />
