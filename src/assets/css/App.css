@@ -532,6 +532,9 @@ img{
   .mb-30 {
     margin-bottom: 30px;
   }
+  .mb-35 {
+    margin-bottom: 35px;
+  }
   .mb-40 {
     margin-bottom: 40px;
   }
@@ -559,6 +562,9 @@ img{
 /*---- Padding ----*/
 .p-40{
     padding: 40px;
+}
+.pl-5{
+  padding-left: 4px;
 }
 .px-20{
     padding-left: 20px;
@@ -971,7 +977,14 @@ img{
     max-width: 640px;
     width: 100%;
 }
-
+.effortless-booking .summary-block2 .h2 {
+    /* max-width: 430px; */
+    width: 100%;
+}
+.effortless-booking .summary-block2 .text-block {
+    /* max-width: 552px; */
+    width: 100%;
+}
 /*---- Explore Our Vehicles ----*/
 .vehicle-block .vehicle-image {
     box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.1);
@@ -3204,7 +3217,7 @@ button[type="button"]:hover {
 
 
 .futura-text {
-  font-family: "Futura PT", sans-serif;
+  font-family: "Futura PT";
   font-weight: 400;
   font-style: normal;
   font-size: 10px;
@@ -3212,4 +3225,19 @@ button[type="button"]:hover {
   letter-spacing: 0.15em; 
   /* text-align: center; */
   text-transform: uppercase;
+}
+
+
+.pb-98p{
+  padding-bottom: 98% !important;
+}
+
+.text-end{
+  text-align: end
+}
+.w-max-441{
+  max-width: 441px;
+}
+.w-max-556{
+  max-width: 544px;
 }

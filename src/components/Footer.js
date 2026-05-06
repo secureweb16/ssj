@@ -55,7 +55,9 @@ function Footer({ cars }) {
                             <li>
                                 <Link to='/airport-transport' className='text-white'>Airport Transport</Link>
                             </li>
-                            
+                            <li>
+                                <Link to='/events-around-london' className='text-white'>Events Around London</Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

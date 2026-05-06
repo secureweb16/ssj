@@ -62,10 +62,13 @@ function App() {
         <img className="cover" src={EffortlessBooking} />
         <div className="wrapper-block position-absolute w-100 h-100">
           <div className="plr-100 h-100 d-flex align-center justify-end">
-            <div className="summary-block">
-              <div className='h2 fs-24 mb-20 fw-200'><span className='fw-300'>effortless booking,</span> the latest models, luxury service.</div>
-              <div className='text-block'><p className='mb-0 font-16'>Experience the ultimate in comfort and sophistication with our luxury black car transport service to and from London’s major airports, including Heathrow, Gatwick, Stansted, Luton, and London City Airport. Our professional chauffeurs ensure a seamless and stress-free journey between the airport and central London, offering punctual, discreet, and high-end transportation tailored to your schedule. Whether you're a business traveler or arriving for a special occasion, our fleet of premium vehicles guarantees a first-class travel experience. Book your London airport transfer today and enjoy a smooth, stylish ride with a trusted luxury car service that prioritizes reliability, comfort, and elegance.</p></div>
+            <div className="summary-block-2 text-end">
+              <div className='w-100 text-end '>
+              <div className='h2 fs-24 mb-35 fw-200 w-100 text-end '><span className='fw-300'>effortless booking,</span> the latest models, <br/>luxury service.</div>
             </div>
+              <div className='text-block w-max-556'><p className='mb-0 font-16'>Experience the ultimate in comfort and sophistication with our luxury black car transport service for events and journeys beyond London. Our professional chauffeurs provide seamless, stress-free travel to destinations across the UK, delivering punctual, discreet, and high-end transportation tailored to your schedule. Whether you're attending a corporate event, a wedding, or a special occasion, our fleet of premium vehicles ensures a first-class travel experience. Book your luxury car service today and enjoy a smooth, stylish ride with a trusted provider that prioritizes reliability, comfort, and elegance wherever your plans take you.</p></div>
+            
+           </div>
           </div>
         </div>
       </div>
