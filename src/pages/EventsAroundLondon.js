@@ -65,7 +65,7 @@ const seo = useSEO();
 
 
       <div className="effortless-booking d-flex align-center overlay position-relative color-light mb-90">
-        <img className="cover" src={EffortlessBooking} />
+        <img className="cover" src={EffortlessBooking} alt="Luxury Event Transport London" />
         <div className="wrapper-block position-absolute w-100 h-100">
           <div className="plr-100 h-100 d-flex align-center justify-end">
             <div className="summary-block-2 text-end">
@@ -104,7 +104,7 @@ const seo = useSEO();
             </div>
             <div className='grid-block right-block'>
               <div className='image-block'>
-                <img src={MobileDevice} alt='' className='' />
+                <img src={MobileDevice} alt='SSJ Luxury Transport Mobile Booking Interface' className='' />
               </div>
             </div>
           </div>

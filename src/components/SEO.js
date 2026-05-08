@@ -17,6 +17,9 @@ const SEO = ({ seo }) => {
       <meta property="og:description" content={seo.description} />
 
       <meta property="og:image" content={seo.image} />
+      <meta property="og:image:alt" content={seo.title} />
+
+
 
       <meta property="og:url" content={seo.page_url} />
 

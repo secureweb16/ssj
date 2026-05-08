@@ -47,7 +47,7 @@ function CarServiceSlider({cars}){
             >                
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
-                        <img src={SliderItem1} alt="Image" className="w-100 object-fit-cover" />
+                        <img src={SliderItem1} alt="Private Chauffeur Service" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>chauffeur</p>
                            <BookingPopup cars={cars} />
@@ -56,7 +56,7 @@ function CarServiceSlider({cars}){
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
-                        <img src={SliderItem2} alt="Image" className="w-100 object-fit-cover" />
+                        <img src={SliderItem2} alt="Private Chauffeur Service" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>corporate services</p>
                            <BookingPopup cars={cars} />
@@ -65,7 +65,7 @@ function CarServiceSlider({cars}){
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
-                        <img src={SliderItem3} alt="Image" className="w-100 object-fit-cover" />
+                        <img src={SliderItem3} alt="Private Chauffeur Service" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>black car hire</p>
                            <BookingPopup cars={cars} />
@@ -74,7 +74,7 @@ function CarServiceSlider({cars}){
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
-                        <img src={SliderItem4} alt="Image" className="w-100 object-fit-cover" />
+                        <img src={SliderItem4} alt="Private Chauffeur Service" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>airport transport</p>
                            <BookingPopup cars={cars} />
@@ -83,7 +83,7 @@ function CarServiceSlider({cars}){
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
-                        <img src={SliderItem1} alt="Image" className="w-100 object-fit-cover" />
+                        <img src={SliderItem1} alt="Private Chauffeur Service" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>chauffeur</p>
                            <BookingPopup cars={cars} />
@@ -92,7 +92,7 @@ function CarServiceSlider({cars}){
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
-                        <img src={SliderItem2} alt="Image" className="w-100 object-fit-cover" />
+                        <img src={SliderItem2} alt="Corporate Car Service" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>corporate services</p>
                            <BookingPopup cars={cars} />
@@ -101,7 +101,7 @@ function CarServiceSlider({cars}){
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
-                        <img src={SliderItem3} alt="Image" className="w-100 object-fit-cover" />
+                        <img src={SliderItem3} alt="Black Car Hire London" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>black car hire</p>
                            <BookingPopup cars={cars} />
@@ -110,7 +110,7 @@ function CarServiceSlider({cars}){
                 </SwiperSlide>
                 <SwiperSlide>
                     <div className="common_service_slide  position-relative">
-                        <img src={SliderItem4} alt="Image" className="w-100 object-fit-cover" />
+                        <img src={SliderItem4} alt="Airport Transport Service" className="w-100 object-fit-cover" />
                         <div className='position-absolute top-0 start-0 h-100 w-100 d-flex flex-column align-items-center justify-content-center text-white font-16'>
                             <p>airport transport</p>
                             <BookingPopup cars={cars} />

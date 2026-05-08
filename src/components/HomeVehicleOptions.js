@@ -77,7 +77,7 @@ function HomeVehicleOptions({ cars }) {
                                                 <SwiperSlide key={car._id}>
                                                     <div className='common-vehicle-option position-relative'>
                                                         <div className='common-vehicle-image position-relative'>
-                                                            <img src={`${config.api.baseURL}${car.image.replace(/\\/g, '/')}`} alt={car.car_name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
+                                                            <img src={`${config.api.baseURL}${car.image.replace(/\\/g, '/')}`} alt={`${car.company_name} ${car.car_name} Luxury Chauffeur Car`} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
                                                         </div>
                                                         <div className='common-vehicle-content'>
                                                             <h6>{car.company_name}&nbsp;<strong>{car.car_name}</strong></h6>

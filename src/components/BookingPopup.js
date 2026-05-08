@@ -561,16 +561,16 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                         <ProgressBar value={progressBar} style={{ height: '3px' }}></ProgressBar>
                         <div className='booking-popup-head-right'>
                             {activeIndex === 0 && (
-                                <Button className="btn largebtn" onClick={() => handleDoneClick('vehicle')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
+                                <Button className="btn largebtn" onClick={() => handleDoneClick('vehicle')}>Next <span className='icon'><img src={rightIcon} alt="Next Step" /></span></Button>
                             )}
                             {activeIndex === 1 && (
-                                <Button className="btn largebtn" onClick={() => handleDoneClick('route')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
+                                <Button className="btn largebtn" onClick={() => handleDoneClick('route')}>Next <span className='icon'><img src={rightIcon} alt="Next Step" /></span></Button>
                             )}
                             {activeIndex === 2 && (
-                                <Button className="btn largebtn" onClick={() => handleDoneClick('details')}>Next <span className='icon'><img src={rightIcon} /></span></Button>
+                                <Button className="btn largebtn" onClick={() => handleDoneClick('details')}>Next <span className='icon'><img src={rightIcon} alt="Next Step" /></span></Button>
                             )}
                             {activeIndex === 3 && (
-                                <Button className={`btn largebtn booked ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book <span className='icon'><img src={checkIcpn} /></span><div className="loader-wrap"><span className='loader'></span></div></Button>
+                                <Button className={`btn largebtn booked ${isLoading ? 'loading' : ''}`} onClick={() => handleSubmit('email')}>Book <span className='icon'><img src={checkIcpn} alt="Confirm Booking" /></span><div className="loader-wrap"><span className='loader'></span></div></Button>
                             )}
                         </div>
                     </div>
@@ -613,17 +613,17 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                 <span className="location-title"><strong>Pick-up:&nbsp;</strong></span>
                                                 <span className="content">{pickupValue}</span>
                                                 <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
-                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                    <img src={Editicon} alt="Edit Pickup Location" className="" />
                                                 </span>
                                             </li>
                                         )}
                                         {destinationValue && (
                                             <li>
-                                                <span className="location-title"><span className='icon'><img src={rightBlackIcon} /></span>
+                                                <span className="location-title"><span className='icon'><img src={rightBlackIcon} alt="Directs To" /></span>
                                                     <strong>Destination:&nbsp;</strong></span>
                                                 <span className="content">{destinationValue}</span>
                                                 <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
-                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                    <img src={Editicon} alt="Edit Destination" className="" />
                                                 </span>
                                             </li>
                                         )}
@@ -631,11 +631,11 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                     <ul className='popup-filter-results font-12 fw-400 nostyle'>
                                         {datetime && (
                                             <li>
-                                                <span className="location-title"><span className='icon'><img src={timerIcon} /></span>
+                                                <span className="location-title"><span className='icon'><img src={timerIcon} alt="Scheduled Time" /></span>
                                                     <strong>Time:&nbsp;</strong></span>
                                                 <span className="content">{formatTime(datetime)}</span>
                                                 <span className="result-icon" onClick={() => handleEditClick('datetime')}>
-                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                    <img src={Editicon} alt="Edit Pickup Time" className="" />
                                                 </span>
                                             </li>
                                         )}
@@ -654,14 +654,14 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                             <span className="location-title"><strong>Passengers:&nbsp;</strong></span>
                                             <span className="content">{passengerCount ? passengerCount : 0}</span>
                                             <span className='result-icon' onClick={() => handleEditClick('passenger')}>
-                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                                <img src={Editicon} alt="Edit Detail" className="" />
                                             </span>
                                         </li>
                                         <li>
                                             <span className="location-title"><strong>Additional requests:&nbsp;</strong></span>
                                             <span className="content"> {additionalRequests ? additionalRequests : 'None'}</span>
                                             <span className='result-icon' onClick={() => handleEditClick('additional')}>
-                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                                <img src={Editicon} alt="Edit Detail" className="" />
                                             </span>
                                         </li>
                                     </ul>
@@ -692,7 +692,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                 <span className="location-title"><strong>Pick-up:&nbsp;</strong></span>
                                                 <span className="content">{pickupValue}</span>
                                                 <span className='result-icon' onClick={() => handleEditClick('pickupaddress')}>
-                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                    <img src={Editicon} alt="Edit Detail" className="" />
                                                 </span>
                                             </li>
                                         )}
@@ -702,7 +702,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                     <strong>Destination:&nbsp;</strong></span>
                                                 <span className="content">{destinationValue}</span>
                                                 <span className='result-icon' onClick={() => handleEditClick('destinationaddress')}>
-                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                    <img src={Editicon} alt="Edit Detail" className="" />
                                                 </span>
                                             </li>
                                         )}
@@ -714,7 +714,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                     <strong>Time:&nbsp;</strong></span>
                                                 <span className="content">{formatTime(datetime)}</span>
                                                 <span className="result-icon" onClick={() => handleEditClick('datetime')}>
-                                                    <img src={Editicon} alt="Edit Icon" className="" />
+                                                    <img src={Editicon} alt="Edit Detail" className="" />
                                                 </span>
                                             </li>
                                         )}
@@ -728,14 +728,14 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                             <span className="location-title"><strong>Passengers:&nbsp;</strong></span>
                                             <span className="content">{passengerCount ? passengerCount : 0}</span>
                                             <span className='result-icon' onClick={() => handleEditClick('passenger')}>
-                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                                <img src={Editicon} alt="Edit Detail" className="" />
                                             </span>
                                         </li>
                                         <li>
                                             <span className="location-title"><strong>Additional requests:&nbsp;</strong></span>
                                             <span className="content"> {additionalRequests ? additionalRequests : 'None'}</span>
                                             <span className='result-icon' onClick={() => handleEditClick('additional')}>
-                                                <img src={Editicon} alt="Edit Icon" className="" />
+                                                <img src={Editicon} alt="Edit Detail" className="" />
                                             </span>
                                         </li>
                                     </ul>
@@ -778,7 +778,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                         <div key={car?._id} className="common-booking-car-info d-flex align-items-center">
                                                             <div className="carpop-bottom-detail d-flex align-items-center">
                                                                 <div className="carpop-bottom-image">
-                                                                    <img src={`${config.api.baseURL}${car?.image.replace(/\\/g, '/')}`} alt={car?.name} />
+                                                                    <img src={`${config.api.baseURL}${car?.image.replace(/\\/g, '/')}`} alt={`${car?.company_name} ${car?.car_name} Luxury Chauffeur Car`} />
                                                                 </div>
                                                                 <div className="carpop-bottom-info">
                                                                     <h6>{car?.company_name} <strong>{car?.car_name}</strong></h6>
@@ -837,13 +837,13 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                                         <div className='routeschedule-signaturebox-locations d-grid'>
                                                             {pickupValue && (
                                                                 <div className='routeschedule-signaturebox-location d-flex align-items-center'>
-                                                                    <img src={Location1} alt="Location Image" className="" />
+                                                                    <img src={Location1} alt="Pickup Location" className="" />
                                                                     <p className='m-0'>{pickupValue} </p>
                                                                 </div>
                                                             )}
                                                             {destinationValue && (
                                                                 <div className='routeschedule-signaturebox-location d-flex align-items-center'>
-                                                                    <img src={Location2} alt="Location Image" className="" />
+                                                                    <img src={Location2} alt="Destination Location" className="" />
                                                                     <p className='m-0'>{destinationValue} </p>
                                                                 </div>
                                                             )}
@@ -1002,7 +1002,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
                                         </li>
                                         <li>
                                             <Button className="btn d-flex align-items-center connect-whatsappbtn" onClick={() => handleSubmit('whatsapp')}>Connect Via Whatsapp
-                                                <img src={WhatsappIcon} alt='Icon' />
+                                                <img src={WhatsappIcon} alt='WhatsApp Icon' />
                                             </Button>
                                         </li>
                                     </ul>

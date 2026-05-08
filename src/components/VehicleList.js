@@ -39,7 +39,7 @@ function VehicleList({ cars }) {
                                                     <div className='common-vehicle-image position-relative'>
                                                         <img
                                                             src={`${config.api.baseURL}${car.image.replace(/\\/g, '/')}`}  // Ensure API base URL is correct
-                                                            alt={car.car_name}
+                                                            alt={`${car.company_name} ${car.car_name} Luxury Chauffeur Car`}
                                                             className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover"
                                                         />
                                                     </div>

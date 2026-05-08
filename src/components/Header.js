@@ -40,19 +40,19 @@ function Header({cars}) {
                 <div className='header-inner w-100 d-flex align-items-center justify-content-between'>
                     <div className='header-left d-flex align-items-center'> 
                         <Link to='/' className='header_logo'>
-                            <img src={Logo} alt="Logo" />
+                            <img src={Logo} alt="SSJ Luxury Transport Logo" />
                         </Link>
                     </div>
                     <div className='header-right'>
                         <ul className='d-flex gap-10 nostyle'>
                             <li className='show-desktop'>
-                                <Link onClick={handleClick} to='/' className='btn transparent-btn'><span className='show-desktop'>Whatsapp</span><img src={WhatsappIcon} alt="Icon" className='show-mobile'/></Link>
+                                <Link onClick={handleClick} to='/' className='btn transparent-btn'><span className='show-desktop'>Whatsapp</span><img src={WhatsappIcon} alt="WhatsApp Icon" className='show-mobile'/></Link>
                             </li>
                             <li>
-                                <Link to={`${config.telegram.baseUrl}`} className='btn transparent-btn'><span className='show-desktop'>Telegram</span><img src={EmailIcon} alt="Icon" className='show-mobile'/></Link>
+                                <Link to={`${config.telegram.baseUrl}`} className='btn transparent-btn'><span className='show-desktop'>Telegram</span><img src={EmailIcon} alt="Telegram Icon" className='show-mobile'/></Link>
                             </li>
                             <li className='show-mobile'>
-                                <Link onClick={handleClick} to='/' className='btn transparent-btn'><span className='show-desktop'>Whatsapp</span><img src={WhatsappIcon} alt="Icon" className='show-mobile'/></Link>
+                                <Link onClick={handleClick} to='/' className='btn transparent-btn'><span className='show-desktop'>Whatsapp</span><img src={WhatsappIcon} alt="WhatsApp Icon" className='show-mobile'/></Link>
                             </li>
                             <li>
                                 <span className='btn transparent-btn' onClick={showPopup}>Book <span className='show-desktop'>a car</span></span>

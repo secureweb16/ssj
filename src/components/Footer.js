@@ -23,7 +23,7 @@ function Footer({ cars }) {
                 <div className='plr-100'>
                     <div className='main-footer-wrap '>
                         <Link to='/' className='footer-logo'>
-                            <img src={Logo} alt="Logo" />
+                            <img src={Logo} alt="SSJ Luxury Transport Logo" />
                         </Link>
                         <span className='border-button' onClick={showPopup}>Book Now</span>
                         {isPopupVisible &&
@@ -61,7 +61,7 @@ function Footer({ cars }) {
                         </ul>
                     </div>
                 </div>
-                <div className="build-by"><Link to="https://themilkbar.co/" target="_blank"><span className='small-text'>bulit by</span><img src={milkbarImage} /></Link></div>
+                <div className="build-by"><Link to="https://themilkbar.co/" target="_blank"><span className='small-text'>bulit by</span><img src={milkbarImage} alt="The Milkbar Logo" /></Link></div>
             </footer>
         </>
     );

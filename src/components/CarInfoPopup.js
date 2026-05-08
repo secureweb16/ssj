@@ -34,7 +34,7 @@ function CarInfoPopup({ car, nextCar, allCars, is_view = null }) {
             <Dialog visible={visible} onHide={() => {if (!visible) return; setVisible(false); }} className='car-info-popup-outer' draggable={false}>
                 <div className='car-info-popup'>
                     <div className='car-info-banner'>
-                        <img src={`${config.api.baseURL}${car?.image.replace(/\\/g, '/')}`} alt={car?.car_name} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
+                        <img src={`${config.api.baseURL}${car?.image.replace(/\\/g, '/')}`} alt={`${car?.company_name} ${car?.car_name} Luxury Car Details`} className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" />
                         <div className='car-info-banner-content position-absolute text-white'>
                             <h6>{car?.company_name} <strong>{car?.car_name}</strong></h6>
                             {/* <p className="font-12 text-uppercase letter-spacing-20">({car?.modal} model + above)</p> */}
@@ -49,7 +49,7 @@ function CarInfoPopup({ car, nextCar, allCars, is_view = null }) {
                                         up to {(car?.passengers) ? car?.passengers : 0 } passengers
                                     </div>
                                     <div className='common-car-spec d-flex align-items-center'>
-                                        <img src={SuitcaseIcon} alt="User Icon" className="" />
+                                        <img src={SuitcaseIcon} alt="Suitcase Icon" className="" />
                                         {(car?.luggage_type) ? car.luggage_type : 'light' } luggage
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@ function CarInfoPopup({ car, nextCar, allCars, is_view = null }) {
                             <div className='carinfo-popup-down-inner pt-20'>
                                 <div className='carpop-bottom-detail d-flex align-items-center'>
                                     <div className='carpop-bottom-image'>
-                                        <img src={`${config.api.baseURL}${nextCar?.image.replace(/\\/g, '/')}`} alt={nextCar.car_name} className="" />
+                                        <img src={`${config.api.baseURL}${nextCar?.image.replace(/\\/g, '/')}`} alt={`${nextCar?.company_name} ${nextCar?.car_name} Luxury Car`} className="" />
                                     </div>
                                     <div className='carpop-bottom-info'>
                                         <h6>{nextCar?.company_name} <strong>{nextCar?.car_name}</strong></h6>

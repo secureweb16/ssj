@@ -121,10 +121,10 @@ function About(){
                             </div>
                             <ul className='d-flex align-items-center justify-content-center nostyle pt-40 about-social-icon'>
                                 <li>
-                                <Link to={`mailto:${config.email.email}`}><img src={EnvelopeIcon} alt='Icon' /></Link>
+                                <Link to={`mailto:${config.email.email}`}><img src={EnvelopeIcon} alt='Email Icon' /></Link>
                                 </li>
                                 <li>
-                                <Link onClick={handleClick} to='#'><img src={WhatsappIcon} alt='Icon' /></Link>
+                                <Link onClick={handleClick} to='#'><img src={WhatsappIcon} alt='WhatsApp Icon' /></Link>
                                 </li>                                                                
                             </ul>
                         </div>
@@ -133,10 +133,10 @@ function About(){
                         <h6 className='font-18 text-center'>contact <strong>us</strong></h6>
                         <ul className='d-flex align-items-center justify-content-center nostyle pt-20 about-social-icon'>
                             <li>
-                                <Link to={`mailto:${config.email.email}`}><img src={EnvelopeIcon} alt='Icon' /></Link>
+                                <Link to={`mailto:${config.email.email}`}><img src={EnvelopeIcon} alt='Email Icon' /></Link>
                             </li>
                             <li>
-                                <Link onClick={handleClick} to='#'><img src={WhatsappIcon} alt='Icon' /></Link>
+                                <Link onClick={handleClick} to='#'><img src={WhatsappIcon} alt='WhatsApp Icon' /></Link>
                             </li>
                         </ul>
                         <form onSubmit={handleSubmit} className="pt-70">
