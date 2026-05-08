@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:sitemap": "node scripts/generateSitemap.js && cp ./public/sitemap.xml ../public/sitemap.xml"
+    "build:sitemap": "node scripts/generateSitemap.js"
   },
   "keywords": [],
   "author": "",
