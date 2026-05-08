@@ -6,10 +6,14 @@ import HomeSignatureRoutesPackages from '../components/HomeSignatureRoutesPackag
 import HomeVehicleOptions from '../components/HomeVehicleOptions';
 import CustomerReviews from '../components/CustomerReviews';
 import config from '../config'; 
+import useSEO from "../hooks/useSEO";
+import SEO from "../components/SEO";
 
 function App() {
   const[cars,setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+  const seo = useSEO();
+
   const fetchCars = async () => {
     try {
       const response = await fetch(`${config.api.baseURL}${config.api.carsEndpoint}`);
@@ -30,8 +34,11 @@ function App() {
     fetchCars();
   }, []);
 
+
+
+
   return (
-    <>
+    <> <SEO seo={seo} />
       <HomeBanner cars={cars} />
       <TitleWithText
         title={

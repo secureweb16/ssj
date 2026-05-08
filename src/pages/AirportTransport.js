@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom'
 import CustomerReviews from '../components/CustomerReviews';
 import HomeVehicleOptions from '../components/HomeVehicleOptions';
 import config from '../config';
+import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 
 function AirportTransport() {
     const airports = [
@@ -82,6 +84,8 @@ function AirportTransport() {
 
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
+    const seo = useSEO();
+
     const fetchCars = async () => {
         try {
             const response = await fetch(`${config.api.baseURL}${config.api.carsEndpoint}`);
@@ -101,8 +105,11 @@ function AirportTransport() {
     useEffect(() => {
         fetchCars();
     }, []);
+
+
+
     return (
-        <>
+        <> <SEO seo={seo} />
             <div className="airport-transport-banner hero-banner d-flex align-center top-overlay sm-bottom-overlay position-relative color-light">
                 <img className="cover" src={HeroBanner} />
                 <div className="wrapper-block position-absolute w-100 h-100">

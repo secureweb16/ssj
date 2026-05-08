@@ -1,37 +1,88 @@
-const express = require('express');
-const { SitemapStream, streamToPromise } = require('sitemap');
-const axios = require('axios');
-
+const express = require("express");
 const router = express.Router();
 
-router.get('/sitemap.xml', async (req, res) => {
-  try {
-    const domain = 'https://blackstoneconcierge.com';
+const { SitemapStream, streamToPromise } = require("sitemap");
 
-    const { data: services } = await axios.get(`${domain}/api/services`);
+router.get("/sitemap.xml", async (req, res) => {
 
-    const staticRoutes = [
-      { url: '/', changefreq: 'daily', priority: 1.0 },
-      { url: '/about', changefreq: 'monthly', priority: 0.8 },
-    ];
+    try {
 
-    const dynamicRoutes = services.map(service => ({
-      url: `/service/${service._id}`,
-      changefreq: 'weekly',
-      priority: 0.7,
-    }));
+        const sitemap = new SitemapStream({
+            hostname: "https://ssjluxurytransport.com",
+        });
 
-    const sitemap = new SitemapStream({ hostname: domain });
-    res.header('Content-Type', 'application/xml');
-    dynamicRoutes.concat(staticRoutes).forEach(link => sitemap.write(link));
-    sitemap.end();
+        // ROUTES WITH SEO SETTINGS
+        const routes = [
+            {
+                url: "/",
+                changefreq: "daily",
+                priority: 1.0,
+            },
+            {
+                url: "/signature-routes",
+                changefreq: "weekly",
+                priority: 0.9,
+            },
+            {
+                url: "/vehicles",
+                changefreq: "weekly",
+                priority: 0.9,
+            },
+            {
+                url: "/about",
+                changefreq: "monthly",
+                priority: 0.7,
+            },
+            {
+                url: "/for-corporate",
+                changefreq: "monthly",
+                priority: 0.8,
+            },
+            {
+                url: "/airport-transport",
+                changefreq: "weekly",
+                priority: 0.9,
+            },
+            {
+                url: "/events-around-london",
+                changefreq: "weekly",
+                priority: 0.8,
+            },
+        ];
 
-    const xml = await streamToPromise(sitemap);
-    res.send(xml);
-  } catch (error) {
-    console.error('Sitemap generation failed:', error.message);
-    res.status(500).end();
-  }
+        routes.forEach((route) => {
+            sitemap.write(route);
+        });
+
+        /*
+        FUTURE DYNAMIC ROUTES
+
+        const cars = await Car.find();
+
+        cars.forEach((car) => {
+            sitemap.write({
+                url: `/vehicle/${car.slug}`,
+                changefreq: "daily",
+                priority: 0.9,
+            });
+        });
+
+        */
+
+        sitemap.end();
+
+        const xmlData = await streamToPromise(sitemap);
+
+        res.header("Content-Type", "application/xml");
+
+        res.send(xmlData.toString());
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).end();
+    }
 });
 
 module.exports = router;

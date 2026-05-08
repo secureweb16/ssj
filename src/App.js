@@ -17,10 +17,16 @@ import AirportTransport from './pages/AirportTransport';
 
 import { loadGoogleMaps } from "./utils/loadGoogleMaps";
 import EventsAroundLondon from './pages/EventsAroundLondon';
+import MetaDataPage from './pages/admin/dashboard/MetaDataPage';
+import NotFound from './pages/NotFound';
+
 function App() {
+
   const location = useLocation();  // Access current location
   const isLoginPage = location.pathname === '/admin/login';
   const isDashboardPage = location.pathname === '/admin/dashboard';
+  const isMetaDataPage = location.pathname === '/admin/meta-data-setting';
+ 
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -55,7 +61,7 @@ function App() {
   return (
     <div>
       <ScrollToTop />
-      {!isLoginPage && !isDashboardPage && <Header cars={cars} />}
+      {!isLoginPage && !isDashboardPage && !isMetaDataPage && <Header cars={cars} />}
       <Routes>
         <Route index element={<Home />} />
         <Route path="signature-routes" element={<SignatureRoutes />} />
@@ -67,6 +73,12 @@ function App() {
         <Route path="/airport-transport" element={<AirportTransport />} />
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        
+        <Route path="/admin/meta-data-setting" element={<MetaDataPage />} />
+
+        {/* Catch-all 404 Route */}
+        <Route path="*" element={<NotFound />} />
+
 
       </Routes>
       {!isLoginPage && !isDashboardPage && <Footer cars={cars} />}

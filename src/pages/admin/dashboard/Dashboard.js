@@ -163,12 +163,20 @@ const Dashboard = () => {
     <>
       <header className="admin-dashboard">
         <div>Hello Admin</div>
+        <div>
+        <button className="setting-btn" onClick={() => {
+          
+          navigate("/admin/meta-data-setting");
+        }}>
+          Meta Data Setting
+        </button>
         <button className="logout-btn" onClick={() => {
           localStorage.removeItem("token");
           navigate("/");
         }}>
           Logout
         </button>
+        </div>
       </header>
 
       <div className="dashboard-container" >

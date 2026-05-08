@@ -5,10 +5,14 @@ import TitleWithText from '../components/TitleWithText';
 import VehicleList from '../components/VehicleList';
 import CustomerReviews from '../components/CustomerReviews';
 import config from '../config'; 
+import useSEO from "../hooks/useSEO";
+import SEO from "../components/SEO";
 
 function App() {
   const[cars,setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+  const seo = useSEO();
+
   const fetchCars = async () => {
     try {
       const response = await fetch(`${config.api.baseURL}${config.api.carsEndpoint}`);
@@ -28,8 +32,11 @@ function App() {
   useEffect(() => {
     fetchCars();
   }, []);
+
+
+
   return (
-    <>
+    <> <SEO seo={seo} />
       <PageBanner bannerimage={BannerImage} 
         title={(
           <>

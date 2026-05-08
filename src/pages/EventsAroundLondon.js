@@ -10,10 +10,13 @@ import HomeVehicleOptions from '../components/HomeVehicleOptions';
 import EffortlessBooking from '../assets/images/about-banner.jpg'
 import MobileDevice from '../assets/images/MobileDevice.png'
 import TitleWithText2 from '../components/TitleWithText2';
+import useSEO from '../hooks/useSEO';
+import SEO from '../components/SEO';
 function App() {
 
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+const seo = useSEO();
 
   const fetchCars = async () => {
     try {
@@ -35,8 +38,11 @@ function App() {
     fetchCars();
   }, []);
 
+
+
+
   return (
-    <>
+    <> <SEO seo={seo} />
       <PageBanner2 bannerimage={BannerImage}
         title={(
           <>

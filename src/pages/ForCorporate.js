@@ -7,10 +7,14 @@ import HomeVehicleOptions from '../components/HomeVehicleOptions';
 import CustomerReviews from '../components/CustomerReviews';
 import ForCorporateIpadImage from '../components/ForCorporateIpadImage';
 import config from '../config'; 
+import useSEO from "../hooks/useSEO";
+import SEO from "../components/SEO";
 
 function ForCorporate() {
   const[cars,setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+  const seo = useSEO();
+  
   const fetchCars = async () => {
     try {
       const response = await fetch(`${config.api.baseURL}${config.api.carsEndpoint}`);
@@ -30,8 +34,11 @@ function ForCorporate() {
   useEffect(() => {
     fetchCars();
   }, []);
+
+
+
   return (
-    <>
+    <> <SEO seo={seo} />
       <PageBanner bannerimage={BannerImage} 
         title={(
           <>

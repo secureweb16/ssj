@@ -25,6 +25,6 @@
   },
   "devDependencies": {
     "axios": "^1.13.2",
-    "sitemap": "^9.0.0"
+    "sitemap": "^9.0.1"
   }
 }

@@ -23,6 +23,15 @@ header.admin-dashboard {
   border: none;
   cursor: pointer;
 }
+.setting-btn {
+  padding: 10px 20px;
+  margin: 20px;
+  background-color: rgb(99, 113, 234);
+  border-radius: 5px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
 
 .container {
   display: flex;
@@ -344,3 +353,65 @@ header.admin-dashboard {
       gap: 20px;
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+  /* TABLE */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.meta-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.meta-table thead tr {
+  background-color: #f4f4f4;
+}
+
+.meta-table th,
+.meta-table td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #ebebeb;
+  vertical-align: middle;
+}
+
+.meta-table th {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.meta-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.table-meta-image {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.desc-cell {
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
