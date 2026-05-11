@@ -44,9 +44,11 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.1",
     "puppeteer": "^24.43.0",
+    "react-snap": "^1.23.0",
     "tailwindcss": "^4.0.3",
     "web-vitals": "^4.2.4"
   },
@@ -61,6 +63,8 @@
       "/signature-routes",
       "/events-around-london"
     ],
-    "inlineCss": true
+    "inlineCss": false,
+    "puppeteerArgs": ["--no-sandbox", "--disable-setuid-sandbox"],
+    "timeout": 30000
   }
 }

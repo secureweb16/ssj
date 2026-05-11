@@ -29,4 +29,9 @@ app.use("/api", emailRoutes);
 app.use("/api/meta-data", metaDataRoutes);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const generateSitemap = require("./scripts/generateSitemap");
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    generateSitemap(); // ✅ Generate sitemap on startup
+});

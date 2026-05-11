@@ -29,7 +29,10 @@ function App() {
  
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
+  const isSnap = navigator.userAgent === 'ReactSnap';
+
   useEffect(() => {
+    if (isSnap) return; // skip Google Maps during prerendering
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
     loadGoogleMaps(apiKey)

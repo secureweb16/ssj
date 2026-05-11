@@ -13,7 +13,22 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 
+const isSnap = typeof navigator !== 'undefined' && navigator.userAgent === 'ReactSnap';
+
 function CarServiceSlider({cars}){    
+    if (isSnap) {
+        // Static fallback for prerendering (no Swiper)
+        return (
+            <div className="car-service-slider">
+                <div className="slider_wrapper position-relative">
+                    <div className="common_service_slide position-relative"><img src={SliderItem1} alt="Private Chauffeur Service" className="w-100 object-fit-cover" /></div>
+                    <div className="common_service_slide position-relative"><img src={SliderItem2} alt="Corporate Car Service" className="w-100 object-fit-cover" /></div>
+                    <div className="common_service_slide position-relative"><img src={SliderItem3} alt="Black Car Hire London" className="w-100 object-fit-cover" /></div>
+                    <div className="common_service_slide position-relative"><img src={SliderItem4} alt="Airport Transport Service" className="w-100 object-fit-cover" /></div>
+                </div>
+            </div>
+        );
+    }
     return(
     <div className="car-service-slider">  
         <div className="slider_wrapper position-relative">

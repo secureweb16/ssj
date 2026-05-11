@@ -10,7 +10,18 @@ import 'swiper/css';
 // import 'swiper/css/navigation';
 // import 'swiper/css/scrollbar';
 
+const isSnap = typeof navigator !== 'undefined' && navigator.userAgent === 'ReactSnap';
+
 function CustomerReviews(){    
+    if (isSnap) {
+        return (
+            <div className="customer-review-slider pl-100 ptb-150 bg-cover-center position-relative overlay-50" style={{ backgroundImage: `url(${ReviewBackground})` }}>
+                <div className="slider-wrapper position-relative">
+                    <div className="common_review_slide position-relative"><img src={Stars} alt="5 Stars Rating" /><p className='text-white'>SSJ Luxury Transport - 5 Star Service</p></div>
+                </div>
+            </div>
+        );
+    }
     return(
     <div className="customer-review-slider pl-100 ptb-150 bg-cover-center position-relative overlay-50" style={{ backgroundImage: `url(${ReviewBackground})` }}>  
         <div className="slider-wrapper position-relative">

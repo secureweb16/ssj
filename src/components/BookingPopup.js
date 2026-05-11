@@ -29,9 +29,12 @@ import { format } from "date-fns";
 import CarInfoPopup from '../components/CarInfoPopup';
 
 const containerStyle = { width: '550px', height: '250px' };
+const LIBRARIES = ['places'];
+const isSnap = typeof navigator !== 'undefined' && navigator.userAgent === 'ReactSnap';
 
 function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home = null ,btnlarge=true}) {
     // Declare all Hooks at the top level
+
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -67,7 +70,7 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        libraries: ['places'],
+        libraries: LIBRARIES,
     });
 
     // Initialize geocoder when Google Maps API is loaded
@@ -134,6 +137,11 @@ function BookingPopup({ cars, isHomeBanner, closePopup, location = null, is_home
             document.body.classList.remove('overflow-hidden');
         };
     }, [visible]);
+
+    // During prerendering, return a simple static placeholder (must be after all hooks)
+    if (isSnap) {
+        return <span className={`${is_home == null ? `btn ${btnlarge ? 'largebtn' : ''}` : 'border-button gray-border'}`}>Book Now</span>;
+    }
 
     // Conditional rendering for loading state
     if (!isLoaded) {

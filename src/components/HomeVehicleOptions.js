@@ -10,9 +10,22 @@ import { Link } from 'react-router-dom';
 import config from '../config'; 
 import BookingPopup from '../components/BookingPopup';
 
+const isSnap = typeof navigator !== 'undefined' && navigator.userAgent === 'ReactSnap';
+
 function HomeVehicleOptions({ cars }) {
     const [activeIndex, setActiveIndex] = useState(0);
     const vehicleTypes = Array.isArray(cars) && cars.length > 0 ? [...new Set(cars.map(car => car.type))] : [];
+
+    if (isSnap) {
+        return (
+            <div className='vehicle-options pb-90'>
+                <div className='vehicle-options-inner'>
+                    <p className='text-uppercase font-12 plr-100 fw-400 text-center section-title'>Explore Our Vehicle Options</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className='vehicle-options pb-90'>
             <div className='vehicle-options-inner'>

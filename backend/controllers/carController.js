@@ -1,5 +1,6 @@
 const { body, validationResult } = require("express-validator");
 const Car = require("../models/Car");
+const generateSitemap = require("../scripts/generateSitemap");
 
 /* Validation Rules */
 const validateCar = [
@@ -28,6 +29,10 @@ exports.addCar = [
       const image = req.file.path;
       const newCar = new Car({ company_name, car_name, modal, passengers, luggage_type, type, description, image });
       await newCar.save();
+      
+      // ✅ Auto-generate sitemap
+      generateSitemap();
+
       res.status(201).json({ message: "Car added successfully", car: newCar, success: true });
     } catch (error) {
       console.error("Error adding car:", error);
@@ -107,6 +112,10 @@ exports.updateCar = [
       if (!updatedCar) {
         return res.status(404).json({ message: "Car not found" });
       }
+
+      // ✅ Auto-generate sitemap
+      generateSitemap();
+
       res.json({ message: "Car updated successfully", car: updatedCar, success: true });
     } catch (error) {
       console.error("Error updating car:", error);
@@ -122,6 +131,10 @@ exports.deleteCar = async (req, res) => {
     if (!deletedCar) {
       return res.status(404).json({ message: "Car not found" });
     }
+
+    // ✅ Auto-generate sitemap
+    generateSitemap();
+
     res.json({ message: "Car deleted successfully", success: true });
   } catch (error) {
     console.error("Error deleting car:", error);

@@ -21,18 +21,17 @@ const generateSitemap = async () => {
         ];
 
         // ✅ Dynamic routes
-        let dynamicRoutes = [];
-        try {
-            // Using the production API URL
-            const { data } = await axios.get("https://api.ssjluxurytransport.com/api/cars/frontend");
-            const cars = data.cars || (Array.isArray(data) ? data : []);
-            dynamicRoutes = cars.map((car) => `/vehicle/${car.slug || car._id}`);
-        } catch (err) {
-            console.warn("⚠️ Skipping dynamic routes:", err.message);
-        }
+        // let dynamicRoutes = [];
+        // try {
+        //     // Using the production API URL
+        //     const { data } = await axios.get("https://api.ssjluxurytransport.com/api/cars/frontend");
+        //     const cars = data.cars || (Array.isArray(data) ? data : []);
+        //     dynamicRoutes = cars.map((car) => `/vehicle/${car._id}`);
+        // } catch (err) {
+        //     console.warn("⚠️ Skipping dynamic routes:", err.message);
+        // }
 
         // ✅ Combine static + dynamic
-        // Note: Currently using only static routes as per your recent change
         const allRoutes = [...staticRoutes]; 
 
         // ✅ Generate sitemap
@@ -56,6 +55,13 @@ const generateSitemap = async () => {
         if (fs.existsSync(rootBuildDir)) {
             fs.writeFileSync(path.join(rootBuildDir, "sitemap.xml"), sitemap);
             console.log("✅ Sitemap saved to build/");
+        }
+
+        // ✅ Also save to THE LIVE HTML folder (for production)
+        const liveHtmlDir = "/var/www/html";
+        if (fs.existsSync(liveHtmlDir)) {
+            fs.writeFileSync(path.join(liveHtmlDir, "sitemap.xml"), sitemap);
+            console.log("✅ Sitemap saved to /var/www/html/");
         }
 
         console.log("✅ Sitemap generation complete.");

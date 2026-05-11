@@ -25,6 +25,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/scrollbar';
 import BookingPopup from '../components/BookingPopup';
 
+const isSnap = typeof navigator !== 'undefined' && navigator.userAgent === 'ReactSnap';
+
 function HomeSignatureRoutesPackages({cars,viewCta=true,viewCtaBooking=false}){    
     const [isPopupVisible, setPopupVisible] = useState(false);
     const [popupIndex, setPopupIndex] = useState(null);
@@ -34,6 +36,21 @@ function HomeSignatureRoutesPackages({cars,viewCta=true,viewCtaBooking=false}){
     const closePopup = () => {
         setPopupIndex(null);
     };
+
+    if (isSnap) {
+        return (
+            <div className="signature-routes-slider ptb-90">
+                <p className='text-uppercase font-12 plr-100 fw-400 text-center section-title'>Signature routes &amp; packages</p>
+                <div className="slider_wrapper position-relative pt-50">
+                    <div className='common-routepack-slide position-relative'><div className='common-routepack-slide-wrap position-relative'><div className='routepack-slide-bg position-relative'><div className='routepack-slide-bottom'><img src={Slide1Bottom} alt="Chauffeur Route from Central London" className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" /></div></div><div className='routepack-slide-content position-absolute text-white'><div className='routepack-slide-content_wrapper d-flex flex-column'><Link to='#' className='text-white'>Central London</Link><Link to='#' className='text-white'>Babington</Link></div></div></div></div>
+                    <div className='common-routepack-slide position-relative'><div className='common-routepack-slide-wrap position-relative'><div className='routepack-slide-bg position-relative'><div className='routepack-slide-bottom'><img src={Slide2Bottom} alt="Luxury Car Service Estelle Manor" className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" /></div></div><div className='routepack-slide-content position-absolute text-white'><div className='routepack-slide-content_wrapper d-flex flex-column'><Link to='#' className='text-white'>Central London</Link><Link to='#' className='text-white'>Estelle Manor</Link></div></div></div></div>
+                    <div className='common-routepack-slide position-relative'><div className='common-routepack-slide-wrap position-relative'><div className='routepack-slide-bg position-relative'><div className='routepack-slide-bottom'><img src={Slide3Bottom} alt="Long Distance Chauffeur London to Manchester" className="position-absolute top-0 start-0 h-100 w-100 object-fit-cover" /></div></div><div className='routepack-slide-content position-absolute text-white'><div className='routepack-slide-content_wrapper d-flex flex-column'><Link to='#' className='text-white'>Central London</Link><Link to='#' className='text-white'>Manchester</Link></div></div></div></div>
+                </div>
+                {viewCta && <div className="slider_nav slider_view_all d-flex align-items-center justify-content-center nowrap"><Link to='/signature-routes' className='view_all_btn'>View All</Link></div>}
+            </div>
+        );
+    }
+
     return(
     <div className="signature-routes-slider ptb-90">  
         <p className='text-uppercase font-12 plr-100 fw-400 text-center section-title'>Signature routes & packages</p>

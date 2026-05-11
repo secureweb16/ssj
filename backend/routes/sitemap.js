@@ -8,8 +8,9 @@ router.get("/sitemap.xml", async (req, res) => {
     try {
 
         const sitemap = new SitemapStream({
-            hostname: "https://ssjluxurytransport.com",
+            hostname: "ssjluxurytransport.com",
         });
+
 
         // ROUTES WITH SEO SETTINGS
         const routes = [
@@ -24,10 +25,11 @@ router.get("/sitemap.xml", async (req, res) => {
                 priority: 0.9,
             },
             {
-                url: "/vehicles",
+                url: "/vehicle",
                 changefreq: "weekly",
                 priority: 0.9,
             },
+
             {
                 url: "/about",
                 changefreq: "monthly",
@@ -54,20 +56,16 @@ router.get("/sitemap.xml", async (req, res) => {
             sitemap.write(route);
         });
 
-        /*
-        FUTURE DYNAMIC ROUTES
+        // const Car = require("../models/Car");
+        // const cars = await Car.find();
 
-        const cars = await Car.find();
-
-        cars.forEach((car) => {
-            sitemap.write({
-                url: `/vehicle/${car.slug}`,
-                changefreq: "daily",
-                priority: 0.9,
-            });
-        });
-
-        */
+        // cars.forEach((car) => {
+        //     sitemap.write({
+        //         url: `/vehicle/${car._id}`,
+        //         changefreq: "daily",
+        //         priority: 0.9,
+        //     });
+        // });
 
         sitemap.end();
 
