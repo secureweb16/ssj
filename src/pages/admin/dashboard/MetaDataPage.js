@@ -342,7 +342,7 @@
 
 //          <div>
 //         <button className="setting-btn" onClick={() => {
-          
+
 //           navigate("/admin/dashboard");
 //         }}>
 //           Dashboard
@@ -668,6 +668,7 @@ import config from "../../../config";
 import leftArrow from "../../../assets/images/left_arrow_icon.svg";
 import rightArrow from "../../../assets/images/right_arrow_icon.svg";
 
+import verifyToken from "../../../utils/verifyToken";
 const MetaDataPage = () => {
 
   const [metaData, setMetaData] = useState([]);
@@ -697,7 +698,11 @@ const MetaDataPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
+    // if (!localStorage.getItem("token")) {
+    //   navigate("/");
+    // }
+    const token = localStorage.getItem('token');
+    if (!verifyToken(token)) {
       navigate("/");
     }
     fetchMetaData();

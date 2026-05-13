@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import Modal from "../../../components/modal/Modal";
 import "./Dashboard.css";
-import config from '../../../config'; 
+import config from '../../../config';
 import leftArrow from '../../../assets/images/left_arrow_icon.svg';
 import rightArrow from '../../../assets/images/right_arrow_icon.svg';
-
+import verifyToken from "../../../utils/verifyToken";
 const Dashboard = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,11 +17,16 @@ const Dashboard = () => {
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [editCar, setEditCar] = useState(null);
   const [deleteCar, setDeleteCar] = useState(null);
-  const [formCar, setFormCar] = useState({company_name: "", car_name: "", modal: "", passengers: "",luggage_type: "",type: "",image: null,description: ""});
-  const [formErrors, setFormErrors] = useState({company_name: "", car_name: "", modal: "", passengers: "",luggage_type: "",type: "",image: ""});
+  const [formCar, setFormCar] = useState({ company_name: "", car_name: "", modal: "", passengers: "", luggage_type: "", type: "", image: null, description: "" });
+  const [formErrors, setFormErrors] = useState({ company_name: "", car_name: "", modal: "", passengers: "", luggage_type: "", type: "", image: "" });
   const navigate = useNavigate();
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
+    // if (!localStorage.getItem("token")) {
+    //   navigate("/");
+    // }
+
+    const token = localStorage.getItem('token');
+    if (!verifyToken(token)) {
       navigate("/");
     }
     fetchCars(currentPage);
@@ -33,8 +38,8 @@ const Dashboard = () => {
       const response = await fetch(`${config.api.baseURL}${config.api.carsEndpoint}?page=${page}&limit=8`);
       const data = await response.json();
       if (Array.isArray(data.cars)) {
-        setCars(data.cars); 
-        setTotalPages(data.totalPages); 
+        setCars(data.cars);
+        setTotalPages(data.totalPages);
       } else {
         console.error("Expected an array for data.cars, but got:", data.cars);
       }
@@ -51,7 +56,7 @@ const Dashboard = () => {
       setCurrentPage(currentPage + 1);
     }
   };
-  
+
   // Handle previous page click
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -75,8 +80,8 @@ const Dashboard = () => {
     setDeleteModalIsOpen(false);
     setEditCar(null);
     setDeleteCar(null);
-    setFormCar({company_name: "", car_name: "", modal: "", passengers: "",luggage_type: "",type: "",image: null,description: ""});
-    setFormErrors({company_name: "", car_name: "", modal: "", passengers: "",luggage_type: "",type: "",image: ""});
+    setFormCar({ company_name: "", car_name: "", modal: "", passengers: "", luggage_type: "", type: "", image: null, description: "" });
+    setFormErrors({ company_name: "", car_name: "", modal: "", passengers: "", luggage_type: "", type: "", image: "" });
   };
 
   const handleChange = (e) => {
@@ -110,10 +115,10 @@ const Dashboard = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    if (!validateForm()){
+    if (!validateForm()) {
       setIsLoading(false);
       return; // Prevent submission if there are validation errors
-    } 
+    }
     try {
       const formData = new FormData();
       formData.append("company_name", formCar.company_name);
@@ -164,18 +169,18 @@ const Dashboard = () => {
       <header className="admin-dashboard">
         <div>Hello Admin</div>
         <div>
-        <button className="setting-btn" onClick={() => {
-          
-          navigate("/admin/meta-data-setting");
-        }}>
-          Meta Data Setting
-        </button>
-        <button className="logout-btn" onClick={() => {
-          localStorage.removeItem("token");
-          navigate("/");
-        }}>
-          Logout
-        </button>
+          <button className="setting-btn" onClick={() => {
+
+            navigate("/admin/meta-data-setting");
+          }}>
+            Meta Data Setting
+          </button>
+          <button className="logout-btn" onClick={() => {
+            localStorage.removeItem("token");
+            navigate("/");
+          }}>
+            Logout
+          </button>
         </div>
       </header>
 
@@ -183,12 +188,12 @@ const Dashboard = () => {
         <div className="dashboard-header">
           <h1>Welcome to the Dashboard</h1>
           <button className="upload-btn" onClick={() => setModalIsOpen(true)}>
-            Upload Car 
+            Upload Car
           </button>
         </div>
-        
+
         {/* Car List */}
-        
+
         {loading ? (
           <div className="loading-message">Loading...</div>
         ) : cars.length === 0 ? (
@@ -223,13 +228,13 @@ const Dashboard = () => {
         {totalPages > 1 &&
           <div className="pagination">
             <button onClick={handlePrevPage} disabled={currentPage === 1}>
-            <img src={leftArrow} />
+              <img src={leftArrow} />
             </button>
             <span>
               Page {currentPage} of {totalPages}
             </span>
             <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-            <img src={rightArrow} />
+              <img src={rightArrow} />
             </button>
           </div>
         }
@@ -312,14 +317,14 @@ const Dashboard = () => {
               required
             ></textarea>
 
-            <input type="file" onChange={handleFileChange}  />
+            <input type="file" onChange={handleFileChange} />
             {formErrors.image && <p className="error-message">{formErrors.image}</p>}
             {/* Image Preview */}
             {formCar.image && (
               <div className="upload-car-image">
                 <img src={formCar.image instanceof File ? URL.createObjectURL(formCar.image) : `${config.api.baseURL}${formCar.image}`} alt="Selected Car" />
                 {/* <img src={URL.createObjectURL(formCar.image)} alt="Selected Car" style={styles.previewImg} /> */}
-                <FaTrashAlt  onClick={() => setFormCar((prev) => ({ ...prev, image: null }))} />
+                <FaTrashAlt onClick={() => setFormCar((prev) => ({ ...prev, image: null }))} />
               </div>
             )}
 
