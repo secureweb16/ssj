@@ -9,26 +9,76 @@ const fixedPassword = process.env.FIXED_PASSWORD;
 // const fixedEmail = "admin@example.com";
 // const fixedPassword = "password123";
 
+// exports.login = async (req, res) => {
+//     const { email, password } = req.body;
+//     if (email === fixedEmail && password === fixedPassword) {
+//     try {
+//         const token = jwt.sign({ user: "admin" }, process.env.JWT_SECRET, {
+//             expiresIn: "8h",
+//         });
+//         return res.status(200).json({
+//             message: "Login successful",
+//             token,
+//         });
+//     } catch (error) {
+//         console.error("Login Error:", error);
+//         return res.status(500).json({ message: "Server error" });
+//     }
+//     } else {
+//         return res.status(400).json({ message: "Invalid email or password" });
+//     }
+// };
 exports.login = async (req, res) => {
+  try {
     const { email, password } = req.body;
-    if (email === fixedEmail && password === fixedPassword) {
-    try {
-        const token = jwt.sign({ user: "admin" }, process.env.JWT_SECRET, {
-            expiresIn: "8h",
-        });
-        return res.status(200).json({
-            message: "Login successful",
-            token,
-        });
-    } catch (error) {
-        console.error("Login Error:", error);
-        return res.status(500).json({ message: "Server error" });
-    }
-    } else {
-        return res.status(400).json({ message: "Invalid email or password" });
-    }
-};
 
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required",
+      });
+    }
+
+    // 1. user DB se lao
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid email or password",
+      });
+    }
+
+    // 2. password compare karo (hashed password)
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid email or password",
+      });
+    }
+
+    // 3. JWT token generate karo
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "8h" }
+    );
+
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+      },
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    return res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
 // Signup function to create a new user
 exports.signup = async (req, res) => {
     const { email, password } = req.body;

@@ -4,22 +4,22 @@ const checkAuth = require('../middleware/authMiddleware');
 const userController = require('../controllers/userController');
 const User = require('../models/User');
 const router = express.Router();
-
+const bcrypt = require('bcryptjs');
 router.post('/login', userController.login);
 router.post('/signup', userController.signup);
 router.get('/dashboard',checkAuth, userController.dashboard);
 router.post("/update-password", async (req, res) => {
   try {
-    const { username, newPassword } = req.body;
+    const { email, newPassword } = req.body;
 
-    if (!username || !newPassword) {
+    if (!email || !newPassword) {
       return res.status(400).json({
         success: false,
-        message: "username and newPassword are required",
+        message: "email and newPassword are required",
       });
     }
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
@@ -28,18 +28,19 @@ router.post("/update-password", async (req, res) => {
       });
     }
 
-    // plain password assign karo
-    // schema ka pre('save') hook bcrypt hash karega
-    user.password = newPassword;
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
     await user.save();
 
     return res.json({
       success: true,
       message: "Password updated successfully",
     });
+
   } catch (error) {
     console.error("Update Password Error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal server error",
     });
